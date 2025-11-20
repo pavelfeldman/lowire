@@ -14,32 +14,27 @@
  * limitations under the License.
  */
 
-import colors from 'colors';
-import debug from 'debug';
-import { zodToJsonSchema } from 'zod-to-json-schema';
-import { z } from 'zod';
-
 import type { Tool, ImageContent, TextContent, CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import type * as llm from './llm';
 
-/* eslint-disable no-console */
+type Logger = (category: string, text: string, details?: string) => void;
 
 type RunLoopOptions = {
-  tools: Tool[];
+  tools?: Tool[];
+  callTool?: (params: { name: string, arguments: any}) => Promise<CallToolResult>;
   maxTurns?: number;
-  callTool: (params: { name: string, arguments: any}) => Promise<CallToolResult>;
-  resultSchema: z.ZodSchema<any>;
+  resultSchema?: Tool['inputSchema'];
+  logger?: Logger;
 };
 
-export async function runLoop<T>(llm: llm.LLM, task: string, options: RunLoopOptions): Promise<T> {
+export async function runLoop<T>(llm: llm.LLM, task: string, options: RunLoopOptions = {}): Promise<T> {
   const taskContent = `Perform following task: ${task}. Once the task is complete, call the "report_result" tool.`;
-  const inputSchema = resultSchemaWithFallback(options.resultSchema);
   const allTools: Tool[] = [
-    ...options.tools,
+    ...(options.tools ?? []),
     {
       name: 'report_result',
       description: 'Report the result of the task.',
-      inputSchema,
+      inputSchema: options.resultSchema ?? defaultResultSchema,
     },
   ];
 
@@ -51,6 +46,7 @@ export async function runLoop<T>(llm: llm.LLM, task: string, options: RunLoopOpt
     tools: allTools,
   };
 
+  const log = options.logger || (() => {});
   log('loop:loop', 'Starting loop', taskContent);
   const maxTurns = options.maxTurns || 100;
   for (let iteration = 0; iteration < maxTurns; ++iteration) {
@@ -80,7 +76,7 @@ export async function runLoop<T>(llm: llm.LLM, task: string, options: RunLoopOpt
         return args;
 
       try {
-        const response = await options.callTool({
+        const response = await options.callTool!({
           name,
           arguments: args,
         });
@@ -126,33 +122,12 @@ export async function runLoop<T>(llm: llm.LLM, task: string, options: RunLoopOpt
   throw new Error('Failed to perform step, max attempts reached');
 }
 
-function log(category: string, text: string, details: string = '') {
-  debug(category)(text, colors.dim(details));
-
-  const trimmedText = trim(text, 100);
-  const trimmedDetails = trim(details, 100 - trimmedText.length - 1);
-  console.log(colors.bold(colors.green(category)), trimmedText, colors.dim(trimmedDetails));
-}
-
-function trim(text: string, maxLength: number) {
-  if (text.length <= maxLength)
-    return text;
-  return text.slice(0, maxLength - 3) + '...';
-}
-
-function resultSchemaWithFallback(resultSchema: any): any {
-  if (resultSchema)
-    return zodToJsonSchema(resultSchema);
-
-  return {
-    type: 'object',
-    description: 'Result of the task.',
-    properties: {
-      result: {
-        type: 'string',
-        description: 'The result of the task as a string.',
-      },
+const defaultResultSchema: Tool['inputSchema'] = {
+  type: 'object',
+  properties: {
+    result: {
+      type: 'string',
     },
-    required: ['result'],
-  };
-}
+  },
+  required: ['result'],
+};

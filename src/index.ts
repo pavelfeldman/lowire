@@ -20,6 +20,7 @@ import { Copilot } from './copilot.js';
 
 export * from './llm.js';
 export * from './agent.js';
+export * from './loop.js';
 
 export function openai() {
   return new OpenAI();

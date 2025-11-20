@@ -16,19 +16,27 @@
 
 // @ts-check
 
+const colors = require('colors');
 const dotenv = require('dotenv');
-const { copilot } = require('./index');
+const { copilot, runLoop } = require('./index');
 
 dotenv.config({ quiet: true });
 
 async function main() {
-  /** @type {import('./index').Conversation} */
-  const conversation = {
-    messages: [{ role: 'user', content: 'Write a short poem about the sea.' }],
-    tools: [],
-  };
-  const model = copilot();
-  console.log(await model.complete(conversation));
+  const { result } = await runLoop(copilot(), 'Write a short poem about the sea.', { logger });
+  console.log(result);
+}
+
+function logger(category, text, details = '') {
+  const trimmedText = trim(text, 100);
+  const trimmedDetails = trim(details, 100 - trimmedText.length - 1);
+  console.log(colors.bold(colors.green(category)), trimmedText, colors.dim(trimmedDetails));
+}
+
+function trim(text, maxLength) {
+  if (text.length <= maxLength)
+    return text;
+  return text.slice(0, maxLength - 3) + '...';
 }
 
 void main();

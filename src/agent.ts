@@ -35,9 +35,9 @@ export class Agent<T extends z.ZodSchema<any>> {
   readonly llm: llm.LLM;
   readonly spec: AgentSpec;
   readonly clients: Map<string, Client>;
-  readonly resultSchema: z.ZodSchema<any>;
+  readonly resultSchema: Tool['inputSchema'];
 
-  constructor(llm: llm.LLM, spec: AgentSpec, clients: Map<string, Client>, resultSchema: T) {
+  constructor(llm: llm.LLM, spec: AgentSpec, clients: Map<string, Client>, resultSchema: Tool['inputSchema']) {
     this.llm = llm;
     this.spec = spec;
     this.clients = clients;

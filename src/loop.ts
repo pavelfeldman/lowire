@@ -17,9 +17,9 @@
 import type { Tool, ImageContent, TextContent, CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import type * as llm from './llm';
 
-type Logger = (category: string, text: string, details?: string) => void;
+export type Logger = (category: string, text: string, details?: string) => void;
 
-type RunLoopOptions = {
+export type RunLoopOptions = {
   tools?: Tool[];
   callTool?: (params: { name: string, arguments: any}) => Promise<CallToolResult>;
   maxTurns?: number;

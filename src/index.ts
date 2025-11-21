@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { Claude } from './claude.js';
-import { OpenAI } from './openai.js';
-import { Copilot } from './copilot.js';
+import { Claude } from './claude';
+import { OpenAI } from './openai';
+import { Copilot } from './copilot';
 
-export * from './llm.js';
-export * from './agent.js';
-export * from './loop.js';
+export * from './llm';
+export * from './agent';
+export * from './loop';
 
 export function openai() {
   return new OpenAI();

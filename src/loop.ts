@@ -18,12 +18,11 @@ import { OpenAI } from './providers/openai';
 import { Copilot } from './providers/copilot';
 import { Claude } from './providers/claude';
 
-import type { ImageContent, TextContent, CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import type * as types from './types';
 
 export type RunLoopOptions = {
   tools?: types.Tool[];
-  callTool?: (params: { name: string, arguments: any}) => Promise<CallToolResult>;
+  callTool?: (params: { name: string, arguments: any}) => Promise<types.ToolResult>;
   maxTurns?: number;
   resultSchema?: types.Schema;
   logger?: types.Logger;
@@ -61,10 +60,10 @@ async function runLoop<T>(provider: types.Provider, task: string, options: RunLo
   };
 
   const log = options.logger || (() => {});
-  log('loop:loop', 'Starting loop', taskContent);
+  log('loop:loop', `Starting ${provider.name} loop`, taskContent);
   const maxTurns = options.maxTurns || 100;
   for (let iteration = 0; iteration < maxTurns; ++iteration) {
-    log('loop:turn', `${iteration + 1} of ${maxTurns}`);
+    log('loop:turn', `${iteration + 1} of (max ${maxTurns})`);
     const { result: assistantMessage, usage } = await provider.complete(conversation);
 
     conversation.messages.push(assistantMessage);
@@ -81,7 +80,7 @@ async function runLoop<T>(provider: types.Provider, task: string, options: RunLo
       continue;
     }
 
-    const toolResults: Array<{ toolCallId: string; content: string; isError?: boolean }> = [];
+    const toolResults: Array<{ toolCallId: string; result: types.ToolResult }> = [];
     for (const toolCall of toolCalls) {
       const { name, arguments: args, id } = toolCall;
 
@@ -90,18 +89,17 @@ async function runLoop<T>(provider: types.Provider, task: string, options: RunLo
         return args;
 
       try {
-        const response = await options.callTool!({
+        const result = await options.callTool!({
           name,
           arguments: args,
         });
 
-        const responseContent = (response.content || []) as (TextContent | ImageContent)[];
-        const text = responseContent.filter(part => part.type === 'text').map(part => part.text).join('\n');
-        log('loop:tool-result', '', text);
+        const text = result.content.filter(part => part.type === 'text').map(part => part.text).join('\n');
+        log('loop:tool-result', text, JSON.stringify(result, null, 2));
 
         toolResults.push({
           toolCallId: id,
-          content: text,
+          result,
         });
       } catch (error) {
         const errorMessage = `Error while executing tool "${name}": ${error instanceof Error ? error.message : String(error)}\n\nPlease try to recover and complete the task.`;
@@ -109,16 +107,20 @@ async function runLoop<T>(provider: types.Provider, task: string, options: RunLo
 
         toolResults.push({
           toolCallId: id,
-          content: errorMessage,
-          isError: true,
+          result: {
+            content: [{ type: 'text', text: errorMessage }],
+            isError: true,
+          }
         });
 
         // Skip remaining tool calls for this iteration
         for (const remainingToolCall of toolCalls.slice(toolCalls.indexOf(toolCall) + 1)) {
           toolResults.push({
             toolCallId: remainingToolCall.id,
-            content: `This tool call is skipped due to previous error.`,
-            isError: true,
+            result: {
+              content: [{ type: 'text', text: `This tool call is skipped due to previous error.` }],
+              isError: true,
+            }
           });
         }
         break;

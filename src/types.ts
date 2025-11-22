@@ -52,11 +52,28 @@ export type AssistantMessage = BaseMessage & {
   toolCalls: ToolCall[];
 };
 
+export type TextContentPart = {
+  type: 'text';
+  text: string;
+};
+
+export type ImageContentPart = {
+  type: 'image';
+  data: string;
+  mimeType: 'image/png' | 'image/jpeg' | 'image/gif';
+};
+
+export type ContentPart = TextContentPart | ImageContentPart;
+
+export type ToolResult = {
+  content: ContentPart[];
+  isError?: boolean;
+};
+
 export type ToolResultMessage = BaseMessage & {
   role: 'tool';
   toolCallId: string;
-  content: string;
-  isError?: boolean;
+  result: ToolResult;
 };
 
 export type Message =
@@ -75,6 +92,7 @@ export interface Model {
 }
 
 export interface Provider {
+  name: string;
   complete(conversation: Conversation): Promise<{ result: AssistantMessage, usage: Usage }>;
 }
 

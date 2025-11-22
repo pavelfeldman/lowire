@@ -21,6 +21,7 @@ import type * as types from '../types';
 const model = 'claude-sonnet-4-20250514';
 
 export class Claude implements Provider {
+  readonly name = 'claude';
   private _anthropic: Anthropic | undefined;
 
   async anthropic(): Promise<Anthropic> {
@@ -69,6 +70,27 @@ function toToolCall(toolCall: Anthropic.Messages.ToolUseBlock): types.ToolCall {
     arguments: toolCall.input as any,
     id: toolCall.id,
   };
+}
+
+function toClaudeContentPart(part: types.ContentPart): Anthropic.Messages.ContentBlockSourceContent {
+  if (part.type === 'text') {
+    return {
+      type: 'text',
+      text: part.text,
+      citations: [],
+    };
+  }
+  if (part.type === 'image') {
+    return {
+      type: 'image',
+      source: {
+        type: 'base64',
+        data: part.data,
+        media_type: part.mimeType
+      },
+    };
+  }
+  throw new Error(`Unsupported content part type: ${(part as any).type}`);
 }
 
 function toClaudeMessages(messages: types.Message[]): Anthropic.Messages.MessageParam[] {
@@ -121,8 +143,8 @@ function toClaudeMessages(messages: types.Message[]): Anthropic.Messages.Message
       const toolResult: Anthropic.Messages.ToolResultBlockParam = {
         type: 'tool_result',
         tool_use_id: message.toolCallId,
-        content: message.content,
-        is_error: message.isError,
+        content: message.result.content.map(toClaudeContentPart),
+        is_error: message.result.isError,
       };
 
       if (lastMessage && lastMessage.role === 'user' && Array.isArray(lastMessage.content)) {

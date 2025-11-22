@@ -31,6 +31,7 @@ export const kEditorHeaders = {
 };
 
 export class Copilot extends OpenAI {
+  override readonly name = 'copilot';
   override async connect(): Promise<Endpoint> {
     return {
       model: 'claude-sonnet-4.5',

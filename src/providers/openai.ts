@@ -25,6 +25,7 @@ export type Endpoint = {
 };
 
 export class OpenAI implements types.Provider {
+  readonly name: string = 'openai';
   private _endpoint: Endpoint | undefined;
 
   async endpoint(): Promise<Endpoint> {
@@ -76,6 +77,7 @@ async function create(body: openai.OpenAI.Chat.Completions.ChatCompletionCreateP
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${endpoint.apiKey}`,
+    'Copilot-Vision-Request': 'true',
     ...endpoint.headers
   };
 
@@ -86,10 +88,29 @@ async function create(body: openai.OpenAI.Chat.Completions.ChatCompletionCreateP
   });
 
   if (!response.ok)
-    throw new Error(`API error: ${response.status} ${response.statusText}`);
+    throw new Error(`API error: ${response.status} ${response.statusText} ${await response.text()}`);
 
   return await response.json() as openai.OpenAI.Chat.Completions.ChatCompletion;
 }
+
+function toOpenAIContentPart(part: types.ContentPart): openai.OpenAI.Chat.Completions.ChatCompletionContentPart {
+  if (part.type === 'text') {
+    return {
+      type: 'text',
+      text: part.text,
+    };
+  }
+  if (part.type === 'image') {
+    return {
+      type: 'image_url',
+      image_url: {
+        url: `data:${part.mimeType};base64,${part.data}`,
+      },
+    };
+  }
+  throw new Error(`Cannot convert content part of type ${(part as any).type} to text content part`);
+}
+
 
 function toOpenAIMessages(messages: types.Message[]): openai.OpenAI.Chat.Completions.ChatCompletionMessageParam[] {
   const openaiMessages: openai.OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [];
@@ -137,7 +158,7 @@ function toOpenAIMessages(messages: types.Message[]): openai.OpenAI.Chat.Complet
       openaiMessages.push({
         role: 'tool',
         tool_call_id: message.toolCallId,
-        content: message.content,
+        content: message.result.content.map(toOpenAIContentPart) as openai.OpenAI.Chat.Completions.ChatCompletionContentPartText[],
       });
       continue;
     }

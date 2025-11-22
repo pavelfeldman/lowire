@@ -18,27 +18,30 @@ import type * as openai from 'openai';
 import type * as llm from './llm';
 import type { Tool } from '@modelcontextprotocol/sdk/types.js';
 
+export type Endpoint = {
+  model: string,
+  baseUrl: string;
+  apiKey: string,
+  headers: Record<string, string>;
+};
+
 export class OpenAI implements llm.LLM {
-  private _openai: openai.OpenAI | undefined;
+  private _endpoint: Endpoint | undefined;
   readonly usage: llm.Usage = { inputTokens: 0, outputTokens: 0 };
 
-  async openai(): Promise<openai.OpenAI> {
-    if (!this._openai)
-      this._openai = await this.createOpenAI();
-    return this._openai;
+  async endpoint(): Promise<Endpoint> {
+    if (!this._endpoint)
+      this._endpoint = await this.connect();
+    return this._endpoint;
   }
 
-  async createOpenAI(): Promise<openai.OpenAI> {
-    const oai = await import('openai');
-    return new oai.OpenAI();
-  }
-
-  model(): string {
-    return 'gpt-4.1';
-  }
-
-  headers(): Record<string, string> | undefined {
-    return undefined;
+  async connect(): Promise<Endpoint> {
+    return {
+      model: 'gpt-4.1',
+      baseUrl: 'https://api.openai.com/v1',
+      apiKey: process.env.OPENAI_API_KEY!,
+      headers: {}
+    };
   }
 
   async complete(conversation: llm.Conversation): Promise<llm.AssistantMessage> {
@@ -46,13 +49,13 @@ export class OpenAI implements llm.LLM {
     const openaiMessages = toOpenAIMessages(conversation.messages);
     const openaiTools = conversation.tools.map(toOpenAITool);
 
-    const api = await this.openai();
-    const response = await api.chat.completions.create({
-      model: this.model(),
+    const endpoint = await this.endpoint();
+    const response = await create({
+      model: endpoint.model,
       messages: openaiMessages,
       tools: openaiTools,
       tool_choice: conversation.tools.length > 0 ? 'auto' : undefined
-    }, { headers: this.headers() });
+    }, endpoint);
 
     this.usage.inputTokens += response.usage?.prompt_tokens ?? 0;
     this.usage.outputTokens += response.usage?.completion_tokens ?? 0;
@@ -68,6 +71,25 @@ export class OpenAI implements llm.LLM {
       toolCalls
     };
   }
+}
+
+async function create(body: openai.OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming, endpoint: Endpoint): Promise<openai.OpenAI.Chat.Completions.ChatCompletion> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${endpoint.apiKey}`,
+    ...endpoint.headers
+  };
+
+  const response = await fetch(`${endpoint.baseUrl}/chat/completions`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body)
+  });
+
+  if (!response.ok)
+    throw new Error(`API error: ${response.status} ${response.statusText}`);
+
+  return await response.json() as openai.OpenAI.Chat.Completions.ChatCompletion;
 }
 
 function toOpenAIMessages(messages: llm.Message[]): openai.OpenAI.Chat.Completions.ChatCompletionMessageParam[] {

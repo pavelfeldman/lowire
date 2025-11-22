@@ -16,6 +16,8 @@
 
 import { OpenAI } from './openai';
 
+import type { Endpoint } from './openai';
+
 type CopilotTokenResponse = {
   token: string;
 };
@@ -29,20 +31,13 @@ export const kEditorHeaders = {
 };
 
 export class Copilot extends OpenAI {
-  override async createOpenAI() {
-    const oai = await import('openai');
-    return new oai.OpenAI({
-      baseURL: 'https://api.githubcopilot.com',
+  override async connect(): Promise<Endpoint> {
+    return {
+      model: 'claude-sonnet-4.5',
+      baseUrl: 'https://api.githubcopilot.com',
       apiKey: await getCopilotToken(),
-    });
-  }
-
-  override model(): string {
-    return 'claude-sonnet-4.5';
-  }
-
-  override headers(): Record<string, string> | undefined {
-    return kEditorHeaders;
+      headers: kEditorHeaders
+    };
   }
 }
 

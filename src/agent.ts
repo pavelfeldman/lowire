@@ -44,11 +44,11 @@ export class Agent<T extends z.ZodSchema<any>> {
     this.resultSchema = resultSchema;
   }
 
-  async runTask(task: string, options?: { logger?: Logger }): Promise<z.output<T>> {
+  async runTask(task: string, params: any, options?: { logger?: Logger }): Promise<z.output<T>> {
     const { clients, tools, callTool } = await this._initClients();
     const prompt = this.spec.description;
     try {
-      return await runLoop<z.output<T>>(this.llm, `${prompt}\n\nTask:\n${task}`, {
+      return await runLoop<z.output<T>>(this.llm, `${prompt}\n\nTask:\n${task}\n\nParams:\n${JSON.stringify(params, null, 2)}`, {
         ...options,
         tools,
         callTool,

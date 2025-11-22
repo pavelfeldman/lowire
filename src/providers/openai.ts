@@ -15,8 +15,7 @@
  */
 
 import type * as openai from 'openai';
-import type * as llm from './llm';
-import type { Tool } from '@modelcontextprotocol/sdk/types.js';
+import type * as types from '../types';
 
 export type Endpoint = {
   model: string,
@@ -25,9 +24,8 @@ export type Endpoint = {
   headers: Record<string, string>;
 };
 
-export class OpenAI implements llm.LLM {
+export class OpenAI implements types.Provider {
   private _endpoint: Endpoint | undefined;
-  readonly usage: llm.Usage = { inputTokens: 0, outputTokens: 0 };
 
   async endpoint(): Promise<Endpoint> {
     if (!this._endpoint)
@@ -44,7 +42,7 @@ export class OpenAI implements llm.LLM {
     };
   }
 
-  async complete(conversation: llm.Conversation): Promise<llm.AssistantMessage> {
+  async complete(conversation: types.Conversation) {
     // Convert generic messages to OpenAI format
     const openaiMessages = toOpenAIMessages(conversation.messages);
     const openaiTools = conversation.tools.map(toOpenAITool);
@@ -57,19 +55,20 @@ export class OpenAI implements llm.LLM {
       tool_choice: conversation.tools.length > 0 ? 'auto' : undefined
     }, endpoint);
 
-    this.usage.inputTokens += response.usage?.prompt_tokens ?? 0;
-    this.usage.outputTokens += response.usage?.completion_tokens ?? 0;
-
     const message = response.choices[0].message;
-
     const openaiToolCalls = message.tool_calls || [];
     const toolCalls = openaiToolCalls.map(toToolCall);
 
-    return {
+    const result: types.AssistantMessage = {
       role: 'assistant',
       content: message.content || '',
-      toolCalls
+      toolCalls,
     };
+    const usage: types.Usage = {
+      input: response.usage?.prompt_tokens ?? 0,
+      output: response.usage?.completion_tokens ?? 0,
+    };
+    return { result, usage };
   }
 }
 
@@ -92,7 +91,7 @@ async function create(body: openai.OpenAI.Chat.Completions.ChatCompletionCreateP
   return await response.json() as openai.OpenAI.Chat.Completions.ChatCompletion;
 }
 
-function toOpenAIMessages(messages: llm.Message[]): openai.OpenAI.Chat.Completions.ChatCompletionMessageParam[] {
+function toOpenAIMessages(messages: types.Message[]): openai.OpenAI.Chat.Completions.ChatCompletionMessageParam[] {
   const openaiMessages: openai.OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [];
 
   for (const message of messages) {
@@ -147,7 +146,7 @@ function toOpenAIMessages(messages: llm.Message[]): openai.OpenAI.Chat.Completio
   return openaiMessages;
 }
 
-function toOpenAITool(tool: Tool): openai.OpenAI.Chat.Completions.ChatCompletionTool {
+function toOpenAITool(tool: types.Tool): openai.OpenAI.Chat.Completions.ChatCompletionTool {
   return {
     type: 'function',
     function: {
@@ -158,7 +157,7 @@ function toOpenAITool(tool: Tool): openai.OpenAI.Chat.Completions.ChatCompletion
   };
 }
 
-function toToolCall(toolCall: openai.OpenAI.Chat.Completions.ChatCompletionMessageToolCall): llm.ToolCall {
+function toToolCall(toolCall: openai.OpenAI.Chat.Completions.ChatCompletionMessageToolCall): types.ToolCall {
   return {
     name: toolCall.type === 'function' ? toolCall.function.name : toolCall.custom.name,
     arguments: JSON.parse(toolCall.type === 'function' ? toolCall.function.arguments : toolCall.custom.input),

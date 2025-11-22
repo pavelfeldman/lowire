@@ -14,38 +14,36 @@
  * limitations under the License.
  */
 
-import { OpenAI } from './openai';
-import { Copilot } from './copilot';
-import { Claude } from './claude';
+import { OpenAI } from './providers/openai';
+import { Copilot } from './providers/copilot';
+import { Claude } from './providers/claude';
 
-import type { Tool, ImageContent, TextContent, CallToolResult } from '@modelcontextprotocol/sdk/types.js';
-import type * as llm from './llm';
-
-export type Logger = (category: string, text: string, details?: string) => void;
+import type { ImageContent, TextContent, CallToolResult } from '@modelcontextprotocol/sdk/types.js';
+import type * as types from './types';
 
 export type RunLoopOptions = {
-  tools?: Tool[];
+  tools?: types.Tool[];
   callTool?: (params: { name: string, arguments: any}) => Promise<CallToolResult>;
   maxTurns?: number;
-  resultSchema?: Tool['inputSchema'];
-  logger?: Logger;
+  resultSchema?: types.Schema;
+  logger?: types.Logger;
 };
 
 export class Loop {
-  private _llm: llm.LLM;
+  private _provider: types.Provider;
 
   constructor(loopName: 'openai' | 'copilot' | 'claude' = 'openai') {
-    this._llm = getLlm(loopName);
+    this._provider = getProvider(loopName);
   }
 
   async run<T>(task: string, options: RunLoopOptions = {}): Promise<T> {
-    return runLoop<T>(this._llm, task, options);
+    return runLoop<T>(this._provider, task, options);
   }
 }
 
-async function runLoop<T>(llm: llm.LLM, task: string, options: RunLoopOptions = {}): Promise<T> {
+async function runLoop<T>(provider: types.Provider, task: string, options: RunLoopOptions = {}): Promise<T> {
   const taskContent = `Perform following task: ${task}. Once the task is complete, call the "report_result" tool.`;
-  const allTools: Tool[] = [
+  const allTools: types.Tool[] = [
     ...(options.tools ?? []),
     {
       name: 'report_result',
@@ -54,7 +52,7 @@ async function runLoop<T>(llm: llm.LLM, task: string, options: RunLoopOptions = 
     },
   ];
 
-  const conversation: llm.Conversation = {
+  const conversation: types.Conversation = {
     messages: [{
       role: 'user',
       content: taskContent,
@@ -67,12 +65,12 @@ async function runLoop<T>(llm: llm.LLM, task: string, options: RunLoopOptions = 
   const maxTurns = options.maxTurns || 100;
   for (let iteration = 0; iteration < maxTurns; ++iteration) {
     log('loop:turn', `${iteration + 1} of ${maxTurns}`);
-    const assistantMessage = await llm.complete(conversation);
+    const { result: assistantMessage, usage } = await provider.complete(conversation);
 
     conversation.messages.push(assistantMessage);
     const { content, toolCalls } = assistantMessage;
 
-    log('loop:usage', `input: ${llm.usage.inputTokens}, output: ${llm.usage.outputTokens}`);
+    log('loop:usage', `input: ${usage.input}, output: ${usage.output}`);
     log('loop:assistant', content, JSON.stringify(toolCalls, null, 2));
 
     if (toolCalls.length === 0) {
@@ -138,7 +136,7 @@ async function runLoop<T>(llm: llm.LLM, task: string, options: RunLoopOptions = 
   throw new Error('Failed to perform step, max attempts reached');
 }
 
-function getLlm(loopName: 'openai' | 'copilot' | 'claude'): llm.LLM {
+function getProvider(loopName: 'openai' | 'copilot' | 'claude'): types.Provider {
   if (loopName === 'openai')
     return new OpenAI();
   if (loopName === 'copilot')
@@ -148,7 +146,7 @@ function getLlm(loopName: 'openai' | 'copilot' | 'claude'): llm.LLM {
   throw new Error(`Unknown loop LLM: ${loopName}`);
 }
 
-const defaultResultSchema: Tool['inputSchema'] = {
+const defaultResultSchema: types.Schema = {
   type: 'object',
   properties: {
     result: {

@@ -15,15 +15,13 @@
  */
 
 import type Anthropic from '@anthropic-ai/sdk';
-import type { Tool } from '@modelcontextprotocol/sdk/types';
-
-import type * as llm from './llm';
+import type { Provider } from '../types';
+import type * as types from '../types';
 
 const model = 'claude-sonnet-4-20250514';
 
-export class Claude implements llm.LLM {
+export class Claude implements Provider {
   private _anthropic: Anthropic | undefined;
-  readonly usage: llm.Usage = { inputTokens: 0, outputTokens: 0 };
 
   async anthropic(): Promise<Anthropic> {
     if (!this._anthropic) {
@@ -33,7 +31,7 @@ export class Claude implements llm.LLM {
     return this._anthropic;
   }
 
-  async complete(conversation: llm.Conversation): Promise<llm.AssistantMessage> {
+  async complete(conversation: types.Conversation) {
     const anthropic = await this.anthropic();
     const response = await anthropic.messages.create({
       model,
@@ -41,21 +39,23 @@ export class Claude implements llm.LLM {
       messages: toClaudeMessages(conversation.messages),
       tools: conversation.tools.map(toClaudeTool),
     });
-    this.usage.inputTokens += response.usage.input_tokens;
-    this.usage.outputTokens += response.usage.output_tokens;
 
     const textContent = response.content.filter(block => block.type === 'text').map(block => block.text).join('');
     const toolCalls = response.content.filter(block => block.type === 'tool_use').map(toToolCall);
-
-    return {
+    const result: types.AssistantMessage = {
       role: 'assistant',
       content: textContent,
       toolCalls,
     };
+    const usage: types.Usage = {
+      input: response.usage.input_tokens,
+      output: response.usage.output_tokens,
+    };
+    return { result, usage };
   }
 }
 
-function toClaudeTool(tool: Tool): Anthropic.Messages.Tool {
+function toClaudeTool(tool: types.Tool): Anthropic.Messages.Tool {
   return {
     name: tool.name,
     description: tool.description,
@@ -63,7 +63,7 @@ function toClaudeTool(tool: Tool): Anthropic.Messages.Tool {
   };
 }
 
-function toToolCall(toolCall: Anthropic.Messages.ToolUseBlock): llm.ToolCall {
+function toToolCall(toolCall: Anthropic.Messages.ToolUseBlock): types.ToolCall {
   return {
     name: toolCall.name,
     arguments: toolCall.input as any,
@@ -71,7 +71,7 @@ function toToolCall(toolCall: Anthropic.Messages.ToolUseBlock): llm.ToolCall {
   };
 }
 
-function toClaudeMessages(messages: llm.Message[]): Anthropic.Messages.MessageParam[] {
+function toClaudeMessages(messages: types.Message[]): Anthropic.Messages.MessageParam[] {
   const claudeMessages: Anthropic.Messages.MessageParam[] = [];
 
   for (const message of messages) {

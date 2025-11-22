@@ -14,7 +14,17 @@
  * limitations under the License.
  */
 
-import type { Tool } from '@modelcontextprotocol/sdk/types.js';
+export type Schema = {
+  type: 'object';
+  properties?: unknown | null;
+  required?: Array<string> | null;
+};
+
+export type Tool = {
+  name: string;
+  description: string;
+  inputSchema: Schema;
+};
 
 export type ToolCall = {
   name: string;
@@ -22,18 +32,27 @@ export type ToolCall = {
   id: string;
 };
 
-export type UserMessage = {
+export type Usage = {
+  input: number;
+  output: number;
+};
+
+export type BaseMessage = {
+  role: 'user' | 'assistant' | 'tool';
+};
+
+export type UserMessage = BaseMessage & {
   role: 'user';
   content: string;
 };
 
-export type AssistantMessage = {
+export type AssistantMessage = BaseMessage & {
   role: 'assistant';
   content: string;
   toolCalls: ToolCall[];
 };
 
-export type ToolResultMessage = {
+export type ToolResultMessage = BaseMessage & {
   role: 'tool';
   toolCallId: string;
   content: string;
@@ -50,12 +69,13 @@ export type Conversation = {
   tools: Tool[];
 };
 
-export type Usage = {
-  inputTokens: number;
-  outputTokens: number;
-};
-
-export interface LLM {
+export interface Model {
   readonly usage: Usage;
   complete(conversation: Conversation): Promise<AssistantMessage>;
 }
+
+export interface Provider {
+  complete(conversation: Conversation): Promise<{ result: AssistantMessage, usage: Usage }>;
+}
+
+export type Logger = (category: string, text: string, details?: string) => void;

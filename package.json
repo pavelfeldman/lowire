@@ -20,6 +20,8 @@
     "lint-fix": "eslint . --fix",
     "watch": "tsc --watch",
     "clean": "rm -rf ./lib",
+    "test": "playwright test",
+    "ctest": "playwright test --project=copilot",
     "deploy": "npm run clean && npm run build && npm publish"
   },
   "exports": {

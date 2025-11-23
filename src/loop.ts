@@ -22,7 +22,7 @@ import type * as types from './types';
 
 export type RunLoopOptions = {
   tools?: types.Tool[];
-  callTool?: (params: { name: string, arguments: any}) => Promise<types.ToolResult>;
+  callTool?: types.ToolCallback;
   maxTurns?: number;
   resultSchema?: types.Schema;
   logger?: types.Logger;

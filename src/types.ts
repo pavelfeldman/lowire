@@ -32,6 +32,11 @@ export type ToolCall = {
   id: string;
 };
 
+export type ToolCallback = (params: {
+  name: string;
+  arguments: any;
+}) => Promise<ToolResult>;
+
 export type Usage = {
   input: number;
   output: number;

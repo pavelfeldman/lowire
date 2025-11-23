@@ -19,19 +19,26 @@ import path from 'path';
 
 import { test as baseTest } from '@playwright/test';
 import { Loop } from '../lib/loop';
-export { expect } from '@playwright/test';
+import { TestServer } from './testServer';
 
 import type * as types from '../src/types';
+
+export { expect } from '@playwright/test';
 
 export type TestOptions = {
   provider: 'openai' | 'copilot' | 'claude';
 };
 
-export type TestFixtures = {
+type TestFixtures = {
   loop: Loop;
+  server: TestServer;
 };
 
-export const test = baseTest.extend<TestOptions & TestFixtures>({
+type WorkerFixtures = {
+  _workerServer: TestServer;
+};
+
+export const test = baseTest.extend<TestOptions & TestFixtures, WorkerFixtures>({
   provider: ['copilot', { option: true }],
   loop: async ({ provider }, use) => {
     const cacheFile = path.join(__dirname, '__cache__', sanitizeFileName(test.info().titlePath.join(' ')) + '.json');
@@ -49,7 +56,19 @@ export const test = baseTest.extend<TestOptions & TestFixtures>({
       await fs.promises.mkdir(path.dirname(cacheFile), { recursive: true });
       await fs.promises.writeFile(cacheFile, JSON.stringify(caches.after, null, 2));
     }
-  }
+  },
+
+  _workerServer: [async ({ }, use, workerInfo) => {
+    const port = 8907 + workerInfo.workerIndex * 2;
+    const server = await TestServer.create(port);
+    await use(server);
+    await server.stop();
+  }, { scope: 'worker' }],
+
+  server: async ({ _workerServer }, use) => {
+    _workerServer.reset();
+    await use(_workerServer);
+  },
 });
 
 function sanitizeFileName(name: string): string {

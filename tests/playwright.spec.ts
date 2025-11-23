@@ -24,17 +24,22 @@ import { ListRootsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { test, expect } from './fixtures';
 import * as types from '../lib/types';
 
-test('integration', async ({ loop }, testInfo) => {
+test('integration', async ({ loop, server }, testInfo) => {
+  server.setContent('/', `
+    <html>
+      <button>Welcome to tiny-loop!</button>
+    </html>
+  `, 'text/html');
   const client = await connectToPlaywrightMcp(testInfo.outputPath());
   const { tools } = await client.listTools() as { tools: types.Tool[] };
   const callTool: types.ToolCallback = async params => {
     return await client.callTool({ name: params.name, arguments: params.arguments }) as types.ToolResult;
   };
-  const result = await loop.run<{ result: string }>('Navigate to playwright.dev using Playwright MCP and tell me what is on that page', {
+  const result = await loop.run<{ result: string }>(`Navigate to ${server.PREFIX} via Playwright MCP and tell me what is on that page`, {
     tools,
     callTool,
   });
-  expect(result.result).toContain('Any browser');
+  expect(result.result).toContain('Welcome to tiny-loop!');
 });
 
 async function connectToPlaywrightMcp(workspaceDir: string): Promise<Client> {

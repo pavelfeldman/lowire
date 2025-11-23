@@ -41,7 +41,7 @@ type WorkerFixtures = {
 export const test = baseTest.extend<TestOptions & TestFixtures, WorkerFixtures>({
   provider: ['copilot', { option: true }],
   loop: async ({ provider }, use) => {
-    const cacheFile = path.join(__dirname, '__cache__', sanitizeFileName(test.info().titlePath.join(' ')) + '.json');
+    const cacheFile = path.join(__dirname, '__cache__', provider, sanitizeFileName(test.info().titlePath.join(' ')) + '.json');
     const dataBefore = await fs.promises.readFile(cacheFile, 'utf-8').catch(() => '{}');
     let cache: types.ReplayCache = {};
     try {

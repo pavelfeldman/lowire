@@ -17,37 +17,28 @@
 import crypto from 'crypto';
 import * as types from './types';
 
-export class CachingProvider implements types.Provider {
-  readonly name: string;
-  private _provider: types.Provider;
-  private _caches: types.ReplayCaches;
-
-  constructor(provider: types.Provider, caches: types.ReplayCaches) {
-    this.name = provider.name;
-    this._provider = provider;
-    this._caches = caches;
-  }
-
-  async complete(conversation: types.Conversation) {
+export function cachedComplete(provider: types.Provider, caches: types.ReplayCaches): types.Provider['complete'] {
+  return async (conversation: types.Conversation) => {
     const key = conversationHash(conversation);
-    if (this._caches.before[key]) {
-      this._caches.after[key] = this._caches.before[key];
-      return this._caches.before[key] ?? this._caches.after[key];
+    if (caches.before[key]) {
+      caches.after[key] = caches.before[key];
+      return caches.before[key] ?? caches.after[key];
     }
-    if (this._caches.after[key])
-      return this._caches.after[key];
-    const result = await this._provider.complete(conversation);
-    this._caches.after[key] = result;
+    if (caches.after[key])
+      return caches.after[key];
+    const result = await provider.complete(conversation);
+    caches.after[key] = result;
     return result;
-  }
+  };
 }
 
 function conversationHash(conversation: types.Conversation): string {
   return calculateSha1(JSON.stringify(conversation));
 }
 
-function calculateSha1(buffer: Buffer | string): string {
+function calculateSha1(text: string): string {
+  text = text.replace(/localhost:\d+/g, 'localhost:PORT');
   const hash = crypto.createHash('sha1');
-  hash.update(buffer);
+  hash.update(text);
   return hash.digest('hex');
 }

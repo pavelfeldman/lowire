@@ -1,0 +1,49 @@
+{
+  "3d57cb65dd1353ab31f6a88a908101536cbcd9d2": {
+    "result": {
+      "role": "assistant",
+      "content": "Capture an image to identify the number visible on it",
+      "toolCalls": [
+        {
+          "name": "capture_image",
+          "arguments": {},
+          "id": "toolu_vrtx_01VUZDeDV44jwdGjWhphQGvG"
+        }
+      ]
+    },
+    "usage": {
+      "input": 744,
+      "output": 63
+    }
+  },
+  "ebfb4d1e674ee5b09782886f8fc8b8682fc2b606": {
+    "result": {
+      "role": "assistant",
+      "content": "I can see the number 42 in the image.",
+      "toolCalls": []
+    },
+    "usage": {
+      "input": 827,
+      "output": 15
+    }
+  },
+  "4b055660b4962d8fdb7726bd3ffaa9f22179ad64": {
+    "result": {
+      "role": "assistant",
+      "content": "",
+      "toolCalls": [
+        {
+          "name": "report_result",
+          "arguments": {
+            "result": 42
+          },
+          "id": "toolu_vrtx_01TrooLbaQfDTaRqebRnRBNG"
+        }
+      ]
+    },
+    "usage": {
+      "input": 842,
+      "output": 53
+    }
+  }
+}

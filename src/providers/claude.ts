@@ -22,6 +22,7 @@ const model = 'claude-sonnet-4-20250514';
 
 export class Claude implements Provider {
   readonly name = 'claude';
+  readonly systemPrompt = systemPrompt;
   private _anthropic: Anthropic | undefined;
 
   async anthropic(): Promise<Anthropic> {
@@ -164,3 +165,8 @@ function toClaudeMessages(messages: types.Message[]): Anthropic.Messages.Message
 
   return claudeMessages;
 }
+
+const systemPrompt = `
+- When you use a tool, you may provide a brief thought or explanation in the content field
+  immediately before the tool_call. Do not split this into separate messages.
+`;

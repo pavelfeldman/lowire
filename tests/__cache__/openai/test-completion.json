@@ -1,0 +1,21 @@
+{
+  "4466b1854dc76d2fccde89d5224ec0874872b1f9": {
+    "result": {
+      "role": "assistant",
+      "content": "",
+      "toolCalls": [
+        {
+          "name": "report_result",
+          "arguments": {
+            "result": "Hello world"
+          },
+          "id": "call_rgtRfXDW6xTpXJgpkLVxvV62"
+        }
+      ]
+    },
+    "usage": {
+      "input": 111,
+      "output": 15
+    }
+  }
+}

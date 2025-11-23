@@ -1,0 +1,21 @@
+{
+  "0a21a03bcfe7cccbcce338d73ee35122980d9807": {
+    "result": {
+      "role": "assistant",
+      "content": "",
+      "toolCalls": [
+        {
+          "name": "report_result",
+          "arguments": {
+            "magic": 42
+          },
+          "id": "call_ufmeTsgVgDDLbotw8uoHso02"
+        }
+      ]
+    },
+    "usage": {
+      "input": 107,
+      "output": 14
+    }
+  }
+}

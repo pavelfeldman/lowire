@@ -26,6 +26,7 @@ export type Endpoint = {
 
 export class OpenAI implements types.Provider {
   readonly name: string = 'openai';
+  readonly systemPrompt: string = systemPrompt;
   private _endpoint: Endpoint | undefined;
 
   async endpoint(): Promise<Endpoint> {
@@ -193,3 +194,8 @@ function toToolCall(toolCall: openai.OpenAI.Chat.Completions.ChatCompletionMessa
     id: toolCall.id,
   };
 }
+
+const systemPrompt = `
+- When you use a tool, you may provide a brief thought or explanation in the content field
+  immediately before the tool_call. Do not split this into separate messages.
+`;

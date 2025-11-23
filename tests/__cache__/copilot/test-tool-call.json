@@ -1,0 +1,41 @@
+{
+  "211e9fe13a6804d333f83ea1923b682b215c77db": {
+    "result": {
+      "role": "assistant",
+      "content": "Adding 2 and 3 as requested by the user",
+      "toolCalls": [
+        {
+          "name": "add",
+          "arguments": {
+            "a": 2,
+            "b": 3
+          },
+          "id": "toolu_vrtx_011BEsd7k8wp3fvFBd6ko4ZF"
+        }
+      ]
+    },
+    "usage": {
+      "input": 791,
+      "output": 97
+    }
+  },
+  "cac4baf0d38693feac029f47685e36064b80c5e7": {
+    "result": {
+      "role": "assistant",
+      "content": "",
+      "toolCalls": [
+        {
+          "name": "report_result",
+          "arguments": {
+            "sum": 5
+          },
+          "id": "toolu_vrtx_01Lqv3ecbcLLUC4FxeAjYSAo"
+        }
+      ]
+    },
+    "usage": {
+      "input": 889,
+      "output": 53
+    }
+  }
+}

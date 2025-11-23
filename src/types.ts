@@ -104,7 +104,9 @@ export interface Model {
 
 export interface Provider {
   name: string;
+  systemPrompt: string;
   complete(conversation: Conversation): Promise<{ result: AssistantMessage, usage: Usage }>;
+  wrapTool?(tool: Tool): Tool;
 }
 
 export type Logger = (category: string, text: string, details?: string) => void;

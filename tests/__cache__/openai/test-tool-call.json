@@ -1,26 +1,25 @@
 {
-  "a58700cb6e0c80d3551b4675ab8139bf96153ed0": {
+  "aa61c354897264c8a11e082404723723c39f7849": {
     "result": {
       "role": "assistant",
-      "content": "",
+      "content": "I'll use the add tool to calculate the sum of 2 and 3.\n\n",
       "toolCalls": [
         {
           "name": "add",
           "arguments": {
             "a": 2,
-            "b": 3,
-            "intent": "Adding 2 and 3 as requested by the user"
+            "b": 3
           },
-          "id": "toolu_vrtx_01PApXjwM8dfwiMfRFYZS5Jq"
+          "id": "call_g12kzDltNc2HQbnZVduEWxHm"
         }
       ]
     },
     "usage": {
-      "input": 771,
-      "output": 97
+      "input": 157,
+      "output": 34
     }
   },
-  "bcc66376419ca84dd92893f468a0abeddbb8005d": {
+  "e970ccf98ca3aa769ac8f9a7578c800b856fdaec": {
     "result": {
       "role": "assistant",
       "content": "",
@@ -30,13 +29,13 @@
           "arguments": {
             "sum": 5
           },
-          "id": "toolu_vrtx_011WeVgURJaTdYB77fGABJhz"
+          "id": "call_kGvwRfzb3zAUkEwsYHhTzg4f"
         }
       ]
     },
     "usage": {
-      "input": 885,
-      "output": 53
+      "input": 206,
+      "output": 14
     }
   }
 }

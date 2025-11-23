@@ -15,7 +15,7 @@
  */
 
 import { getProvider } from './providers/registry';
-import { CachingProvider } from './cache';
+import { cachedComplete } from './cache';
 import { prune } from './prune';
 
 import type * as types from './types';
@@ -30,119 +30,113 @@ export type RunLoopOptions = {
 
 export class Loop {
   private _provider: types.Provider;
-  private _caches: types.ReplayCaches | undefined;
+  private _complete: types.Provider['complete'];
 
   constructor(loopName: 'openai' | 'copilot' | 'claude', options?: { caches?: types.ReplayCaches }) {
     this._provider = getProvider(loopName);
-    this._caches = options?.caches;
+    this._complete = options?.caches ? cachedComplete(this._provider, options.caches) : this._provider.complete.bind(this._provider);
   }
 
   async run<T>(task: string, options: RunLoopOptions = {}): Promise<T> {
-    const provider = this._caches ? new CachingProvider(this._provider, this._caches) : this._provider;
-    return runLoop<T>(provider, task, options);
-  }
-}
+    const allTools: types.Tool[] = [
+      ...(options.tools ?? []).map(tool => this._provider.wrapTool?.(tool) ?? tool),
+      {
+        name: 'report_result',
+        description: 'Report the result of the task.',
+        inputSchema: options.resultSchema ?? defaultResultSchema,
+      },
+    ];
 
-async function runLoop<T>(provider: types.Provider, task: string, options: RunLoopOptions): Promise<T> {
-  const allTools: types.Tool[] = [
-    ...(options.tools?.map(decorateWithIntent) ?? []),
-    {
-      name: 'report_result',
-      description: 'Report the result of the task.',
-      inputSchema: options.resultSchema ?? defaultResultSchema,
-    },
-  ];
-
-  const conversation: types.Conversation = {
-    messages: [{
-      role: 'system',
-      content: systemPrompt,
-    }, {
-      role: 'user',
-      content: task,
-    }],
-    tools: allTools,
-  };
-
-  const log = options.logger || (() => {});
-  log('loop:loop', `Starting ${provider.name} loop`, task);
-  const maxTurns = options.maxTurns || 100;
-  for (let iteration = 0; iteration < maxTurns; ++iteration) {
-    log('loop:turn', `${iteration + 1} of (max ${maxTurns})`);
-    const { result: assistantMessage, usage } = await provider.complete(conversation);
-
-    prune(conversation);
-
-    conversation.messages.push(assistantMessage);
-    const { content, toolCalls } = assistantMessage;
-
-    log('loop:usage', `input: ${usage.input}, output: ${usage.output}`);
-    log('loop:assistant', content, JSON.stringify(toolCalls, null, 2));
-
-    if (toolCalls.length === 0) {
-      conversation.messages.push({
+    const conversation: types.Conversation = {
+      messages: [{
+        role: 'system',
+        content: systemPrompt + '\n' + this._provider.systemPrompt,
+      }, {
         role: 'user',
-        content: `Tool call expected. Call the "report_result" tool when the task is complete.`,
-      });
-      continue;
-    }
+        content: task,
+      }],
+      tools: allTools,
+    };
 
-    const toolResults: Array<{ toolCallId: string; result: types.ToolResult }> = [];
-    for (const toolCall of toolCalls) {
-      const { name, arguments: args, id } = toolCall;
+    const log = options.logger || (() => {});
+    log('loop:loop', `Starting ${this._provider.name} loop`, task);
+    const maxTurns = options.maxTurns || 100;
+    for (let iteration = 0; iteration < maxTurns; ++iteration) {
+      log('loop:turn', `${iteration + 1} of (max ${maxTurns})`);
+      const { result: assistantMessage, usage } = await this._complete(conversation);
+      prune(conversation);
 
-      log('loop:call-tool', name, JSON.stringify(args, null, 2));
-      if (name === 'report_result')
-        return args;
+      conversation.messages.push(assistantMessage);
+      const { content, toolCalls } = assistantMessage;
 
-      try {
-        const result = await options.callTool!({
-          name,
-          arguments: args,
+      log('loop:usage', `input: ${usage.input}, output: ${usage.output}`);
+      log('loop:assistant', content, JSON.stringify(toolCalls, null, 2));
+
+      if (toolCalls.length === 0) {
+        conversation.messages.push({
+          role: 'user',
+          content: `Tool call expected. Call the "report_result" tool when the task is complete.`,
         });
+        continue;
+      }
 
-        const text = result.content.filter(part => part.type === 'text').map(part => part.text).join('\n');
-        log('loop:tool-result', text, JSON.stringify(result, null, 2));
+      const toolResults: Array<{ toolCallId: string; result: types.ToolResult }> = [];
+      for (const toolCall of toolCalls) {
+        const { name, arguments: args, id } = toolCall;
 
-        toolResults.push({
-          toolCallId: id,
-          result,
-        });
-      } catch (error) {
-        const errorMessage = `Error while executing tool "${name}": ${error instanceof Error ? error.message : String(error)}\n\nPlease try to recover and complete the task.`;
-        log('loop:tool-error', errorMessage, String(error));
+        log('loop:call-tool', name, JSON.stringify(args, null, 2));
+        if (name === 'report_result')
+          return args;
 
-        toolResults.push({
-          toolCallId: id,
-          result: {
-            content: [{ type: 'text', text: errorMessage }],
-            isError: true,
-          }
-        });
+        try {
+          const result = await options.callTool!({
+            name,
+            arguments: args,
+          });
 
-        // Skip remaining tool calls for this iteration
-        for (const remainingToolCall of toolCalls.slice(toolCalls.indexOf(toolCall) + 1)) {
+          const text = result.content.filter(part => part.type === 'text').map(part => part.text).join('\n');
+          log('loop:tool-result', text, JSON.stringify(result, null, 2));
+
           toolResults.push({
-            toolCallId: remainingToolCall.id,
+            toolCallId: id,
+            result,
+          });
+        } catch (error) {
+          const errorMessage = `Error while executing tool "${name}": ${error instanceof Error ? error.message : String(error)}\n\nPlease try to recover and complete the task.`;
+          log('loop:tool-error', errorMessage, String(error));
+
+          toolResults.push({
+            toolCallId: id,
             result: {
-              content: [{ type: 'text', text: `This tool call is skipped due to previous error.` }],
+              content: [{ type: 'text', text: errorMessage }],
               isError: true,
             }
           });
+
+          // Skip remaining tool calls for this iteration
+          for (const remainingToolCall of toolCalls.slice(toolCalls.indexOf(toolCall) + 1)) {
+            toolResults.push({
+              toolCallId: remainingToolCall.id,
+              result: {
+                content: [{ type: 'text', text: `This tool call is skipped due to previous error.` }],
+                isError: true,
+              }
+            });
+          }
+          break;
         }
-        break;
+      }
+
+      for (const toolResult of toolResults) {
+        conversation.messages.push({
+          role: 'tool',
+          ...toolResult,
+        });
       }
     }
 
-    for (const toolResult of toolResults) {
-      conversation.messages.push({
-        role: 'tool',
-        ...toolResult,
-      });
-    }
+    throw new Error('Failed to perform step, max attempts reached');
   }
-
-  throw new Error('Failed to perform step, max attempts reached');
 }
 
 const defaultResultSchema: types.Schema = {
@@ -155,24 +149,6 @@ const defaultResultSchema: types.Schema = {
   required: ['result'],
 };
 
-const decorateWithIntent = (tool: types.Tool): types.Tool => {
-  const inputSchema = tool.inputSchema || { type: 'object', properties: {} };
-  inputSchema.properties = {
-    intent: { type: 'string', description: 'Describe the intent of this tool call' },
-    ...inputSchema.properties || {},
-  };
-  return {
-    ...tool,
-    inputSchema,
-  };
-};
-
 const systemPrompt = `
-You are an autonomous agent designed to complete tasks by interacting with tools.
-
-### Steps to perform
-- Your reply MUST be a tool call and nothing but the tool call.
-- NEVER respond with text messages.
-- Do NOT describe your plan, do NOT explain what you are doing.
-- Provide thoughts in the 'intent property of the tool calls instead.
+You are an autonomous agent designed to complete tasks by interacting with tools. Perform the user task.
 `;

@@ -43,7 +43,12 @@ export type Usage = {
 };
 
 export type BaseMessage = {
-  role: 'user' | 'assistant' | 'tool';
+  role: 'system' | 'user' | 'assistant' | 'tool';
+};
+
+export type SystemMessage = BaseMessage & {
+  role: 'system';
+  content: string;
 };
 
 export type UserMessage = BaseMessage & {
@@ -82,6 +87,7 @@ export type ToolResultMessage = BaseMessage & {
 };
 
 export type Message =
+  | SystemMessage
   | UserMessage
   | AssistantMessage
   | ToolResultMessage;

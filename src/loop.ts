@@ -46,9 +46,8 @@ export class Loop {
 }
 
 async function runLoop<T>(provider: types.Provider, task: string, options: RunLoopOptions): Promise<T> {
-  const taskContent = `Perform following task: ${task}. Once the task is complete, call the "report_result" tool.`;
   const allTools: types.Tool[] = [
-    ...(options.tools ?? []),
+    ...(options.tools?.map(decorateWithIntent) ?? []),
     {
       name: 'report_result',
       description: 'Report the result of the task.',
@@ -58,14 +57,17 @@ async function runLoop<T>(provider: types.Provider, task: string, options: RunLo
 
   const conversation: types.Conversation = {
     messages: [{
+      role: 'system',
+      content: systemPrompt,
+    }, {
       role: 'user',
-      content: taskContent,
+      content: task,
     }],
     tools: allTools,
   };
 
   const log = options.logger || (() => {});
-  log('loop:loop', `Starting ${provider.name} loop`, taskContent);
+  log('loop:loop', `Starting ${provider.name} loop`, task);
   const maxTurns = options.maxTurns || 100;
   for (let iteration = 0; iteration < maxTurns; ++iteration) {
     log('loop:turn', `${iteration + 1} of (max ${maxTurns})`);
@@ -164,3 +166,25 @@ const defaultResultSchema: types.Schema = {
   },
   required: ['result'],
 };
+
+const decorateWithIntent = (tool: types.Tool): types.Tool => {
+  const inputSchema = tool.inputSchema || { type: 'object', properties: {} };
+  inputSchema.properties = {
+    intent: { type: 'string', description: 'Describe the intent of this tool call' },
+    ...inputSchema.properties || {},
+  };
+  return {
+    ...tool,
+    inputSchema,
+  };
+};
+
+const systemPrompt = `
+You are an autonomous agent designed to complete tasks by interacting with tools.
+
+### Steps to perform
+- Your reply MUST be a tool call and nothing but the tool call.
+- NEVER respond with text messages.
+- Do NOT describe your plan, do NOT explain what you are doing.
+- Provide thoughts in the 'intent property of the tool calls instead.
+`;

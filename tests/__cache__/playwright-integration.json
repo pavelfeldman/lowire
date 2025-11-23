@@ -1,0 +1,41 @@
+{
+  "2a70f407f33fd76dd13c0a2580c4fcc6148f2f5c": {
+    "result": {
+      "role": "assistant",
+      "content": "",
+      "toolCalls": [
+        {
+          "name": "browser_navigate",
+          "arguments": {
+            "url": "https://playwright.dev",
+            "intent": "Navigate to playwright.dev to see what content is on the page"
+          },
+          "id": "toolu_vrtx_013fH2eGBzukL1PzQetcQWdg"
+        }
+      ]
+    },
+    "usage": {
+      "input": 3574,
+      "output": 86
+    }
+  },
+  "ecdfe8eece9ceaa25c937b250a1d19f7f07363df": {
+    "result": {
+      "role": "assistant",
+      "content": "",
+      "toolCalls": [
+        {
+          "name": "report_result",
+          "arguments": {
+            "result": "The playwright.dev homepage contains:\n\n**Main Heading:** \"Playwright enables reliable end-to-end testing for modern web apps.\"\n\n**Key Features Highlighted:**\n1. **Any browser • Any platform • One API** - Cross-browser support (Chromium, WebKit, Firefox), cross-platform (Windows, Linux, macOS), and cross-language support (TypeScript, JavaScript, Python, .NET, Java)\n\n2. **Resilient • No flaky tests** - Auto-wait functionality, web-first assertions, and tracing capabilities\n\n3. **No trade-offs • No limits** - Multiple tabs/origins/users support, trusted events, and shadow DOM support\n\n4. **Full isolation • Fast execution** - Browser contexts for test isolation and authentication state reuse\n\n5. **Powerful Tooling** - Includes Codegen for test generation, Playwright Inspector for debugging, and Trace Viewer for test failure investigation\n\n**Companies Using Playwright:** VS Code, Bing, Outlook, Disney+ Hotstar, Material UI, ING, Adobe, React Navigation, and Accessibility Insights\n\n**Navigation:** Links to documentation, training resources, community channels (Stack Overflow, Discord, Twitter, LinkedIn), and GitHub repository with 79k+ stars\n\nThe page is a comprehensive introduction to Playwright as an end-to-end testing framework for modern web applications."
+          },
+          "id": "toolu_vrtx_014UkubQnsF2XuYtYbnJZxvb"
+        }
+      ]
+    },
+    "usage": {
+      "input": 6898,
+      "output": 352
+    }
+  }
+}

@@ -116,6 +116,14 @@ function toOpenAIMessages(messages: types.Message[]): openai.OpenAI.Chat.Complet
   const openaiMessages: openai.OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [];
 
   for (const message of messages) {
+    if (message.role === 'system') {
+      openaiMessages.push({
+        role: 'system',
+        content: message.content
+      });
+      continue;
+    }
+
     if (message.role === 'user') {
       openaiMessages.push({
         role: 'user',

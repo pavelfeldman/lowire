@@ -76,7 +76,7 @@ test('tool call - image reply', async ({ loop }) => {
 
   const callTool: types.ToolCallback = async params => {
     expect(params.name).toBe('capture_image');
-    const data = await fs.promises.readFile(path.resolve(__dirname, '42.png'));
+    const data = await fs.promises.readFile(path.resolve(__dirname, 'assets/42.png'));
     return {
       content: [{ type: 'image', mimeType: 'image/png', data: data.toString('base64') }]
     };

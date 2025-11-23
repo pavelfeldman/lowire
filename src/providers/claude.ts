@@ -97,7 +97,7 @@ function toClaudeMessages(messages: types.Message[]): Anthropic.Messages.Message
   const claudeMessages: Anthropic.Messages.MessageParam[] = [];
 
   for (const message of messages) {
-    if (message.role === 'user') {
+    if (message.role === 'user' || message.role === 'system') {
       claudeMessages.push({
         role: 'user',
         content: message.content

@@ -17,26 +17,22 @@
 import fs from 'fs';
 import path from 'path';
 
-import { Loop } from '../lib/loop';
 import { test, expect } from './fixtures';
 import * as types from '../lib/types';
 
-test('complete', async ({ provider }) => {
-  const loop = new Loop(provider);
+test('completion', async ({ loop }) => {
   const result = await loop.run('This is a test, reply with just "Hello world"');
   expect(result).toEqual({ result: 'Hello world' });
 });
 
-test('typed reply', async ({ provider }) => {
-  const loop = new Loop(provider);
+test('typed reply', async ({ loop }) => {
   const result = await loop.run('Reply with 42 using the given schema', {
     resultSchema: { type: 'object', properties: { magic: { type: 'number' } }, required: ['magic'] },
   });
   expect(result).toEqual({ magic: 42 });
 });
 
-test('tool call', async ({ provider }) => {
-  const loop = new Loop(provider);
+test('tool call', async ({ loop }) => {
   const tools: types.Tool[] = [
     {
       name: 'add',
@@ -69,8 +65,7 @@ test('tool call', async ({ provider }) => {
   expect(result).toEqual({ sum: 5 });
 });
 
-test('tool call - image reply', async ({ provider }) => {
-  const loop = new Loop(provider);
+test('tool call - image reply', async ({ loop }) => {
   const tools: types.Tool[] = [
     {
       name: 'capture_image',

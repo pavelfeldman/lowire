@@ -102,3 +102,9 @@ export interface Provider {
 }
 
 export type Logger = (category: string, text: string, details?: string) => void;
+
+export type ReplayCache = Record<string, { result: AssistantMessage, usage: Usage }>;
+export type ReplayCaches = {
+  before: ReplayCache;
+  after: ReplayCache;
+};

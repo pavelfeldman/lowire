@@ -1,0 +1,63 @@
+{
+  "655cbcb8d1a692218f614ef85254f31e4ed10cff": {
+    "result": {
+      "role": "assistant",
+      "content": "I'll help you add 2 and 3 using the add tool, and then report the result.",
+      "toolCalls": []
+    },
+    "usage": {
+      "input": 688,
+      "output": 92
+    }
+  },
+  "81204241e14de43f326d05386b1ded03dad55a08": {
+    "result": {
+      "role": "assistant",
+      "content": "I'll add 2 and 3 using the add tool, then report the result.",
+      "toolCalls": []
+    },
+    "usage": {
+      "input": 735,
+      "output": 89
+    }
+  },
+  "d7657fb8fe8199fd1432ff56c5466ce4c7b45a9f": {
+    "result": {
+      "role": "assistant",
+      "content": "",
+      "toolCalls": [
+        {
+          "name": "add",
+          "arguments": {
+            "a": 2,
+            "b": 3
+          },
+          "id": "toolu_vrtx_014rSuqDwtyDzfYctQ2m4G25"
+        }
+      ]
+    },
+    "usage": {
+      "input": 779,
+      "output": 68
+    }
+  },
+  "47b0aa34d2209ad41f9516c8484c982905e42514": {
+    "result": {
+      "role": "assistant",
+      "content": "",
+      "toolCalls": [
+        {
+          "name": "report_result",
+          "arguments": {
+            "sum": 5
+          },
+          "id": "toolu_vrtx_01Cqkdb6YjRibrsYEHP8SedD"
+        }
+      ]
+    },
+    "usage": {
+      "input": 864,
+      "output": 53
+    }
+  }
+}

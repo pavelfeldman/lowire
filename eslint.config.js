@@ -189,7 +189,7 @@ const noBooleanCompareRules = {
 
 module.exports = [
   {
-    ignores: ["lib/**/*.js", "lib/**/*.d.ts", "index.d.ts"],
+    ignores: ["lib/**/*.js", "lib/**/*.d.ts", "index.d.ts", "tests/**", "playwright.config.ts"],
   },
   {
     files: ["**/*.ts", "**/*.tsx"],

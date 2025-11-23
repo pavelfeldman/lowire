@@ -1,0 +1,82 @@
+{
+  "882b467ec704c6b27d9fe6adb7bfb1b220f5ac59": {
+    "result": {
+      "role": "assistant",
+      "content": "I'll help you capture an image and identify the number on it. Let me start by capturing the image.",
+      "toolCalls": []
+    },
+    "usage": {
+      "input": 644,
+      "output": 59
+    }
+  },
+  "4b2875436df82cb868d052631db812a0204796e1": {
+    "result": {
+      "role": "assistant",
+      "content": "I'll capture the image first to see what number is on it.",
+      "toolCalls": []
+    },
+    "usage": {
+      "input": 690,
+      "output": 51
+    }
+  },
+  "34e3646cf8a267730315ffb1a7bfee0ded934ba1": {
+    "result": {
+      "role": "assistant",
+      "content": "I'll capture the image and identify the number on it.",
+      "toolCalls": []
+    },
+    "usage": {
+      "input": 728,
+      "output": 49
+    }
+  },
+  "c7d8ed801515ecbb925fe9ffe5b286437e231bcf": {
+    "result": {
+      "role": "assistant",
+      "content": "",
+      "toolCalls": [
+        {
+          "name": "capture_image",
+          "arguments": {},
+          "id": "toolu_vrtx_018NHtLVRxfJ2KnFUE35qtgs"
+        }
+      ]
+    },
+    "usage": {
+      "input": 764,
+      "output": 36
+    }
+  },
+  "5ec0c2175153f812e9ca4f22aece72aace09d082": {
+    "result": {
+      "role": "assistant",
+      "content": "I can see the number 42 in the image. Now I'll report this result.",
+      "toolCalls": []
+    },
+    "usage": {
+      "input": 836,
+      "output": 73
+    }
+  },
+  "9f984923f0129d0ee604fb5b0abe1c7f5942e73f": {
+    "result": {
+      "role": "assistant",
+      "content": "",
+      "toolCalls": [
+        {
+          "name": "report_result",
+          "arguments": {
+            "result": 42
+          },
+          "id": "toolu_vrtx_01R6XGDzFZPz4x2HvCSAGEZj"
+        }
+      ]
+    },
+    "usage": {
+      "input": 879,
+      "output": 53
+    }
+  }
+}

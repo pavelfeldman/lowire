@@ -17,6 +17,7 @@
 import { OpenAI } from './providers/openai';
 import { Copilot } from './providers/copilot';
 import { Claude } from './providers/claude';
+import { CachingProvider } from './cache';
 
 import type * as types from './types';
 
@@ -30,17 +31,20 @@ export type RunLoopOptions = {
 
 export class Loop {
   private _provider: types.Provider;
+  private _caches: types.ReplayCaches | undefined;
 
-  constructor(loopName: 'openai' | 'copilot' | 'claude' = 'openai') {
+  constructor(loopName: 'openai' | 'copilot' | 'claude', options?: { caches?: types.ReplayCaches }) {
     this._provider = getProvider(loopName);
+    this._caches = options?.caches;
   }
 
   async run<T>(task: string, options: RunLoopOptions = {}): Promise<T> {
-    return runLoop<T>(this._provider, task, options);
+    const provider = this._caches ? new CachingProvider(this._provider, this._caches) : this._provider;
+    return runLoop<T>(provider, task, options);
   }
 }
 
-async function runLoop<T>(provider: types.Provider, task: string, options: RunLoopOptions = {}): Promise<T> {
+async function runLoop<T>(provider: types.Provider, task: string, options: RunLoopOptions): Promise<T> {
   const taskContent = `Perform following task: ${task}. Once the task is complete, call the "report_result" tool.`;
   const allTools: types.Tool[] = [
     ...(options.tools ?? []),

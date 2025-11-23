@@ -14,13 +14,44 @@
  * limitations under the License.
  */
 
+import fs from 'fs';
+import path from 'path';
+
 import { test as baseTest } from '@playwright/test';
+import { Loop } from '../lib/loop';
 export { expect } from '@playwright/test';
+
+import type * as types from '../src/types';
 
 export type TestOptions = {
   provider: 'openai' | 'copilot' | 'claude';
 };
 
-export const test = baseTest.extend<TestOptions>({
+export type TestFixtures = {
+  loop: Loop;
+};
+
+export const test = baseTest.extend<TestOptions & TestFixtures>({
   provider: ['copilot', { option: true }],
+  loop: async ({ provider }, use) => {
+    const cacheFile = path.join(__dirname, '__cache__', sanitizeFileName(test.info().titlePath.join(' ')) + '.json');
+    const dataBefore = await fs.promises.readFile(cacheFile, 'utf-8').catch(() => '{}');
+    let cache: types.ReplayCache = {};
+    try {
+      cache = JSON.parse(dataBefore) as types.ReplayCache;
+    } catch {
+      cache = {};
+    }
+    const caches: types.ReplayCaches = { before: cache, after: {} };
+    await use(new Loop(provider, { caches }));
+    const dataAfter = JSON.stringify(caches.after, null, 2);
+    if (dataBefore !== dataAfter) {
+      await fs.promises.mkdir(path.dirname(cacheFile), { recursive: true });
+      await fs.promises.writeFile(cacheFile, JSON.stringify(caches.after, null, 2));
+    }
+  }
 });
+
+function sanitizeFileName(name: string): string {
+  return name.replace('.spec.ts', '').replace(/[^a-zA-Z0-9_]+/g, '-');
+}

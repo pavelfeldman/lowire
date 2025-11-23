@@ -18,6 +18,7 @@ import { OpenAI } from './providers/openai';
 import { Copilot } from './providers/copilot';
 import { Claude } from './providers/claude';
 import { CachingProvider } from './cache';
+import { prune } from './prune';
 
 import type * as types from './types';
 
@@ -69,6 +70,8 @@ async function runLoop<T>(provider: types.Provider, task: string, options: RunLo
   for (let iteration = 0; iteration < maxTurns; ++iteration) {
     log('loop:turn', `${iteration + 1} of (max ${maxTurns})`);
     const { result: assistantMessage, usage } = await provider.complete(conversation);
+
+    prune(conversation);
 
     conversation.messages.push(assistantMessage);
     const { content, toolCalls } = assistantMessage;

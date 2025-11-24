@@ -26,7 +26,7 @@ import type * as types from '../src/types';
 export { expect } from '@playwright/test';
 
 export type TestOptions = {
-  provider: 'openai' | 'copilot' | 'claude';
+  provider: 'openai' | 'copilot' | 'claude' | 'gemini';
 };
 
 type TestFixtures = {

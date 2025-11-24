@@ -1,0 +1,38 @@
+{
+  "cbb80310893d266b868aad76b0f2c4043e50cbbc": {
+    "result": {
+      "role": "assistant",
+      "content": "I need to capture an image to see what number is on it.",
+      "toolCalls": [
+        {
+          "name": "capture_image",
+          "arguments": {},
+          "id": "call_ihq4tregin9"
+        }
+      ]
+    },
+    "usage": {
+      "input": 164,
+      "output": 24
+    }
+  },
+  "bd6a1b5ab5caacd9ab084a7deae9502b2b3b8fa0": {
+    "result": {
+      "role": "assistant",
+      "content": "I see the number 42 in the image. I will now report the result.",
+      "toolCalls": [
+        {
+          "name": "report_result",
+          "arguments": {
+            "result": 42
+          },
+          "id": "call_dsg01hdemhh"
+        }
+      ]
+    },
+    "usage": {
+      "input": 458,
+      "output": 34
+    }
+  }
+}

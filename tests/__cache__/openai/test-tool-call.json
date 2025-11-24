@@ -2,7 +2,7 @@
   "ab8fe633fd45b553223a99f05c491f0b8519f0a3": {
     "result": {
       "role": "assistant",
-      "content": "I'll add 2 and 3 using the add tool.",
+      "content": "Let's add 2 and 3 using the add tool.",
       "toolCalls": [
         {
           "name": "add",
@@ -10,7 +10,7 @@
             "a": 2,
             "b": 3
           },
-          "id": "call_GC2IFLTYQAjyEPNBgrTdShyO"
+          "id": "call_qmdEBixujZjERngstsWkTveu"
         }
       ]
     },
@@ -19,7 +19,7 @@
       "output": 30
     }
   },
-  "e4d1b55170553ee426fd6df8a5ce1aae639480a8": {
+  "10d62306e3c06aa1a6de7e998012155283158fcb": {
     "result": {
       "role": "assistant",
       "content": "",
@@ -29,7 +29,7 @@
           "arguments": {
             "sum": 5
           },
-          "id": "call_Oj49l7mGadfTCF4ROvEUDOnI"
+          "id": "call_oyMGwjIDxCoA0mgkBVFs9EZI"
         }
       ]
     },

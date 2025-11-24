@@ -17,15 +17,18 @@
 import { OpenAI } from './openai';
 import { Copilot } from './copilot';
 import { Claude } from './claude';
+import { Gemini } from './gemini';
 
 import * as types from '../types';
 
-export function getProvider(loopName: 'openai' | 'copilot' | 'claude'): types.Provider {
+export function getProvider(loopName: 'openai' | 'copilot' | 'claude' | 'gemini'): types.Provider {
   if (loopName === 'openai')
     return new OpenAI();
   if (loopName === 'copilot')
     return new Copilot();
   if (loopName === 'claude')
     return new Claude();
+  if (loopName === 'gemini')
+    return new Gemini();
   throw new Error(`Unknown loop LLM: ${loopName}`);
 }

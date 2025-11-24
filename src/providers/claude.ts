@@ -15,12 +15,11 @@
  */
 
 import type Anthropic from '@anthropic-ai/sdk';
-import type { Provider } from '../types';
 import type * as types from '../types';
 
 const model = 'claude-sonnet-4-5';
 
-export class Claude implements Provider {
+export class Claude implements types.Provider {
   readonly name = 'claude';
   readonly systemPrompt = systemPrompt;
 

@@ -33,5 +33,11 @@ export default defineConfig<TestOptions>({
         provider: 'claude',
       }
     },
+    {
+      name: 'gemini',
+      use: {
+        provider: 'gemini',
+      }
+    },
   ],
 });

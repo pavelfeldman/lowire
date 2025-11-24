@@ -2,40 +2,40 @@
   "ab8fe633fd45b553223a99f05c491f0b8519f0a3": {
     "result": {
       "role": "assistant",
-      "content": "I'll add 2 and 3 using the add tool.",
+      "content": "",
       "toolCalls": [
         {
           "name": "add",
           "arguments": {
-            "a": 2,
-            "b": 3
+            "b": 3,
+            "a": 2
           },
-          "id": "toolu_01QDkubGDSJiL7JX749hVLcZ"
+          "id": "call_fqi4tm5viqr"
         }
       ]
     },
     "usage": {
-      "input": 750,
-      "output": 84
+      "input": 194,
+      "output": 18
     }
   },
-  "7af43ae266324c8ba1cd6ff98dfedd5001a7f7eb": {
+  "9758b22639ccdd0e13095fea48c722aea2c082b6": {
     "result": {
       "role": "assistant",
-      "content": "The addition is complete! 2 + 3 = 5. Now I'll report this result.",
+      "content": "I have added 2 and 3 and the result is 5.\n",
       "toolCalls": [
         {
           "name": "report_result",
           "arguments": {
             "sum": 5
           },
-          "id": "toolu_01DtjeBqBTrmqe6qJKgsjG6y"
+          "id": "call_m6jwbpmemj"
         }
       ]
     },
     "usage": {
-      "input": 850,
-      "output": 77
+      "input": 229,
+      "output": 31
     }
   }
 }

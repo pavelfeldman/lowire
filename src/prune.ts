@@ -19,7 +19,7 @@ import type * as types from './types';
 export function prune(conversation: types.Conversation) {
   // Replace all image results with empty text.
   for (const message of conversation.messages) {
-    if (message.role === 'tool') {
+    if (message.role === 'tool_result') {
       message.result.content = message.result.content.map(part => {
         if (part.type === 'image')
           return { type: 'text', text: '<pruned>' };

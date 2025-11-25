@@ -2,39 +2,47 @@
   "1abe6a108ee3c89fb9f75c7488ff5c061123ab5f": {
     "result": {
       "role": "assistant",
-      "content": "Okay, I will navigate to the specified URL and inspect the page's content.",
-      "toolCalls": [
+      "content": [
         {
+          "type": "text",
+          "text": "I need to navigate to the specified URL and describe the page content. I'll use the `browser_navigate` tool for this and analyze the resulting snapshot."
+        },
+        {
+          "type": "tool_call",
           "name": "browser_navigate",
           "arguments": {
             "url": "http://localhost:<PORT>/"
           },
-          "id": "call_2f5yyq1z1o4"
+          "id": "call_h9qy1kzkfc"
         }
       ]
     },
     "usage": {
       "input": 2017,
-      "output": 40
+      "output": 56
     }
   },
-  "c09b89dfab877fa1b6fbc6adfd380a843857d7aa": {
+  "8abe101ac9d4365ff193fc7666cfac1477adea83": {
     "result": {
       "role": "assistant",
-      "content": "The page contains a single button with the text \"Welcome to tiny-loop!\". I will now report this as the result.",
-      "toolCalls": [
+      "content": [
         {
+          "type": "text",
+          "text": "The page contains a button with the text \"Welcome to tiny-loop!\".\n"
+        },
+        {
+          "type": "tool_call",
           "name": "report_result",
           "arguments": {
-            "result": "The page contains a single button with the text \"Welcome to tiny-loop!\"."
+            "result": "The page contains a button with the text \"Welcome to tiny-loop!\"."
           },
-          "id": "call_9whrq02pi1"
+          "id": "call_lakavhv318"
         }
       ]
     },
     "usage": {
-      "input": 2159,
-      "output": 56
+      "input": 2175,
+      "output": 46
     }
   }
 }

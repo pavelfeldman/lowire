@@ -2,14 +2,14 @@
   "b5bfd853a52dfa556220777ccac2163c33b48984": {
     "result": {
       "role": "assistant",
-      "content": "",
-      "toolCalls": [
+      "content": [
         {
+          "type": "tool_call",
           "name": "report_result",
           "arguments": {
             "magic": 42
           },
-          "id": "toolu_vrtx_01RS2pmgnmcksp2xiFGmmTWZ"
+          "id": "toolu_vrtx_01Ad1nAdGjtnwwsvThhSVd3U"
         }
       ]
     },

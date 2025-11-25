@@ -2,36 +2,40 @@
   "cbb80310893d266b868aad76b0f2c4043e50cbbc": {
     "result": {
       "role": "assistant",
-      "content": "I will start by capturing the image to see what number appears on it.",
-      "toolCalls": [
+      "content": [
         {
+          "type": "text",
+          "text": "First, I'll capture the image to see what number is displayed, then I'll report the number that appears in the image."
+        },
+        {
+          "type": "tool_call",
           "name": "capture_image",
           "arguments": {},
-          "id": "call_qmWXz9QWXXmCoeuweK0ih1nt"
+          "id": "call_0Qv7fnM8xkxqQJWIGrD7KQau"
         }
       ]
     },
     "usage": {
       "input": 152,
-      "output": 26
+      "output": 35
     }
   },
-  "e8877b24e6139ab2ed87961f1d4ec1db75e70271": {
+  "3da6ab403ba26bb3b6500b95812f0d2b96775d2a": {
     "result": {
       "role": "assistant",
-      "content": "",
-      "toolCalls": [
+      "content": [
         {
+          "type": "tool_call",
           "name": "report_result",
           "arguments": {
-            "result": 9
+            "result": 8
           },
-          "id": "call_xZTiuR4LatjKkTlCfcJ5k4Y0"
+          "id": "call_qVygbmQ1iCBEf9hBRcFx2ZHD"
         }
       ]
     },
     "usage": {
-      "input": 324,
+      "input": 333,
       "output": 14
     }
   }

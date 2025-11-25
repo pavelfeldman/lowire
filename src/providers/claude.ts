@@ -27,17 +27,10 @@ export class Claude implements types.Provider {
     const response = await create({
       model,
       max_tokens: 10000,
-      messages: toClaudeMessages(conversation.messages),
+      messages: conversation.messages.map(toClaudeMessagePart),
       tools: conversation.tools.map(toClaudeTool),
     });
-
-    const textContent = response.content.filter(block => block.type === 'text').map(block => block.text).join('');
-    const toolCalls = response.content.filter(block => block.type === 'tool_use').map(toToolCall);
-    const result: types.AssistantMessage = {
-      role: 'assistant',
-      content: textContent,
-      toolCalls,
-    };
+    const result = toAssistantMessage(response);
     const usage: types.Usage = {
       input: response.usage.input_tokens,
       output: response.usage.output_tokens,
@@ -65,29 +58,32 @@ async function create(body: Anthropic.Messages.MessageCreateParamsNonStreaming):
   return await response.json() as Anthropic.Messages.Message;
 }
 
-function toClaudeTool(tool: types.Tool): Anthropic.Messages.Tool {
-  return {
-    name: tool.name,
-    description: tool.description,
-    input_schema: tool.inputSchema,
-  };
+function toContentPart(block: Anthropic.Messages.ContentBlock): types.TextContentPart | types.ToolCall | null {
+  if (block.type === 'text') {
+    return {
+      type: 'text',
+      text: block.text,
+    };
+  }
+  if (block.type === 'tool_use') {
+    return {
+      type: 'tool_call',
+      name: block.name,
+      arguments: block.input as any,
+      id: block.id,
+    };
+  }
+  return null;
 }
 
-function toToolCall(toolCall: Anthropic.Messages.ToolUseBlock): types.ToolCall {
-  return {
-    name: toolCall.name,
-    arguments: toolCall.input as any,
-    id: toolCall.id,
-  };
-}
-
-function toClaudeContentPart(part: types.ContentPart): Anthropic.Messages.ContentBlockSourceContent {
+function toClaudeParam(part: types.ContentPart): Anthropic.Messages.TextBlockParam | Anthropic.Messages.ImageBlockParam {
   if (part.type === 'text') {
     return {
       type: 'text',
       text: part.text,
     };
   }
+
   if (part.type === 'image') {
     return {
       type: 'image',
@@ -98,79 +94,73 @@ function toClaudeContentPart(part: types.ContentPart): Anthropic.Messages.Conten
       },
     };
   }
+
   throw new Error(`Unsupported content part type: ${(part as any).type}`);
 }
 
-function toClaudeMessages(messages: types.Message[]): Anthropic.Messages.MessageParam[] {
-  const claudeMessages: Anthropic.Messages.MessageParam[] = [];
+function toAssistantMessage(message: Anthropic.Messages.Message): types.AssistantMessage {
+  return {
+    role: 'assistant',
+    content: message.content.map(toContentPart).filter(Boolean) as types.AssistantMessage['content'],
+  };
+}
 
-  for (const message of messages) {
-    if (message.role === 'user' || message.role === 'system') {
-      claudeMessages.push({
-        role: 'user',
-        content: message.content
-      });
+function toClaudeTool(tool: types.Tool): Anthropic.Messages.Tool {
+  return {
+    name: tool.name,
+    description: tool.description,
+    input_schema: tool.inputSchema,
+  };
+}
+
+function toClaudeAssistantMessageParam(message: types.AssistantMessage): Anthropic.Messages.MessageParam {
+  const content: Anthropic.Messages.ContentBlock[] = [];
+
+  for (const part of message.content) {
+    if (part.type === 'text') {
+      content.push({ ...part, citations: [] });
       continue;
     }
 
-    if (message.role === 'assistant') {
-      const content: Anthropic.Messages.ContentBlock[] = [];
-
-      // Add text content
-      if (message.content) {
-        content.push({
-          type: 'text',
-          text: message.content,
-          citations: []
-        });
-      }
-
-      // Add tool calls
-      if (message.toolCalls) {
-        for (const toolCall of message.toolCalls) {
-          content.push({
-            type: 'tool_use',
-            id: toolCall.id,
-            name: toolCall.name,
-            input: toolCall.arguments
-          });
-        }
-      }
-
-      claudeMessages.push({
-        role: 'assistant',
-        content
-      });
-
-      continue;
-    }
-
-    if (message.role === 'tool') {
-      // Tool results are added differently - we need to find if there's already a user message with tool results
-      const lastMessage = claudeMessages[claudeMessages.length - 1];
-      const toolResult: Anthropic.Messages.ToolResultBlockParam = {
-        type: 'tool_result',
-        tool_use_id: message.toolCallId,
-        content: message.result.content.map(toClaudeContentPart),
-        is_error: message.result.isError,
-      };
-
-      if (lastMessage && lastMessage.role === 'user' && Array.isArray(lastMessage.content)) {
-        // Add to existing tool results message
-        (lastMessage.content as Anthropic.Messages.ToolResultBlockParam[]).push(toolResult);
-      } else {
-        // Create new tool results message
-        claudeMessages.push({
-          role: 'user',
-          content: [toolResult]
-        });
-      }
-
-      continue;
-    }
+    content.push({
+      type: 'tool_use',
+      id: part.id,
+      name: part.name,
+      input: part.arguments
+    });
   }
+  return {
+    role: 'assistant',
+    content
+  };
+}
 
-  return claudeMessages;
+function toClaudeToolResultMessage(message: types.ToolResultMessage): Anthropic.Messages.MessageParam {
+  const toolResult: Anthropic.Messages.ToolResultBlockParam = {
+    type: 'tool_result',
+    tool_use_id: message.toolCallId,
+    content: message.result.content.map(toClaudeParam),
+    is_error: message.result.isError,
+  };
+
+  return {
+    role: 'user',
+    content: [toolResult]
+  };
+}
+
+function toClaudeMessagePart(message: types.Message): Anthropic.Messages.MessageParam {
+  if (message.role === 'user' || message.role === 'system') {
+    return {
+      role: 'user',
+      content: message.content
+    };
+  }
+  if (message.role === 'assistant')
+    return toClaudeAssistantMessageParam(message);
+  if (message.role === 'tool_result')
+    return toClaudeToolResultMessage(message);
+  throw new Error(`Unsupported message role: ${(message as any).role}`);
 }
 
 const systemPrompt = `

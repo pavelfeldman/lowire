@@ -2,14 +2,18 @@
   "5ece9e7f5b47406614283ceabc98733e7cd93604": {
     "result": {
       "role": "assistant",
-      "content": "I'll report the result with the value 42 as requested.",
-      "toolCalls": [
+      "content": [
         {
+          "type": "text",
+          "text": "I'll report the result with the value 42 as requested."
+        },
+        {
+          "type": "tool_call",
           "name": "report_result",
           "arguments": {
             "magic": 42
           },
-          "id": "toolu_014ckRtx1PcFKhzPxgNHh6FJ"
+          "id": "toolu_01Bgp6isYRH4cJ2y3ey6hUxn"
         }
       ]
     },

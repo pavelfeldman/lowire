@@ -33,7 +33,7 @@ export class Loop {
   private _complete: types.Provider['complete'];
   private _logger: types.Logger | undefined;
 
-  constructor(loopName: 'openai' | 'copilot' | 'claude', options?: { caches?: types.ReplayCaches, secrets?: Record<string, string>, logger?: types.Logger }) {
+  constructor(loopName: 'openai' | 'copilot' | 'claude' | 'gemini', options?: { caches?: types.ReplayCaches, secrets?: Record<string, string>, logger?: types.Logger }) {
     this._provider = getProvider(loopName);
     this._complete = options?.caches ? cachedComplete(this._provider, options.caches, options.secrets ?? {}) : this._provider.complete.bind(this._provider);
     this._logger = options?.logger;
@@ -69,10 +69,11 @@ export class Loop {
       prune(conversation);
 
       conversation.messages.push(assistantMessage);
-      const { content, toolCalls } = assistantMessage;
+      const text = assistantMessage.content.filter(part => part.type === 'text').map(part => part.text).join('\n');
+      const toolCalls = assistantMessage.content.filter(part => part.type === 'tool_call') as types.ToolCall[];
 
       log('loop:usage', `input: ${usage.input}, output: ${usage.output}`);
-      log('loop:assistant', content, JSON.stringify(toolCalls, null, 2));
+      log('loop:assistant', text, JSON.stringify(assistantMessage.content, null, 2));
 
       if (toolCalls.length === 0) {
         conversation.messages.push({
@@ -82,7 +83,7 @@ export class Loop {
         continue;
       }
 
-      const toolResults: Array<{ toolCallId: string; result: types.ToolResult }> = [];
+      const toolResults: Array<{ toolName: string; toolCallId: string; result: types.ToolResult }> = [];
       for (const toolCall of toolCalls) {
         const { name, arguments: args, id } = toolCall;
 
@@ -100,6 +101,7 @@ export class Loop {
           log('loop:tool-result', text, JSON.stringify(result, null, 2));
 
           toolResults.push({
+            toolName: name,
             toolCallId: id,
             result,
           });
@@ -108,6 +110,7 @@ export class Loop {
           log('loop:tool-error', errorMessage, String(error));
 
           toolResults.push({
+            toolName: name,
             toolCallId: id,
             result: {
               content: [{ type: 'text', text: errorMessage }],
@@ -118,6 +121,7 @@ export class Loop {
           // Skip remaining tool calls for this iteration
           for (const remainingToolCall of toolCalls.slice(toolCalls.indexOf(toolCall) + 1)) {
             toolResults.push({
+              toolName: remainingToolCall.name,
               toolCallId: remainingToolCall.id,
               result: {
                 content: [{ type: 'text', text: `This tool call is skipped due to previous error.` }],
@@ -131,7 +135,7 @@ export class Loop {
 
       for (const toolResult of toolResults) {
         conversation.messages.push({
-          role: 'tool',
+          role: 'tool_result',
           ...toolResult,
         });
       }

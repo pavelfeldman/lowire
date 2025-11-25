@@ -2,36 +2,40 @@
   "81680cbfd81260252b3f25d517f6dcbf88e50f53": {
     "result": {
       "role": "assistant",
-      "content": "Capture the image to see what number is displayed on it",
-      "toolCalls": [
+      "content": [
         {
+          "type": "text",
+          "text": "Capture an image to identify the number displayed in it"
+        },
+        {
+          "type": "tool_call",
           "name": "capture_image",
           "arguments": {},
-          "id": "toolu_vrtx_019H9FKQ7Tf58JYwS3GAp7jq"
+          "id": "toolu_vrtx_01EhgMyBnWS9CWmQHTdeEGP3"
         }
       ]
     },
     "usage": {
       "input": 745,
-      "output": 64
+      "output": 63
     }
   },
-  "06bdededaa9dea892de80cce57b2ba76ce45cfe9": {
+  "4c88ee5f03c179f84c1ae172e067a57acea622c0": {
     "result": {
       "role": "assistant",
-      "content": "",
-      "toolCalls": [
+      "content": [
         {
+          "type": "tool_call",
           "name": "report_result",
           "arguments": {
             "result": 42
           },
-          "id": "toolu_vrtx_01U3PtvtqdcngEV2LPZJBErb"
+          "id": "toolu_vrtx_01Gs3XXMPogABoDqw2TxedMQ"
         }
       ]
     },
     "usage": {
-      "input": 2384,
+      "input": 2383,
       "output": 53
     }
   }

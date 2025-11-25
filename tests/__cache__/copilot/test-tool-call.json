@@ -2,39 +2,43 @@
   "211e9fe13a6804d333f83ea1923b682b215c77db": {
     "result": {
       "role": "assistant",
-      "content": "Add 2 and 3 together",
-      "toolCalls": [
+      "content": [
         {
+          "type": "text",
+          "text": "Adding 2 and 3 as requested by the user"
+        },
+        {
+          "type": "tool_call",
           "name": "add",
           "arguments": {
             "a": 2,
             "b": 3
           },
-          "id": "toolu_vrtx_01CWAka3pvToEgYddEDgmCDq"
+          "id": "toolu_vrtx_018ypcoTW2yA7E6nEnbpyyET"
         }
       ]
     },
     "usage": {
       "input": 791,
-      "output": 93
+      "output": 97
     }
   },
-  "1ded61848938010c365a716a8dd5f8c2e722d8f5": {
+  "b0bb5056d739374abf38083e009f92e475db36dc": {
     "result": {
       "role": "assistant",
-      "content": "",
-      "toolCalls": [
+      "content": [
         {
+          "type": "tool_call",
           "name": "report_result",
           "arguments": {
             "sum": 5
           },
-          "id": "toolu_vrtx_01XuhVR8kvHDmGzpQNK9aenc"
+          "id": "toolu_vrtx_0145MbECxQUkQMgk1tLAMcty"
         }
       ]
     },
     "usage": {
-      "input": 885,
+      "input": 889,
       "output": 53
     }
   }

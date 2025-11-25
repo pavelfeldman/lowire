@@ -2,36 +2,44 @@
   "cbb80310893d266b868aad76b0f2c4043e50cbbc": {
     "result": {
       "role": "assistant",
-      "content": "I'll capture the image and identify the number displayed on it.",
-      "toolCalls": [
+      "content": [
         {
+          "type": "text",
+          "text": "I'll capture the image and identify the number on it."
+        },
+        {
+          "type": "tool_call",
           "name": "capture_image",
           "arguments": {},
-          "id": "toolu_018t92jax3t9Y78jeDDTANq1"
+          "id": "toolu_01SzDYu84TTQekpUFCV2Gb2Y"
         }
       ]
     },
     "usage": {
       "input": 702,
-      "output": 50
+      "output": 49
     }
   },
-  "dea1f708f62759df9d1a10aaab0732d128a7f211": {
+  "d280c6364166c463cab770016a1d7fd2106d2fad": {
     "result": {
       "role": "assistant",
-      "content": "I can see the number **42** displayed in the image. Now I'll report this result.",
-      "toolCalls": [
+      "content": [
         {
+          "type": "text",
+          "text": "I can see the number **42** displayed in the image. Now I'll report this result."
+        },
+        {
+          "type": "tool_call",
           "name": "report_result",
           "arguments": {
             "result": 42
           },
-          "id": "toolu_01FjbveDURonadhtQBtrY4eK"
+          "id": "toolu_01YcPqxt9vqsPyX18qiCvD3v"
         }
       ]
     },
     "usage": {
-      "input": 2342,
+      "input": 2341,
       "output": 74
     }
   }

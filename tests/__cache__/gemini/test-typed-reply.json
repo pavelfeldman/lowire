@@ -2,20 +2,24 @@
   "5ece9e7f5b47406614283ceabc98733e7cd93604": {
     "result": {
       "role": "assistant",
-      "content": "I can do that.",
-      "toolCalls": [
+      "content": [
         {
+          "type": "text",
+          "text": "I need to report the result, which is 42."
+        },
+        {
+          "type": "tool_call",
           "name": "report_result",
           "arguments": {
             "magic": 42
           },
-          "id": "call_m98cfc9pix"
+          "id": "call_703wxh54i82"
         }
       ]
     },
     "usage": {
       "input": 129,
-      "output": 21
+      "output": 29
     }
   }
 }

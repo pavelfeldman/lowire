@@ -27,6 +27,7 @@ export type Tool = {
 };
 
 export type ToolCall = {
+  type: 'tool_call';
   name: string;
   arguments: any;
   id: string;
@@ -43,7 +44,7 @@ export type Usage = {
 };
 
 export type BaseMessage = {
-  role: 'system' | 'user' | 'assistant' | 'tool';
+  role: 'system' | 'user' | 'assistant' | 'tool_result';
 };
 
 export type SystemMessage = BaseMessage & {
@@ -58,8 +59,7 @@ export type UserMessage = BaseMessage & {
 
 export type AssistantMessage = BaseMessage & {
   role: 'assistant';
-  content: string;
-  toolCalls: ToolCall[];
+  content: (TextContentPart | ToolCall)[];
 };
 
 export type TextContentPart = {
@@ -81,7 +81,8 @@ export type ToolResult = {
 };
 
 export type ToolResultMessage = BaseMessage & {
-  role: 'tool';
+  role: 'tool_result';
+  toolName: string;
   toolCallId: string;
   result: ToolResult;
 };

@@ -2,14 +2,14 @@
   "1abe6a108ee3c89fb9f75c7488ff5c061123ab5f": {
     "result": {
       "role": "assistant",
-      "content": "",
-      "toolCalls": [
+      "content": [
         {
+          "type": "tool_call",
           "name": "browser_navigate",
           "arguments": {
             "url": "http://localhost:<PORT>/"
           },
-          "id": "call_ekCBXEAB5ODLStQQDZdFWM06"
+          "id": "call_5fSdozU6jQFrFU9b7PXYajgW"
         }
       ]
     },
@@ -18,23 +18,40 @@
       "output": 21
     }
   },
-  "489e9308c265afeba06c9dd16f8375963b6a5790": {
+  "3924117875bc101c35e33aadfaf55bdb43ea9f18": {
     "result": {
       "role": "assistant",
-      "content": "",
-      "toolCalls": [
+      "content": [
         {
-          "name": "report_result",
-          "arguments": {
-            "result": "The page at http://localhost:<PORT>/ contains a button labeled \"Welcome to tiny-loop!\". There is no visible title or additional content in the snapshot."
-          },
-          "id": "call_U2X0Xhk1HGtFxPhVZvQ2C4dw"
+          "type": "tool_call",
+          "name": "browser_snapshot",
+          "arguments": {},
+          "id": "call_3pLx3GjKtoDG8pVkJ1Y7e4KG"
         }
       ]
     },
     "usage": {
       "input": 1533,
-      "output": 47
+      "output": 10
+    }
+  },
+  "c3ad47d2789d270410d08f1421dac5d7e58679e2": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool_call",
+          "name": "report_result",
+          "arguments": {
+            "result": "The page at http://localhost:<PORT>/ contains a single button with the label \"Welcome to tiny-loop!\". There is no other visible content or title on the page."
+          },
+          "id": "call_gm2dbk2Toj7mIQD1oV0XFw1o"
+        }
+      ]
+    },
+    "usage": {
+      "input": 1593,
+      "output": 50
     }
   }
 }

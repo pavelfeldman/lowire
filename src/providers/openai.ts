@@ -46,7 +46,7 @@ export class OpenAI implements types.Provider {
 
   async complete(conversation: types.Conversation) {
     // Convert generic messages to OpenAI format
-    const openaiMessages = toOpenAIMessages(conversation.messages);
+    const openaiMessages = conversation.messages.map(toOpenAIMessage);
     const openaiTools = conversation.tools.map(toOpenAITool);
 
     const endpoint = await this.endpoint();
@@ -57,15 +57,12 @@ export class OpenAI implements types.Provider {
       tool_choice: conversation.tools.length > 0 ? 'auto' : undefined
     }, endpoint);
 
+    const result: types.AssistantMessage = { role: 'assistant', content: [] };
     const message = response.choices[0].message;
-    const openaiToolCalls = message.tool_calls || [];
-    const toolCalls = openaiToolCalls.map(toToolCall);
+    if (message.content)
+      result.content.push({ type: 'text', text: message.content });
+    result.content.push(...(message.tool_calls || []).map(toToolCall));
 
-    const result: types.AssistantMessage = {
-      role: 'assistant',
-      content: message.content || '',
-      toolCalls,
-    };
     const usage: types.Usage = {
       input: response.usage?.prompt_tokens ?? 0,
       output: response.usage?.completion_tokens ?? 0,
@@ -112,68 +109,61 @@ function toOpenAIContentPart(part: types.ContentPart): openai.OpenAI.Chat.Comple
   throw new Error(`Cannot convert content part of type ${(part as any).type} to text content part`);
 }
 
+function toOpenAIMessage(message: types.Message): openai.OpenAI.Chat.Completions.ChatCompletionMessageParam {
 
-function toOpenAIMessages(messages: types.Message[]): openai.OpenAI.Chat.Completions.ChatCompletionMessageParam[] {
-  const openaiMessages: openai.OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [];
-
-  for (const message of messages) {
-    if (message.role === 'system') {
-      openaiMessages.push({
-        role: 'system',
-        content: message.content
-      });
-      continue;
-    }
-
-    if (message.role === 'user') {
-      openaiMessages.push({
-        role: 'user',
-        content: message.content
-      });
-      continue;
-    }
-
-    if (message.role === 'assistant') {
-      const toolCalls: openai.OpenAI.Chat.Completions.ChatCompletionMessageToolCall[] = [];
-
-      if (message.toolCalls) {
-        for (const toolCall of message.toolCalls) {
-          toolCalls.push({
-            id: toolCall.id,
-            type: 'function',
-            function: {
-              name: toolCall.name,
-              arguments: JSON.stringify(toolCall.arguments)
-            }
-          });
-        }
-      }
-
-      const assistantMessage: openai.OpenAI.Chat.Completions.ChatCompletionAssistantMessageParam = {
-        role: 'assistant'
-      };
-
-      if (message.content)
-        assistantMessage.content = message.content;
-
-      if (toolCalls.length > 0)
-        assistantMessage.tool_calls = toolCalls;
-
-      openaiMessages.push(assistantMessage);
-      continue;
-    }
-
-    if (message.role === 'tool') {
-      openaiMessages.push({
-        role: 'tool',
-        tool_call_id: message.toolCallId,
-        content: message.result.content.map(toOpenAIContentPart) as openai.OpenAI.Chat.Completions.ChatCompletionContentPartText[],
-      });
-      continue;
-    }
+  if (message.role === 'system') {
+    return {
+      role: 'system',
+      content: message.content
+    };
   }
 
-  return openaiMessages;
+  if (message.role === 'user') {
+    return {
+      role: 'user',
+      content: message.content
+    };
+  }
+
+  if (message.role === 'assistant') {
+    const assistantMessage: openai.OpenAI.Chat.Completions.ChatCompletionAssistantMessageParam = {
+      role: 'assistant'
+    };
+
+    const textParts = message.content.filter(part => part.type === 'text');
+    const toolCallParts = message.content.filter(part => part.type === 'tool_call');
+    if (textParts.length === 1)
+      assistantMessage.content = textParts[0].text;
+    else
+      assistantMessage.content = textParts;
+
+    const toolCalls: openai.OpenAI.Chat.Completions.ChatCompletionMessageToolCall[] = [];
+    for (const toolCall of toolCallParts) {
+      toolCalls.push({
+        id: toolCall.id,
+        type: 'function',
+        function: {
+          name: toolCall.name,
+          arguments: JSON.stringify(toolCall.arguments)
+        }
+      });
+    }
+
+    if (toolCalls.length > 0)
+      assistantMessage.tool_calls = toolCalls;
+
+    return assistantMessage;
+  }
+
+  if (message.role === 'tool_result') {
+    return {
+      role: 'tool',
+      tool_call_id: message.toolCallId,
+      content: message.result.content.map(toOpenAIContentPart) as openai.OpenAI.Chat.Completions.ChatCompletionContentPartText[],
+    };
+  }
+
+  throw new Error(`Unsupported message role: ${(message as any).role}`);
 }
 
 function toOpenAITool(tool: types.Tool): openai.OpenAI.Chat.Completions.ChatCompletionTool {
@@ -189,6 +179,7 @@ function toOpenAITool(tool: types.Tool): openai.OpenAI.Chat.Completions.ChatComp
 
 function toToolCall(toolCall: openai.OpenAI.Chat.Completions.ChatCompletionMessageToolCall): types.ToolCall {
   return {
+    type: 'tool_call',
     name: toolCall.type === 'function' ? toolCall.function.name : toolCall.custom.name,
     arguments: JSON.parse(toolCall.type === 'function' ? toolCall.function.arguments : toolCall.custom.input),
     id: toolCall.id,

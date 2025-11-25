@@ -51,13 +51,17 @@ export class Copilot extends OpenAI {
 
   override async complete(conversation: types.Conversation) {
     const message = await super.complete(conversation);
-    if (!message.result.content) {
+    const textPart = message.result.content.find(part => part.type === 'text');
+    if (!textPart) {
       const content: string[] = [];
-      for (const toolCall of message.result.toolCalls) {
+      const toolCalls = message.result.content.filter(part => part.type === 'tool_call');
+      for (const toolCall of toolCalls) {
         content.push(toolCall.arguments?._intent ?? '');
         delete toolCall.arguments._intent;
       }
-      message.result.content = content.join(' ');
+      const text = content.join(' ').trim();
+      if (text.trim())
+        message.result.content.unshift({ type: 'text', text: content.join(' ') });
     }
     return message;
   }

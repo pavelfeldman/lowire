@@ -2,20 +2,20 @@
   "fb999006ede812b98da473ca3962d18253ee0956": {
     "result": {
       "role": "assistant",
-      "content": "Hello world",
-      "toolCalls": [
+      "content": [
         {
+          "type": "tool_call",
           "name": "report_result",
           "arguments": {
             "result": "Hello world"
           },
-          "id": "call_5qzkaqzkfey"
+          "id": "call_ispntp6j9th"
         }
       ]
     },
     "usage": {
       "input": 132,
-      "output": 18
+      "output": 16
     }
   }
 }

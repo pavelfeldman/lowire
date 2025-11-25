@@ -2,37 +2,45 @@
   "cbb80310893d266b868aad76b0f2c4043e50cbbc": {
     "result": {
       "role": "assistant",
-      "content": "I need to capture an image to see what number is on it.",
-      "toolCalls": [
+      "content": [
         {
+          "type": "text",
+          "text": "I need to capture an image to identify the number in it."
+        },
+        {
+          "type": "tool_call",
           "name": "capture_image",
           "arguments": {},
-          "id": "call_ihq4tregin9"
+          "id": "call_7eicwb2yk3k"
         }
       ]
     },
     "usage": {
       "input": 164,
-      "output": 24
+      "output": 23
     }
   },
-  "bd6a1b5ab5caacd9ab084a7deae9502b2b3b8fa0": {
+  "a6277da7ed481588cead8e26f65d4d19ee8ab784": {
     "result": {
       "role": "assistant",
-      "content": "I see the number 42 in the image. I will now report the result.",
-      "toolCalls": [
+      "content": [
         {
+          "type": "text",
+          "text": "I see the number 42 in the image."
+        },
+        {
+          "type": "tool_call",
           "name": "report_result",
           "arguments": {
             "result": 42
           },
-          "id": "call_dsg01hdemhh"
+          "id": "call_9tvov5iiq4a"
         }
       ]
     },
     "usage": {
-      "input": 458,
-      "output": 34
+      "input": 457,
+      "output": 27
     }
   }
 }

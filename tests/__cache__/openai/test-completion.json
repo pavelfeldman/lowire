@@ -2,14 +2,14 @@
   "fb999006ede812b98da473ca3962d18253ee0956": {
     "result": {
       "role": "assistant",
-      "content": "",
-      "toolCalls": [
+      "content": [
         {
+          "type": "tool_call",
           "name": "report_result",
           "arguments": {
             "result": "Hello world"
           },
-          "id": "call_4LZDv9N6MgxPCheIfU8q9W6n"
+          "id": "call_WdQArfekAFEyPaZKhU4jmohl"
         }
       ]
     },

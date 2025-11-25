@@ -2,14 +2,14 @@
   "5ece9e7f5b47406614283ceabc98733e7cd93604": {
     "result": {
       "role": "assistant",
-      "content": "",
-      "toolCalls": [
+      "content": [
         {
+          "type": "tool_call",
           "name": "report_result",
           "arguments": {
             "magic": 42
           },
-          "id": "call_sq4nS1RISXI3juxLdgZyLFiw"
+          "id": "call_7orUXu65NPaHQcXEBFOE7hJr"
         }
       ]
     },

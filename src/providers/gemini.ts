@@ -24,29 +24,28 @@ export class Gemini implements types.Provider {
   readonly systemPrompt = systemPrompt;
 
   async complete(conversation: types.Conversation) {
+    const contents = conversation.messages.map(toGeminiContent).flat();
     const response = await create({
-      contents: toGeminiMessages(conversation.messages),
+      contents,
       tools: conversation.tools.length > 0 ? [{ functionDeclarations: conversation.tools.map(toGeminiTool) }] : undefined,
     });
 
-    const firstCandidate = response.candidates?.[0];
-    if (!firstCandidate)
+    const [candidate] = response.candidates ?? [];
+    if (!candidate)
       throw new Error('No candidates in response');
-
-    const textContent = firstCandidate.content.parts
-        .filter(part => 'text' in part)
-        .map(part => part.text)
-        .join('');
-
-    const toolCalls = firstCandidate.content.parts
-        .filter(part => 'functionCall' in part)
-        .map(toToolCall);
 
     const result: types.AssistantMessage = {
       role: 'assistant',
-      content: textContent,
-      toolCalls,
+      content: [],
     };
+
+    for (const part of candidate.content.parts) {
+      if (part.text)
+        result.content.push({ type: 'text', text: part.text });
+      else if (part.functionCall)
+        result.content.push(toToolCall(part));
+    }
+
     const usage: types.Usage = {
       input: response.usageMetadata?.promptTokenCount ?? 0,
       output: response.usageMetadata?.candidatesTokenCount ?? 0,
@@ -96,121 +95,88 @@ function stripUnsupportedSchemaFields(schema: any): any {
   return cleaned;
 }
 
-function toToolCall(part: gemini.Part): types.ToolCall {
-  if (!('functionCall' in part))
-    throw new Error('Expected functionCall part');
-
-  const functionCall = part.functionCall as gemini.FunctionCall;
+function toToolCall(part: gemini.FunctionCallPart): types.ToolCall {
   return {
-    name: functionCall.name,
-    arguments: functionCall.args,
+    type: 'tool_call',
+    name: part.functionCall.name,
+    arguments: part.functionCall.args,
     id: `call_${Math.random().toString(36).substring(2, 15)}`,
   };
 }
 
-function toGeminiMessages(messages: types.Message[]): gemini.Content[] {
-  const geminiMessages: gemini.Content[] = [];
-
-  for (const message of messages) {
-    if (message.role === 'user' || message.role === 'system') {
-      geminiMessages.push({
-        role: 'user',
-        parts: [{ text: message.content }]
-      });
-      continue;
-    }
-
-    if (message.role === 'assistant') {
-      const parts: gemini.Part[] = [];
-
-      // Add text content
-      if (message.content) {
-        parts.push({
-          text: message.content,
-        });
-      }
-
-      // Add tool calls
-      if (message.toolCalls) {
-        for (const toolCall of message.toolCalls) {
-          parts.push({
-            functionCall: {
-              name: toolCall.name,
-              args: toolCall.arguments
-            }
-          });
-        }
-      }
-
-      geminiMessages.push({
-        role: 'model',
-        parts
-      });
-
-      continue;
-    }
-
-    if (message.role === 'tool') {
-      // Find the corresponding function call to get the tool name
-      // We need to look back in messages to find the assistant message with this toolCallId
-      let toolName = 'unknown';
-      for (let i = messages.indexOf(message) - 1; i >= 0; i--) {
-        const prevMsg = messages[i];
-        if (prevMsg.role === 'assistant' && prevMsg.toolCalls) {
-          const matchingCall = prevMsg.toolCalls.find(tc => tc.id === message.toolCallId);
-          if (matchingCall) {
-            toolName = matchingCall.name;
-            break;
-          }
-        }
-      }
-
-      // Convert tool result content to a response object
-      const responseContent: any = {};
-
-      // Handle all content parts using toGeminiContentPart
-      const textParts: string[] = [];
-      const inlineDatas: any[] = [];
-
-      for (const part of message.result.content) {
-        if (part.type === 'text') {
-          textParts.push(part.text);
-        } else if (part.type === 'image') {
-          // Store image data for inclusion in response
-          inlineDatas.push({
-            inline_data: {
-              mime_type: part.mimeType,
-              data: part.data
-            }
-          });
-        }
-      }
-
-      if (textParts.length > 0)
-        responseContent.result = textParts.join('\n');
-
-      geminiMessages.push({
-        role: 'function',
-        parts: [{
-          functionResponse: {
-            name: toolName,
-            response: responseContent
-          }
-        }]
-      });
-
-      if (inlineDatas.length > 0) {
-        geminiMessages.push({
-          role: 'user',
-          parts: inlineDatas
-        });
-      }
-
-      continue;
-    }
+function toGeminiContent(message: types.Message): gemini.Content[] {
+  if (message.role === 'user' || message.role === 'system') {
+    return [{
+      role: 'user',
+      parts: [{ text: message.content }]
+    }];
   }
 
-  return geminiMessages;
+  if (message.role === 'assistant') {
+    const parts: gemini.Part[] = [];
+
+    for (const part of message.content) {
+      if (part.type === 'text') {
+        parts.push({ text: part.text });
+        continue;
+      }
+      parts.push({
+        functionCall: {
+          name: part.name,
+          args: part.arguments
+        }
+      });
+    }
+
+    return [{
+      role: 'model',
+      parts
+    }];
+  }
+
+  if (message.role === 'tool_result') {
+    const responseContent: any = {};
+    const textParts: string[] = [];
+    const inlineDatas: any[] = [];
+
+    for (const part of message.result.content) {
+      if (part.type === 'text') {
+        textParts.push(part.text);
+      } else if (part.type === 'image') {
+        // Store image data for inclusion in response
+        inlineDatas.push({
+          inline_data: {
+            mime_type: part.mimeType,
+            data: part.data
+          }
+        });
+      }
+    }
+
+    if (textParts.length > 0)
+      responseContent.result = textParts.join('\n');
+
+    const result = [{
+      role: 'function',
+      parts: [{
+        functionResponse: {
+          name: message.toolName,
+          response: responseContent
+        }
+      }]
+    }];
+
+    if (inlineDatas.length > 0) {
+      result.push({
+        role: 'user',
+        parts: inlineDatas
+      });
+    }
+
+    return result;
+  }
+
+  throw new Error(`Unsupported message role: ${(message as any).role}`);
 }
 
 const systemPrompt = `

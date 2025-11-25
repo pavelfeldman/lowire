@@ -2,39 +2,43 @@
   "ab8fe633fd45b553223a99f05c491f0b8519f0a3": {
     "result": {
       "role": "assistant",
-      "content": "Let's add 2 and 3 using the add tool.",
-      "toolCalls": [
+      "content": [
         {
+          "type": "text",
+          "text": "Let me add 2 and 3 together using the add tool.\n\ntool_call:\nfunctions.add  { \"a\": 2, \"b\": 3 }"
+        },
+        {
+          "type": "tool_call",
           "name": "add",
           "arguments": {
             "a": 2,
             "b": 3
           },
-          "id": "call_qmdEBixujZjERngstsWkTveu"
+          "id": "call_4dCAnyDtS8mAvF9rjvXK3h0T"
         }
       ]
     },
     "usage": {
       "input": 176,
-      "output": 30
+      "output": 51
     }
   },
-  "10d62306e3c06aa1a6de7e998012155283158fcb": {
+  "e7303f9640f65818d554654b5cb678ca5a8bb1c4": {
     "result": {
       "role": "assistant",
-      "content": "",
-      "toolCalls": [
+      "content": [
         {
+          "type": "tool_call",
           "name": "report_result",
           "arguments": {
             "sum": 5
           },
-          "id": "call_oyMGwjIDxCoA0mgkBVFs9EZI"
+          "id": "call_9UOlxzNGXRTFogV6IEglNpBe"
         }
       ]
     },
     "usage": {
-      "input": 221,
+      "input": 242,
       "output": 14
     }
   }

@@ -2,40 +2,48 @@
   "ab8fe633fd45b553223a99f05c491f0b8519f0a3": {
     "result": {
       "role": "assistant",
-      "content": "",
-      "toolCalls": [
+      "content": [
         {
+          "type": "text",
+          "text": "I need to add two numbers, 2 and 3. The `add` tool is perfect for this."
+        },
+        {
+          "type": "tool_call",
           "name": "add",
           "arguments": {
-            "b": 3,
-            "a": 2
+            "a": 2,
+            "b": 3
           },
-          "id": "call_fqi4tm5viqr"
+          "id": "call_mwnepygkqy"
         }
       ]
     },
     "usage": {
       "input": 194,
-      "output": 18
+      "output": 41
     }
   },
-  "9758b22639ccdd0e13095fea48c722aea2c082b6": {
+  "0065a3da3afe4c1acb6bce50fbb1cef0e9c1d081": {
     "result": {
       "role": "assistant",
-      "content": "I have added 2 and 3 and the result is 5.\n",
-      "toolCalls": [
+      "content": [
         {
+          "type": "text",
+          "text": "I have the result of adding 2 and 3, which is 5. Now I will report this result."
+        },
+        {
+          "type": "tool_call",
           "name": "report_result",
           "arguments": {
             "sum": 5
           },
-          "id": "call_m6jwbpmemj"
+          "id": "call_x1bm79minfr"
         }
       ]
     },
     "usage": {
-      "input": 229,
-      "output": 31
+      "input": 252,
+      "output": 39
     }
   }
 }

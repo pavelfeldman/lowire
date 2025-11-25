@@ -66,7 +66,6 @@ test('tool call', async ({ loop }) => {
 });
 
 test('tool call - image reply', async ({ loop, provider }) => {
-  test.fail(provider === 'openai', 'OpenAI does not do well with image tool results by default');
   const tools: types.Tool[] = [
     {
       name: 'capture_image',

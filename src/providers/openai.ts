@@ -45,33 +45,62 @@ export class OpenAI implements types.Provider {
   }
 
   async complete(conversation: types.Conversation) {
-    // Convert generic messages to OpenAI format
-    const openaiMessages = conversation.messages.map(toOpenAIMessage);
-    const openaiTools = conversation.tools.map(toOpenAITool);
+    const systemMessages = conversation.messages.filter(m => m.role === 'system');
+    const nonSystemMessages = conversation.messages.filter(m => m.role !== 'system');
+
+    const inputItems: openai.OpenAI.Responses.ResponseInputItem[] = [];
+    for (const message of nonSystemMessages) {
+      const items = toResponseInputItems(message);
+      inputItems.push(...items);
+    }
+
+    const tools = conversation.tools.map(toOpenAIFunctionTool);
+
+    // Combine system messages into instructions
+    const instructions = systemMessages.length > 0
+      ? systemMessages.map(m => m.content).join('\n\n')
+      : undefined;
 
     const endpoint = await this.endpoint();
     const response = await create({
       model: endpoint.model,
-      messages: openaiMessages,
-      tools: openaiTools,
-      tool_choice: conversation.tools.length > 0 ? 'auto' : undefined
+      input: inputItems,
+      instructions,
+      tools: tools.length > 0 ? tools : undefined,
+      tool_choice: conversation.tools.length > 0 ? 'auto' : undefined,
+      parallel_tool_calls: false,
     }, endpoint);
 
+    // Parse response output items
     const result: types.AssistantMessage = { role: 'assistant', content: [] };
-    const message = response.choices[0].message;
-    if (message.content)
-      result.content.push({ type: 'text', text: message.content });
-    result.content.push(...(message.tool_calls || []).map(toToolCall));
+
+    for (const item of response.output) {
+      if (item.type === 'message' && item.role === 'assistant') {
+        result.openaiId = item.id;
+        result.openaiStatus = item.status;
+        for (const contentPart of item.content) {
+          if (contentPart.type === 'output_text') {
+            result.content.push({
+              type: 'text',
+              text: contentPart.text,
+            });
+          }
+        }
+      } else if (item.type === 'function_call') {
+        // Add tool call
+        result.content.push(toToolCall(item));
+      }
+    }
 
     const usage: types.Usage = {
-      input: response.usage?.prompt_tokens ?? 0,
-      output: response.usage?.completion_tokens ?? 0,
+      input: response.usage?.input_tokens ?? 0,
+      output: response.usage?.output_tokens ?? 0,
     };
     return { result, usage };
   }
 }
 
-async function create(body: openai.OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming, endpoint: Endpoint): Promise<openai.OpenAI.Chat.Completions.ChatCompletion> {
+async function create(body: openai.OpenAI.Responses.ResponseCreateParamsNonStreaming, endpoint: Endpoint): Promise<openai.OpenAI.Responses.Response> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${endpoint.apiKey}`,
@@ -79,7 +108,7 @@ async function create(body: openai.OpenAI.Chat.Completions.ChatCompletionCreateP
     ...endpoint.headers
   };
 
-  const response = await fetch(`${endpoint.baseUrl}/chat/completions`, {
+  const response = await fetch(`${endpoint.baseUrl}/responses`, {
     method: 'POST',
     headers,
     body: JSON.stringify(body)
@@ -88,101 +117,102 @@ async function create(body: openai.OpenAI.Chat.Completions.ChatCompletionCreateP
   if (!response.ok)
     throw new Error(`API error: ${response.status} ${response.statusText} ${await response.text()}`);
 
-  return await response.json() as openai.OpenAI.Chat.Completions.ChatCompletion;
+  return await response.json() as openai.OpenAI.Responses.Response;
 }
 
-function toOpenAIResultContentPart(part: types.ResultContentPart): openai.OpenAI.Chat.Completions.ChatCompletionContentPart {
+function toResultContentPart(part: types.ResultContentPart): openai.OpenAI.Responses.ResponseInputText | openai.OpenAI.Responses.ResponseInputImage {
   if (part.type === 'text') {
     return {
-      type: 'text',
+      type: 'input_text',
       text: part.text,
     };
   }
   if (part.type === 'image') {
     return {
-      type: 'image_url',
-      image_url: {
-        url: `data:${part.mimeType};base64,${part.data}`,
-      },
+      type: 'input_image',
+      image_url: `data:${part.mimeType};base64,${part.data}`,
+      detail: 'auto',
     };
   }
-  throw new Error(`Cannot convert content part of type ${(part as any).type} to text content part`);
+  throw new Error(`Cannot convert content part of type ${(part as any).type} to response content part`);
 }
 
-function toOpenAIMessage(message: types.Message): openai.OpenAI.Chat.Completions.ChatCompletionMessageParam {
-
-  if (message.role === 'system') {
-    return {
-      role: 'system',
-      content: message.content
-    };
-  }
-
+function toResponseInputItems(message: types.Message): openai.OpenAI.Responses.ResponseInputItem[] {
   if (message.role === 'user') {
-    return {
+    return [{
+      type: 'message',
       role: 'user',
       content: message.content
-    };
+    }];
   }
 
   if (message.role === 'assistant') {
-    const assistantMessage: openai.OpenAI.Chat.Completions.ChatCompletionAssistantMessageParam = {
-      role: 'assistant'
-    };
-
     const textParts = message.content.filter(part => part.type === 'text');
     const toolCallParts = message.content.filter(part => part.type === 'tool_call');
-    if (textParts.length === 1)
-      assistantMessage.content = textParts[0].text;
-    else
-      assistantMessage.content = textParts;
 
-    const toolCalls: openai.OpenAI.Chat.Completions.ChatCompletionMessageToolCall[] = [];
-    for (const toolCall of toolCallParts) {
-      toolCalls.push({
-        id: toolCall.id,
-        type: 'function',
-        function: {
-          name: toolCall.name,
-          arguments: JSON.stringify(toolCall.arguments)
-        }
-      });
+    const items: openai.OpenAI.Responses.ResponseInputItem[] = [];
+
+    // Add assistant message with text content
+    if (textParts.length > 0) {
+      const outputMessage: openai.OpenAI.Responses.ResponseOutputMessage = {
+        id: message.openaiId!,
+        status: message.openaiStatus!,
+        type: 'message',
+        role: 'assistant',
+        content: textParts.map(part => ({
+          type: 'output_text',
+          text: part.text,
+          annotations: [],
+          logprobs: []
+        }))
+      };
+      items.push(outputMessage);
     }
 
-    if (toolCalls.length > 0)
-      assistantMessage.tool_calls = toolCalls;
-
-    return assistantMessage;
+    items.push(...toolCallParts.map(toFunctionToolCall));
+    return items;
   }
 
   if (message.role === 'tool_result') {
-    return {
-      role: 'tool',
-      tool_call_id: message.toolCallId,
-      content: message.result.content.map(toOpenAIResultContentPart) as openai.OpenAI.Chat.Completions.ChatCompletionContentPartText[],
-    };
+    return [{
+      type: 'function_call_output',
+      call_id: message.toolCallId,
+      output: message.result.content.map(toResultContentPart),
+    } as openai.OpenAI.Responses.ResponseInputItem.FunctionCallOutput];
   }
 
   throw new Error(`Unsupported message role: ${(message as any).role}`);
 }
 
-function toOpenAITool(tool: types.Tool): openai.OpenAI.Chat.Completions.ChatCompletionTool {
+function toOpenAIFunctionTool(tool: types.Tool): openai.OpenAI.Responses.FunctionTool {
   return {
     type: 'function',
-    function: {
-      name: tool.name,
-      description: tool.description,
-      parameters: tool.inputSchema,
-    },
+    name: tool.name,
+    description: tool.description ?? null,
+    parameters: tool.inputSchema,
+    strict: null,
   };
 }
 
-function toToolCall(toolCall: openai.OpenAI.Chat.Completions.ChatCompletionMessageToolCall): types.ToolCallPart {
+function toFunctionToolCall(toolCall: types.ToolCallPart): openai.OpenAI.Responses.ResponseFunctionToolCall {
+  return {
+    type: 'function_call',
+    call_id: toolCall.id,
+    name: toolCall.name,
+    arguments: JSON.stringify(toolCall.arguments),
+    id: toolCall.openaiId!,
+    status: toolCall.openaiStatus!,
+  };
+}
+
+function toToolCall(functionCall: openai.OpenAI.Responses.ResponseFunctionToolCall): types.ToolCallPart {
   return {
     type: 'tool_call',
-    name: toolCall.type === 'function' ? toolCall.function.name : toolCall.custom.name,
-    arguments: JSON.parse(toolCall.type === 'function' ? toolCall.function.arguments : toolCall.custom.input),
-    id: toolCall.id,
+    name: functionCall.name,
+    arguments: JSON.parse(functionCall.arguments),
+    id: functionCall.call_id,
+    openaiId: functionCall.id,
+    openaiStatus: functionCall.status,
   };
 }
 

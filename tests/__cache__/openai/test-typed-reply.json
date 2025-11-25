@@ -9,13 +9,15 @@
           "arguments": {
             "magic": 42
           },
-          "id": "call_7orUXu65NPaHQcXEBFOE7hJr"
+          "id": "call_n7JBDet950KHK2bo3nDItFry",
+          "openaiId": "fc_0234c83658df934000692621481f1c819daaf57871b9fcd777",
+          "openaiStatus": "completed"
         }
       ]
     },
     "usage": {
-      "input": 126,
-      "output": 14
+      "input": 127,
+      "output": 15
     }
   }
 }

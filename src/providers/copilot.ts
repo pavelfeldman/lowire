@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { OpenAI } from './openai';
+import { OpenAICompletions } from './openaiCompletions';
 
-import type { Endpoint } from './openai';
+import type { Endpoint } from './openaiCompletions';
 import type * as types from '../types';
 
 type CopilotTokenResponse = {
@@ -37,7 +37,7 @@ export const kEditorHeaders = {
 // to a page it will reply with "Navigating to <url>" w/o tool call. Mitigate it
 // via injecting a tool call intent and then converting it into the assistant
 // message content.
-export class Copilot extends OpenAI {
+export class Copilot extends OpenAICompletions {
   override readonly name = 'copilot';
   override readonly systemPrompt = systemPrompt;
   override async connect(): Promise<Endpoint> {

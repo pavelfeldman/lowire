@@ -9,13 +9,15 @@
           "arguments": {
             "result": "Hello world"
           },
-          "id": "call_WdQArfekAFEyPaZKhU4jmohl"
+          "id": "call_fgfBA4YRcVxkeTJojNPllcQT",
+          "openaiId": "fc_0c5d50ad7e040a140069262147ab488191b39648018094abea",
+          "openaiStatus": "completed"
         }
       ]
     },
     "usage": {
-      "input": 130,
-      "output": 15
+      "input": 131,
+      "output": 16
     }
   }
 }

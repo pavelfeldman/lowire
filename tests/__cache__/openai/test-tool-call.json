@@ -5,7 +5,7 @@
       "content": [
         {
           "type": "text",
-          "text": "Let me add 2 and 3 together using the add tool.\n\ntool_call:\nfunctions.add  { \"a\": 2, \"b\": 3 }"
+          "text": "I will add 2 and 3 using the add tool.\n"
         },
         {
           "type": "tool_call",
@@ -14,16 +14,20 @@
             "a": 2,
             "b": 3
           },
-          "id": "call_4dCAnyDtS8mAvF9rjvXK3h0T"
+          "id": "call_ffHpOn5g2kovVJhjGg75pAWB",
+          "openaiId": "fc_0e030ffbaea3e7a30069262147f9b881948a295758beaf29c8",
+          "openaiStatus": "completed"
         }
-      ]
+      ],
+      "openaiId": "msg_0e030ffbaea3e7a3006926214774d88194a7497c3a81f557aa",
+      "openaiStatus": "completed"
     },
     "usage": {
-      "input": 176,
-      "output": 51
+      "input": 179,
+      "output": 33
     }
   },
-  "e7303f9640f65818d554654b5cb678ca5a8bb1c4": {
+  "39a2743446241c2601c7f35098d296073f14983d": {
     "result": {
       "role": "assistant",
       "content": [
@@ -33,13 +37,15 @@
           "arguments": {
             "sum": 5
           },
-          "id": "call_9UOlxzNGXRTFogV6IEglNpBe"
+          "id": "call_9SrKknuI6i751sl0Kik4nOo2",
+          "openaiId": "fc_0e030ffbaea3e7a30069262149c8a081949190cb7d5dd45b7b",
+          "openaiStatus": "completed"
         }
       ]
     },
     "usage": {
-      "input": 242,
-      "output": 14
+      "input": 224,
+      "output": 15
     }
   }
 }

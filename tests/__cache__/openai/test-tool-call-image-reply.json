@@ -4,23 +4,23 @@
       "role": "assistant",
       "content": [
         {
-          "type": "text",
-          "text": "First, I'll capture the image to see what number is displayed, then I'll report the number that appears in the image."
-        },
-        {
           "type": "tool_call",
           "name": "capture_image",
-          "arguments": {},
-          "id": "call_0Qv7fnM8xkxqQJWIGrD7KQau"
+          "arguments": {
+            "reason": "I need to capture the current image to identify the number displayed on it."
+          },
+          "id": "call_PpwpeVdI2UCQpXcUzK0LtbgU",
+          "openaiId": "fc_0b5ef1dfe606e7f00069262147c43481a39c9f2460fe0770ac",
+          "openaiStatus": "completed"
         }
       ]
     },
     "usage": {
-      "input": 152,
-      "output": 35
+      "input": 153,
+      "output": 32
     }
   },
-  "3da6ab403ba26bb3b6500b95812f0d2b96775d2a": {
+  "358d4c08a6c7c19dc0472d57c444fc6e91f1dca3": {
     "result": {
       "role": "assistant",
       "content": [
@@ -28,15 +28,17 @@
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
-            "result": 8
+            "result": 42
           },
-          "id": "call_qVygbmQ1iCBEf9hBRcFx2ZHD"
+          "id": "call_oByfAZfsfpkv3iEh65HcFBsY",
+          "openaiId": "fc_0b5ef1dfe606e7f0006926214def4881a3ae3476edb8055498",
+          "openaiStatus": "completed"
         }
       ]
     },
     "usage": {
-      "input": 333,
-      "output": 14
+      "input": 955,
+      "output": 15
     }
   }
 }

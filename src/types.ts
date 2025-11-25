@@ -32,6 +32,8 @@ export type ToolCallPart = {
   arguments: any;
   id: string;
   geminiThoughtSignature?: string;
+  openaiId?: string;
+  openaiStatus?: 'completed' | 'incomplete' | 'in_progress';
 };
 
 export type ToolCallback = (params: {
@@ -61,6 +63,8 @@ export type UserMessage = BaseMessage & {
 export type AssistantMessage = BaseMessage & {
   role: 'assistant';
   content: (TextContentPart | ToolCallPart | ThinkingContentPart)[];
+  openaiId?: string;
+  openaiStatus?: 'completed' | 'incomplete' | 'in_progress';
 };
 
 export type TextContentPart = {

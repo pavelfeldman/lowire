@@ -1,37 +1,32 @@
 {
-  "cbb80310893d266b868aad76b0f2c4043e50cbbc": {
+  "a0180cb5480b1cf1601baba65c19593d8f5e08d8": {
     "result": {
       "role": "assistant",
       "content": [
         {
-          "type": "thinking",
-          "thinking": "The user wants me to capture an image and tell them what number I see on it. I need to:\n1. First capture the image using the capture_image function\n2. Then report the result using the report_result function with the number I see\n\nLet me start by capturing the image.",
-          "signature": "ErMDCkYIChgCKkAQiSWRdsDok/VC/ojC9LYNDtIyi3LIftRwesLZFqotcTzlawlgxJwWLJXYReRk20rNmaQYT4nB9ZXLlXBci+oAEgyqYlsbQgzwWmjpiC4aDDcmg8sC2XKRVaxxMiIwU9vsoxr7x6UgjTb+/JsZsvBEnO58rKXrKQkm2Vrujzny5qEZqlrwLjEdorXqPCsBKpoCqlcvkuVuxPTwQzPlMt7RYV+B1iAlKIpW+WBTfXDT5tkEx+HPxoVK8fJAaNeeEBoajvKaCXO3UG1HXN5uLGQdpIIvuX0OOscFIUQo8dBuMLHY33jGyTVjIFDSdvKvSdBK+7AcDktfFjLREMioa9aksipsGNNVo0PT7PcZqsQxGawB47GrFGheR61P3Pp+oLfsfEFNkwQtWVbz2DMWLUGxXbNmv0ApKm9K+3kltU3We0XkKAqWuY3xZ2dK/nki/LJI1WRPtttd7ER+WDvo7AceKIeNvVDeL4CDpbgBuhUE9zbH0vW4XUnDs1HV9LQzI3PnIqz9OCN4NhnCW4I3fxWH5X41NZqSfHf3D/E/pQhQTGepT2rGrucfJEQ4GAE="
-        },
-        {
           "type": "text",
-          "text": "I'll capture the image for you and identify the number displayed on it."
+          "text": "I'll capture the image and identify the number for you."
         },
         {
           "type": "tool_call",
           "name": "capture_image",
           "arguments": {},
-          "id": "toolu_012qFibt4ps9PnWsMyD73WGK"
+          "id": "toolu_01K36UBQWaEXPcYCfHdvE9xJ"
         }
       ]
     },
     "usage": {
-      "input": 732,
-      "output": 122
+      "input": 709,
+      "output": 49
     }
   },
-  "bbdb1a7f963d667e60974c9631629be54f6c471b": {
+  "5f60e85b647d48116b0de2f98d07395099cee342": {
     "result": {
       "role": "assistant",
       "content": [
         {
           "type": "text",
-          "text": "I can see the number **42** displayed in the image. Now I'll report this result."
+          "text": "I can see the number **42** in the image. Now I'll report this result."
         },
         {
           "type": "tool_call",
@@ -39,13 +34,13 @@
           "arguments": {
             "result": 42
           },
-          "id": "toolu_01H1krPmzoT4UdJHv7nbksXk"
+          "id": "toolu_01RcyErh9gqDGp6cYobf5bXJ"
         }
       ]
     },
     "usage": {
-      "input": 2444,
-      "output": 74
+      "input": 2348,
+      "output": 73
     }
   }
 }

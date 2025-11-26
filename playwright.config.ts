@@ -19,7 +19,7 @@ export default defineConfig<TestOptions>({
       name: 'copilot',
       use: {
         provider: 'github',
-        model: 'claude-sonnet-4-5',
+        model: 'claude-sonnet-4.5',
       }
     },
     {
@@ -40,7 +40,7 @@ export default defineConfig<TestOptions>({
       name: 'gemini',
       use: {
         provider: 'google',
-        model: 'gemini-2.5-pro',
+        model: 'gemini-2.5-flash',
       }
     },
   ],

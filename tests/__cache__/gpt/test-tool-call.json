@@ -1,12 +1,8 @@
 {
-  "ab8fe633fd45b553223a99f05c491f0b8519f0a3": {
+  "b88d95ad2a255a13dd6c58b28e716a191e91939f": {
     "result": {
       "role": "assistant",
       "content": [
-        {
-          "type": "text",
-          "text": "I will add 2 and 3 using the add tool.\n"
-        },
         {
           "type": "tool_call",
           "name": "add",
@@ -14,20 +10,18 @@
             "a": 2,
             "b": 3
           },
-          "id": "call_ffHpOn5g2kovVJhjGg75pAWB",
-          "openaiId": "fc_0e030ffbaea3e7a30069262147f9b881948a295758beaf29c8",
+          "id": "call_0S9TBEIdGBsaLtrxcToFkmGv",
+          "openaiId": "fc_08665671e010237e0069274b220880819f8c287cb9e1bd7cad",
           "openaiStatus": "completed"
         }
-      ],
-      "openaiId": "msg_0e030ffbaea3e7a3006926214774d88194a7497c3a81f557aa",
-      "openaiStatus": "completed"
+      ]
     },
     "usage": {
-      "input": 179,
-      "output": 33
+      "input": 186,
+      "output": 18
     }
   },
-  "39a2743446241c2601c7f35098d296073f14983d": {
+  "a295ca4efa7f7dc65033c4e56798901332cd9ec4": {
     "result": {
       "role": "assistant",
       "content": [
@@ -37,14 +31,14 @@
           "arguments": {
             "sum": 5
           },
-          "id": "call_9SrKknuI6i751sl0Kik4nOo2",
-          "openaiId": "fc_0e030ffbaea3e7a30069262149c8a081949190cb7d5dd45b7b",
+          "id": "call_xEHPTWxPHnYCZcDYWXAIEphc",
+          "openaiId": "fc_08665671e010237e0069274b2424bc819f91a35a18182155ed",
           "openaiStatus": "completed"
         }
       ]
     },
     "usage": {
-      "input": 224,
+      "input": 216,
       "output": 15
     }
   }

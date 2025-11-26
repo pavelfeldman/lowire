@@ -1,51 +1,43 @@
 {
-  "ab8fe633fd45b553223a99f05c491f0b8519f0a3": {
+  "b88d95ad2a255a13dd6c58b28e716a191e91939f": {
     "result": {
       "role": "assistant",
       "content": [
-        {
-          "type": "text",
-          "text": "I need to add 2 and 3. The `add` tool can be used for this.",
-          "geminiThoughtSignature": "CqUCAdHtim+z1PSA7zx8RoRqXsVhCnmj/pvTw+ut+JEEXPRityylL2VrxqAEENR7FE676MlAHLw7iCwjp07jwlgRs5JXx80N2SDEV+cAgAEIgWiQAS1H9dh5i0TmiyZQv5/cPYFSXrgr14oSXE6CqRTClcaQWE1VJcLtpSfE5MljNjNF+exZiNxYYpzrEa7HkHHkphmUuFppT6xf7izMI6H/cayhqObar3XnB14vuJV4OS45jiEVcXrJYERm0t3pvf7lWI6GWC1Pcbj/gzXd+vaKGZKiHTOH2zVgebVfZJ+q6FX03j8WXhs36bEFebpzP87eirnCLYcPU9KPuuHHpf9cWXo4/2NrpnVX7Eqge1smeJOqB8zS3o9z5VaOsP2CDmLZ5Z5LPa8="
-        },
         {
           "type": "tool_call",
           "name": "add",
           "arguments": {
-            "b": 3,
-            "a": 2
+            "a": 2,
+            "b": 3
           },
-          "id": "call_z7mjgeqrdvo"
+          "id": "call_l0gpqcdm0et",
+          "googleThoughtSignature": "CqsBAXLI2ny4yiRZ6ANKz1pN5DxZJm402/lZPKtR7XLfsfV+S7LGIZo+3nVB9e6s4LSD2yuJtqKd/sHYuShKHXsM3nKP1DJxSd7i+pHegEhXNTkl3kTPRpenGPsRiXU/gJ+XnC5jR2sB4wVyfDjdFoD18MiiMrxYZAw0gQFMjLLZ0mEviZ6452Gp/OUDWfIPt1G3z6UsIYylyMda87nhnFYq1yYndMPx8gUOyim4"
         }
       ]
     },
     "usage": {
-      "input": 194,
-      "output": 39
+      "input": 203,
+      "output": 18
     }
   },
-  "a767d02c7c9a8dc4f71169a035ea3b6771bd31df": {
+  "507fcbba292cc52e089db30ee050e26abf69a967": {
     "result": {
       "role": "assistant",
       "content": [
-        {
-          "type": "text",
-          "text": "The sum of 2 and 3 is 5. I will report this result.",
-          "geminiThoughtSignature": "CsIDAdHtim9fcDLjKU/hYR2Z/5i2kcEAmmmr091Z+DQBF67M8p8pYzqZYotwK6mHXew446gu70QNwWk4EGHDPk5If31LhHKc4/eLD/r0r3PvykVOyEr47s63Z7M9CwYFnZITaqP+59vcPxXL8TTCg81y8ISBNRAR27UhK+1WyFMlnTBAHFMuWPjWnPd7rByvbJYCalcOBeIh/P09StIK+P5zI4Fqc4amZxw3K8XSVjBCn0GX1/67tKq/K4SjGdccd+l+6pfxCNFey1DLoIQ5WsDsncEqEoCNqW+wp51Azq2F5TrHd9m9tiasPFJ7q/Byfu4+lHfFYi+YchnTfuW/njXEPg9LA6kWuqaSyhzFN/Hn+vf/PrjtBctqgWaohNGtVbhNiM39SVmcvZclCSRJ4vJfSiv/T2zPeHtK9CasqLIJnB9e+eU+GMHTW3Wi4ujeb8/z88FNztDLkIB66Xu2u9/K4jp3KWUMgdvvFAEJl1C5CMirnJOiKCixmIDdS+h9yKwReSzxE8+9QKfvUuTjP8rP6NFaqD3lQR0ON05OPwEZq9Diz6q6mcgRovZkYTZGRbhX4RqoDCPIIf++kSM63yhbakh4"
-        },
         {
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
             "sum": 5
           },
-          "id": "call_e10ugbvcoge"
+          "id": "call_4wml6ziihjn",
+          "googleThoughtSignature": "CpkBAXLI2nzPeCEwi6YHnYKfIzAA5Uo2hkVUzIfeufNrGLw7jujrIFmRoABgqW6GIaRn+KEdeX5EvlJsav7bGtwoouOsy/FroXUsJII/h/ZnL3OJX9FwE5+Sx955ZMQ1f2XrooFbCZMSpYztNR9PF+DRgPAO23ekXMzcNtpog6mOXF5mFMOBK2+8cEqF0heryyMXNvvyq9if79fP"
         }
       ]
     },
     "usage": {
-      "input": 250,
-      "output": 33
+      "input": 238,
+      "output": 15
     }
   }
 }

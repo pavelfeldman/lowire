@@ -19,29 +19,15 @@ import type * as types from '../types';
 
 export class OpenAI implements types.Provider {
   readonly name: string = 'openai';
-  readonly systemPrompt: string = systemPrompt;
 
   async complete(conversation: types.Conversation, options: types.CompletionOptions) {
-    const systemMessages = conversation.messages.filter(m => m.role === 'system');
-    const nonSystemMessages = conversation.messages.filter(m => m.role !== 'system');
-
-    const inputItems: openai.OpenAI.Responses.ResponseInputItem[] = [];
-    for (const message of nonSystemMessages) {
-      const items = toResponseInputItems(message);
-      inputItems.push(...items);
-    }
-
+    const inputItems = conversation.messages.map(toResponseInputItems).flat();
     const tools = conversation.tools.map(toOpenAIFunctionTool);
-
-    // Combine system messages into instructions
-    const instructions = systemMessages.length > 0
-      ? systemMessages.map(m => m.content).join('\n\n')
-      : undefined;
 
     const response = await create({
       model: options.model,
       input: inputItems,
-      instructions,
+      instructions: systemPrompt(conversation.systemPrompt),
       tools: tools.length > 0 ? tools : undefined,
       tool_choice: conversation.tools.length > 0 ? 'auto' : undefined,
       parallel_tool_calls: false,
@@ -193,7 +179,12 @@ function toToolCall(functionCall: openai.OpenAI.Responses.ResponseFunctionToolCa
   };
 }
 
-const systemPrompt = `
+const systemPrompt = (prompt: string) => `
+### System instructions
+
+${prompt}
+
+### Tool calling instructions
 - Make sure every message contains a tool call.
 - When you use a tool, you may provide a brief thought or explanation in the content field
   immediately before the tool_call. Do not split this into separate messages.

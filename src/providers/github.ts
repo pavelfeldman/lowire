@@ -31,7 +31,6 @@ export const kEditorHeaders = {
   'Content-Type': 'application/json'
 };
 
-
 // Copilot endpoint does not reply with content+tool_call, it instead
 // replies with the content and expects continuation. I.e. instead of navigating
 // to a page it will reply with "Navigating to <url>" w/o tool call. Mitigate it
@@ -39,7 +38,6 @@ export const kEditorHeaders = {
 // message content.
 export class Github extends OpenAICompletions {
   override readonly name = 'copilot';
-  override readonly systemPrompt = systemPrompt;
   override async connect(): Promise<Endpoint> {
     return {
       baseUrl: 'https://api.githubcopilot.com',
@@ -76,10 +74,3 @@ async function getCopilotToken(): Promise<string> {
     return data.token;
   throw new Error('Failed to get Copilot token');
 }
-
-const systemPrompt = `
-  - Your reply MUST be a tool call and nothing but the tool call.
-  - NEVER respond with text content, only tool calls.
-  - Do NOT describe your plan, do NOT explain what you are doing, do NOT describe what you see, call tools.
-  - Provide thoughts in the '_intent' property of the tool calls instead.
-`;

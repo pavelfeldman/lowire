@@ -19,12 +19,12 @@ import type * as types from '../types';
 
 export class Anthropic implements types.Provider {
   readonly name = 'anthropic';
-  readonly systemPrompt = systemPrompt;
 
   async complete(conversation: types.Conversation, options: types.CompletionOptions) {
     const response = await create({
       model: options.model,
       max_tokens: options.maxTokens ?? 32768,
+      system: systemPrompt(conversation.systemPrompt),
       messages: conversation.messages.map(toAnthropicMessagePart),
       tools: conversation.tools.map(toAnthropicTool),
       thinking: options.reasoning ? {
@@ -175,7 +175,7 @@ function toAnthropicToolResultMessage(message: types.ToolResultMessage): anthrop
 }
 
 function toAnthropicMessagePart(message: types.Message): anthropic.Anthropic.Messages.MessageParam {
-  if (message.role === 'user' || message.role === 'system') {
+  if (message.role === 'user') {
     return {
       role: 'user',
       content: message.content
@@ -191,7 +191,12 @@ function toAnthropicMessagePart(message: types.Message): anthropic.Anthropic.Mes
   throw new Error(`Unsupported message role: ${(message as any).role}`);
 }
 
-const systemPrompt = `
+const systemPrompt = (prompt: string) => `
+### System instructions
+
+${prompt}
+
+### Tool calling instructions
 - Make sure every message contains a tool call.
 - When you use a tool, you may provide a brief thought or explanation in the content field
   immediately before the tool_call. Do not split this into separate messages.

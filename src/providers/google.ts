@@ -14,18 +14,23 @@
  * limitations under the License.
  */
 
-import type * as gemini from '@google/generative-ai';
+import type * as google from '@google/generative-ai';
 import type * as types from '../types';
 
-type GeminiThinkingPart = gemini.Part & { thoughtSignature?: string };
+type GeminiThinkingPart = google.Part & { thoughtSignature?: string };
 
 export class Google implements types.Provider {
   readonly name = 'google';
-  readonly systemPrompt = systemPrompt;
 
   async complete(conversation: types.Conversation, options: types.CompletionOptions) {
     const contents = conversation.messages.map(toGeminiContent).flat();
     const response = await create(options.model ?? 'gemini-2.5-pro', {
+      systemInstruction: {
+        role: 'system',
+        parts: [
+          { text: systemPrompt(conversation.systemPrompt) }
+        ]
+      },
       contents,
       tools: conversation.tools.length > 0 ? [{ functionDeclarations: conversation.tools.map(toGeminiTool) }] : undefined,
     });
@@ -44,7 +49,7 @@ export class Google implements types.Provider {
   }
 }
 
-async function create(model: string, body: gemini.GenerateContentRequest): Promise<gemini.GenerateContentResponse> {
+async function create(model: string, body: google.GenerateContentRequest): Promise<google.GenerateContentResponse> {
   const apiKey = process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY;
   if (!apiKey)
     throw new Error('GEMINI_API_KEY or GOOGLE_API_KEY environment variable is required');
@@ -61,7 +66,7 @@ async function create(model: string, body: gemini.GenerateContentRequest): Promi
   if (!response.ok)
     throw new Error(`API error: ${response.status} ${response.statusText} ${await response.text()}`);
 
-  return await response.json() as gemini.GenerateContentResponse;
+  return await response.json() as google.GenerateContentResponse;
 }
 
 function toGeminiTool(tool: types.Tool) {
@@ -85,19 +90,19 @@ function stripUnsupportedSchemaFields(schema: any): any {
   return cleaned;
 }
 
-function toAssistantMessage(candidate: gemini.GenerateContentCandidate): types.AssistantMessage {
+function toAssistantMessage(candidate: google.GenerateContentCandidate): types.AssistantMessage {
   return {
     role: 'assistant',
     content: candidate.content.parts.map(toContentPart).filter(Boolean) as (types.TextContentPart | types.ToolCallPart)[],
   };
 }
 
-function toContentPart(part: gemini.Part & { thoughtSignature?: string }): types.TextContentPart | types.ToolCallPart | null {
+function toContentPart(part: google.Part & { thoughtSignature?: string }): types.TextContentPart | types.ToolCallPart | null {
   if (part.text) {
     return {
       type: 'text',
       text: part.text,
-      geminiThoughtSignature: part.thoughtSignature,
+      googleThoughtSignature: part.thoughtSignature,
     };
   }
 
@@ -107,15 +112,15 @@ function toContentPart(part: gemini.Part & { thoughtSignature?: string }): types
       name: part.functionCall.name,
       arguments: part.functionCall.args,
       id: `call_${Math.random().toString(36).substring(2, 15)}`,
-      geminiThoughtSignature: part.thoughtSignature,
+      googleThoughtSignature: part.thoughtSignature,
     };
   }
 
   return null;
 }
 
-function toGeminiContent(message: types.Message): gemini.Content[] {
-  if (message.role === 'user' || message.role === 'system') {
+function toGeminiContent(message: types.Message): google.Content[] {
+  if (message.role === 'user') {
     return [{
       role: 'user',
       parts: [{ text: message.content }]
@@ -129,7 +134,7 @@ function toGeminiContent(message: types.Message): gemini.Content[] {
       if (part.type === 'text') {
         parts.push({
           text: part.text,
-          thoughtSignature: part.geminiThoughtSignature,
+          thoughtSignature: part.googleThoughtSignature,
         });
         continue;
       }
@@ -140,7 +145,7 @@ function toGeminiContent(message: types.Message): gemini.Content[] {
             name: part.name,
             args: part.arguments
           },
-          thoughtSignature: part.geminiThoughtSignature,
+          thoughtSignature: part.googleThoughtSignature,
         });
       }
     }
@@ -196,7 +201,12 @@ function toGeminiContent(message: types.Message): gemini.Content[] {
   throw new Error(`Unsupported message role: ${(message as any).role}`);
 }
 
-const systemPrompt = `
+const systemPrompt = (prompt: string) => `
+### System instructions
+
+${prompt}
+
+### Tool calling instructions
 - Make sure every message contains a tool call.
 - When you use a tool, you may provide a brief thought or explanation in the content field
   immediately before the tool_call. Do not split this into separate messages.

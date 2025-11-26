@@ -46,13 +46,10 @@ export class Loop {
     ];
 
     const conversation: types.Conversation = {
-      messages: [{
-        role: 'system',
-        content: systemPrompt + '\n' + this._provider.systemPrompt,
-      }, {
-        role: 'user',
-        content: task,
-      }],
+      systemPrompt,
+      messages: [
+        { role: 'user', content: task },
+      ],
       tools: allTools,
     };
 

@@ -1,48 +1,40 @@
 {
-  "cbb80310893d266b868aad76b0f2c4043e50cbbc": {
+  "a0180cb5480b1cf1601baba65c19593d8f5e08d8": {
     "result": {
       "role": "assistant",
       "content": [
-        {
-          "type": "text",
-          "text": "I need to capture an image to identify the number in it.",
-          "geminiThoughtSignature": "Cu4EAdHtim9i1QlsFqJCjczKiTdoNVk6FR1+h0pf2HGuRAXVUGpkAap0Np5PYfeRGRcKsTgI6rLXVW1yl6XUZJ9uQHb/qQvsOeNe7BVnvbyBvDN43dguUQza8wHxcprkSOeTHja+AxgjZilBXZSJnIDoPgc+ekvSIGC7zBZVzx6McA2BdDs2YNy1BDTyYIvVbpDcI16e4ny4RQt0HtcSkEYXTTX3n3Eun3WY7JIJ9tjsURMZfQLRsLKPf3omoptcEydHIMRhLv4Xi0PLjJXR7UDoFJGvQezyNkqS/ELfVSNTjyDl5f9bzGsTDYXVfyMFJDOMcD3H/u0JtVgx08pmjCWDjR1uu2Z0lbEUSITPKNlvkfYXDlndIa3c7CeYJ+/PpVO6n/oPeyqHVkn4C3+pZvQSt6bVHIjm+dqqZLgPY+RUeyTQ3QQ2yKFZuggKZIGXV6QMiMG4ODEvim74u/8c8CXXR8m5oK/ta0hv/SpzeWgLxSc769yUtGiLmD/kM6ABuRfu/kbnF6v1p5eEWb1ba6hKNv3G6f6OJ4BXLqn9+KyKP2wrw6VZ1v+OhF7X2UA0yC/kB/NFQaYV4wL5fL/BL5GjKLCaQXzMvp5DQHfnTW4EPPV4G1tnghXtsxQaOsaMOZWO8+fdhW6KYid2foEBIPTWBeB6CWuvG7NpCbX3kMcPDnFc1uy3n37pm+vfhrZgE4RYIvSKnoBrr8y3nPiNCXtDsiFBcq5vipB21C0Ijzjt03EH03kzXQE1RvYrqo977dnGsJzgZ+4TOZ2mCx3+jxupq9EC0wEsn75NCgckF2p8eRYv0cIrkcLhX60CcYvrPw=="
-        },
         {
           "type": "tool_call",
           "name": "capture_image",
           "arguments": {},
-          "id": "call_7qf14s4g7t7"
+          "id": "call_dnpaifzalo",
+          "googleThoughtSignature": "CrUCAXLI2nwql5FEM/DRi7FrGdznkeI4hQ9s5tEM1z7u0yFg8K9CuqgfVNen4YLqLBxQ5KMblbfUv1AlJxIJ53pBVWVetaBpixX9bz00MQ7hlPdbdAO9XaPDNfSQoMVQovNY8dJbooNP0z+0o2Gs8oYp5zs04GeYZKZW6iBkEyzJLmkjm0v4r5uH3r6VcVRSreMhtOlaEOHHVkFh3cX+96qNBjbutOewI0fg9SevxMua/PTxGjckJtmDbhWUPmu/T9V/pB6YHGT0CYSCA4SYQI4Rw2cLQoowxNWpahEskGIOcDGEQdU7btE7DXrAsddaj+0T34uIKVu9Rf4xO/DZbn79CTwXqR+CNIsakwCb8nkmqOymbjURF+1ZTgH1eiDGHVfJ8wKRVVariYjDQr2mkmRuXGWBfXIG"
         }
       ]
     },
     "usage": {
-      "input": 164,
-      "output": 23
+      "input": 173,
+      "output": 10
     }
   },
-  "85189038d3cf718f7039147d73283d6411029458": {
+  "eafbdfdf89aad37b79f560533fe0f53feaf41081": {
     "result": {
       "role": "assistant",
       "content": [
-        {
-          "type": "text",
-          "text": "I see the number 42 in the image.",
-          "geminiThoughtSignature": "CusCAdHtim8BtWy2lK2iiRGAReFUBUl+KLYMl0adcGyBhbr42zLNC0x/ljjdwZv+PJp7Dpxhmk70Z2tFmlxQu6m7Tm2vz81W0xscFIUaWkPDGkn17E7qfjxFfZfy1gzUSTkPJAy1lDph3lR+zCTImRHYhSbDIT7QmffjhkgYvlO250WiXzmwizzriZWYnDUIAhEwyPAh+E0eskj+ExfuJj+Xh1Q3FzdZ/La4Th4Snzn1l9wioxH/wvw7Av7h+Df/P+ehEwZKIG9TaJXyvHfH6nqP4Ibp5cErwOmpRZulYFVkOhXyU/DvzhzD0uiv4qYF+EiF+nG/VG0512MT8LHhTkAi2W3Rbib1yZZmITlQmnuFH4E1s8DE1ek5tVe/ktvrt+JlrM7MdQI2CGM/i3qsQjNB9fw+vdHePxcaIbXtZocMhPwGcjUwd1CC+Fw0kqEizpivhGkklwMrubxkSZZoUy/+20ePWuSGVPaOYQO3"
-        },
         {
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
             "result": 42
           },
-          "id": "call_9xk2soocik"
+          "id": "call_81s5aztrwbf",
+          "googleThoughtSignature": "CosBAXLI2nzRLDmEFsbUI8o4GKmDz+aOETI8GBziFRxB46ZIE5+hru/PqEfu4CJ04dvg9gXZcwLYptaeLd2/YuUNq5U17FkiIywAv5TkrGb7Gr8sPXfW3IKYlxJwRJGOy13MNQfW/1OQKzfmJ0AkVMQXCBLF3IxZFkvdP5Dwie8e/lbQyST1yvbpPtKAcw=="
         }
       ]
     },
     "usage": {
-      "input": 457,
-      "output": 27
+      "input": 453,
+      "output": 16
     }
   }
 }

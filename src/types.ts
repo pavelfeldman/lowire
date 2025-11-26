@@ -31,7 +31,7 @@ export type ToolCallPart = {
   name: string;
   arguments: any;
   id: string;
-  geminiThoughtSignature?: string;
+  googleThoughtSignature?: string;
   openaiId?: string;
   openaiStatus?: 'completed' | 'incomplete' | 'in_progress';
 };
@@ -47,12 +47,7 @@ export type Usage = {
 };
 
 export type BaseMessage = {
-  role: 'system' | 'user' | 'assistant' | 'tool_result';
-};
-
-export type SystemMessage = BaseMessage & {
-  role: 'system';
-  content: string;
+  role: 'user' | 'assistant' | 'tool_result';
 };
 
 export type UserMessage = BaseMessage & {
@@ -70,7 +65,7 @@ export type AssistantMessage = BaseMessage & {
 export type TextContentPart = {
   type: 'text';
   text: string;
-  geminiThoughtSignature?: string;
+  googleThoughtSignature?: string;
 };
 
 export type ImageContentPart = {
@@ -100,12 +95,12 @@ export type ToolResultMessage = BaseMessage & {
 };
 
 export type Message =
-  | SystemMessage
   | UserMessage
   | AssistantMessage
   | ToolResultMessage;
 
 export type Conversation = {
+  systemPrompt: string;
   messages: Message[];
   tools: Tool[];
 };
@@ -143,6 +138,5 @@ export type RunLoopOptions = Omit<CompletionOptions, 'model'> & {
 
 export interface Provider {
   name: string;
-  systemPrompt: string;
   complete(conversation: Conversation, options: CompletionOptions): Promise<{ result: AssistantMessage, usage: Usage }>;
 }

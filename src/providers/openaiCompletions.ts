@@ -25,7 +25,6 @@ export type Endpoint = {
 
 export class OpenAICompletions implements types.Provider {
   readonly name: string = 'openai';
-  readonly systemPrompt: string = systemPrompt;
   private _endpoint: Endpoint | undefined;
 
   async endpoint(): Promise<Endpoint> {
@@ -44,7 +43,11 @@ export class OpenAICompletions implements types.Provider {
 
   async complete(conversation: types.Conversation, options: types.CompletionOptions & { injectIntent?: boolean }) {
     // Convert generic messages to OpenAI format
-    const openaiMessages = conversation.messages.map(toOpenAIMessage);
+    const systemMessage: openai.OpenAI.Chat.Completions.ChatCompletionSystemMessageParam = {
+      role: 'system',
+      content: systemPrompt(conversation.systemPrompt)
+    };
+    const openaiMessages = [systemMessage, ...conversation.messages.map(toOpenAIMessage)];
     const openaiTools = conversation.tools.map(t => toOpenAITool(t, options));
 
     const endpoint = await this.endpoint();
@@ -110,14 +113,6 @@ function toOpenAIResultContentPart(part: types.ResultContentPart): openai.OpenAI
 }
 
 function toOpenAIMessage(message: types.Message): openai.OpenAI.Chat.Completions.ChatCompletionMessageParam {
-
-  if (message.role === 'system') {
-    return {
-      role: 'system',
-      content: message.content
-    };
-  }
-
   if (message.role === 'user') {
     return {
       role: 'user',
@@ -194,9 +189,14 @@ function toToolCall(toolCall: openai.OpenAI.Chat.Completions.ChatCompletionMessa
   };
 }
 
-const systemPrompt = `
-- Make sure every message contains a tool call.
-- When you use a tool, you may provide a brief thought or explanation in the content field
-  immediately before the tool_call. Do not split this into separate messages.
-- Every reply must include a tool call.
+const systemPrompt = (prompt: string) => `
+### System instructions
+
+${prompt}
+
+### Tool calling instructions
+- Your reply MUST be a tool call and nothing but the tool call.
+- NEVER respond with text content, only tool calls.
+- Do NOT describe your plan, do NOT explain what you are doing, do NOT describe what you see, call tools.
+- Provide thoughts in the '_intent' property of the tool calls instead.
 `;

@@ -29,7 +29,7 @@ export class Loop {
   private _complete: types.Provider['complete'];
   private _options: LoopOptions;
 
-  constructor(loopName: 'openai' | 'copilot' | 'claude' | 'gemini', options: LoopOptions) {
+  constructor(loopName: 'openai' | 'github' | 'anthropic' | 'google', options: LoopOptions) {
     this._provider = getProvider(loopName);
     this._options = options;
     this._complete = cachedComplete(this._provider, options);

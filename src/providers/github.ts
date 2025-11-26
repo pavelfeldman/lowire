@@ -37,7 +37,7 @@ export const kEditorHeaders = {
 // to a page it will reply with "Navigating to <url>" w/o tool call. Mitigate it
 // via injecting a tool call intent and then converting it into the assistant
 // message content.
-export class Copilot extends OpenAICompletions {
+export class Github extends OpenAICompletions {
   override readonly name = 'copilot';
   override readonly systemPrompt = systemPrompt;
   override async connect(): Promise<Endpoint> {

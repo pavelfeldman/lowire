@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { kEditorHeaders } from './copilot';
+import { kEditorHeaders } from '../providers/github';
 
 /* eslint-disable no-console */
 

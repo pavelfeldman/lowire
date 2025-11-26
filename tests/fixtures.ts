@@ -26,7 +26,7 @@ import type * as types from '../src/types';
 export { expect } from '@playwright/test';
 
 export type TestOptions = {
-  provider: 'openai' | 'copilot' | 'claude' | 'gemini';
+  provider: 'openai' | 'github' | 'anthropic' | 'google';
   model: string;
 };
 
@@ -41,10 +41,10 @@ type WorkerFixtures = {
 };
 
 export const test = baseTest.extend<TestOptions & TestFixtures, WorkerFixtures>({
-  provider: ['copilot', { option: true }],
+  provider: ['github', { option: true }],
   model: ['', { option: true }],
-  loop: async ({ provider, _workerPort, model }, use) => {
-    const cacheFile = path.join(__dirname, '__cache__', provider, sanitizeFileName(test.info().titlePath.join(' ')) + '.json');
+  loop: async ({ provider, _workerPort, model }, use, testInfo) => {
+    const cacheFile = path.join(__dirname, '__cache__', testInfo.project.name, sanitizeFileName(test.info().titlePath.join(' ')) + '.json');
     const dataBefore = await fs.promises.readFile(cacheFile, 'utf-8').catch(() => '{}');
     let cache: types.ReplayCache = {};
     try {

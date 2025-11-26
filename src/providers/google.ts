@@ -19,8 +19,8 @@ import type * as types from '../types';
 
 type GeminiThinkingPart = gemini.Part & { thoughtSignature?: string };
 
-export class Gemini implements types.Provider {
-  readonly name = 'gemini';
+export class Google implements types.Provider {
+  readonly name = 'google';
   readonly systemPrompt = systemPrompt;
 
   async complete(conversation: types.Conversation, options: types.CompletionOptions) {
@@ -45,9 +45,9 @@ export class Gemini implements types.Provider {
 }
 
 async function create(model: string, body: gemini.GenerateContentRequest): Promise<gemini.GenerateContentResponse> {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY;
   if (!apiKey)
-    throw new Error('GEMINI_API_KEY environment variable is required');
+    throw new Error('GEMINI_API_KEY or GOOGLE_API_KEY environment variable is required');
 
   const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: 'POST',

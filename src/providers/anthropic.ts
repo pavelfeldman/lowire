@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-import type Anthropic from '@anthropic-ai/sdk';
+import type * as anthropic from '@anthropic-ai/sdk';
 import type * as types from '../types';
 
-export class Claude implements types.Provider {
-  readonly name = 'claude';
+export class Anthropic implements types.Provider {
+  readonly name = 'anthropic';
   readonly systemPrompt = systemPrompt;
 
   async complete(conversation: types.Conversation, options: types.CompletionOptions) {
     const response = await create({
       model: options.model,
       max_tokens: options.maxTokens ?? 32768,
-      messages: conversation.messages.map(toClaudeMessagePart),
-      tools: conversation.tools.map(toClaudeTool),
+      messages: conversation.messages.map(toAnthropicMessagePart),
+      tools: conversation.tools.map(toAnthropicTool),
       thinking: options.reasoning ? {
         type: 'enabled',
         budget_tokens: options.maxTokens ? Math.round(options.maxTokens / 10) : 1024,
@@ -41,7 +41,7 @@ export class Claude implements types.Provider {
   }
 }
 
-async function create(body: Anthropic.Messages.MessageCreateParamsNonStreaming): Promise<Anthropic.Messages.Message> {
+async function create(body: anthropic.Anthropic.Messages.MessageCreateParamsNonStreaming): Promise<anthropic.Anthropic.Messages.Message> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     'x-api-key': process.env.ANTHROPIC_API_KEY!,
@@ -57,10 +57,10 @@ async function create(body: Anthropic.Messages.MessageCreateParamsNonStreaming):
   if (!response.ok)
     throw new Error(`API error: ${response.status} ${response.statusText} ${await response.text()}`);
 
-  return await response.json() as Anthropic.Messages.Message;
+  return await response.json() as anthropic.Anthropic.Messages.Message;
 }
 
-function toContentPart(block: Anthropic.Messages.ContentBlock): types.TextContentPart | types.ToolCallPart | types.ThinkingContentPart | null {
+function toContentPart(block: anthropic.Anthropic.Messages.ContentBlock): types.TextContentPart | types.ToolCallPart | types.ThinkingContentPart | null {
   if (block.type === 'text') {
     return {
       type: 'text',
@@ -88,7 +88,7 @@ function toContentPart(block: Anthropic.Messages.ContentBlock): types.TextConten
   return null;
 }
 
-function toClaudeResultParam(part: types.ResultContentPart): Anthropic.Messages.TextBlockParam | Anthropic.Messages.ImageBlockParam {
+function toAnthropicResultParam(part: types.ResultContentPart): anthropic.Anthropic.Messages.TextBlockParam | anthropic.Anthropic.Messages.ImageBlockParam {
   if (part.type === 'text') {
     return {
       type: 'text',
@@ -110,14 +110,14 @@ function toClaudeResultParam(part: types.ResultContentPart): Anthropic.Messages.
   throw new Error(`Unsupported content part type: ${(part as any).type}`);
 }
 
-function toAssistantMessage(message: Anthropic.Messages.Message): types.AssistantMessage {
+function toAssistantMessage(message: anthropic.Anthropic.Messages.Message): types.AssistantMessage {
   return {
     role: 'assistant',
     content: message.content.map(toContentPart).filter(Boolean) as types.AssistantMessage['content'],
   };
 }
 
-function toClaudeTool(tool: types.Tool): Anthropic.Messages.Tool {
+function toAnthropicTool(tool: types.Tool): anthropic.Anthropic.Messages.Tool {
   return {
     name: tool.name,
     description: tool.description,
@@ -125,8 +125,8 @@ function toClaudeTool(tool: types.Tool): Anthropic.Messages.Tool {
   };
 }
 
-function toClaudeAssistantMessageParam(message: types.AssistantMessage): Anthropic.Messages.MessageParam {
-  const content: Anthropic.Messages.ContentBlock[] = [];
+function toAnthropicAssistantMessageParam(message: types.AssistantMessage): anthropic.Anthropic.Messages.MessageParam {
+  const content: anthropic.Anthropic.Messages.ContentBlock[] = [];
 
   for (const part of message.content) {
     if (part.type === 'text') {
@@ -160,11 +160,11 @@ function toClaudeAssistantMessageParam(message: types.AssistantMessage): Anthrop
   };
 }
 
-function toClaudeToolResultMessage(message: types.ToolResultMessage): Anthropic.Messages.MessageParam {
-  const toolResult: Anthropic.Messages.ToolResultBlockParam = {
+function toAnthropicToolResultMessage(message: types.ToolResultMessage): anthropic.Anthropic.Messages.MessageParam {
+  const toolResult: anthropic.Anthropic.Messages.ToolResultBlockParam = {
     type: 'tool_result',
     tool_use_id: message.toolCallId,
-    content: message.result.content.map(toClaudeResultParam),
+    content: message.result.content.map(toAnthropicResultParam),
     is_error: message.result.isError,
   };
 
@@ -174,7 +174,7 @@ function toClaudeToolResultMessage(message: types.ToolResultMessage): Anthropic.
   };
 }
 
-function toClaudeMessagePart(message: types.Message): Anthropic.Messages.MessageParam {
+function toAnthropicMessagePart(message: types.Message): anthropic.Anthropic.Messages.MessageParam {
   if (message.role === 'user' || message.role === 'system') {
     return {
       role: 'user',
@@ -183,10 +183,10 @@ function toClaudeMessagePart(message: types.Message): Anthropic.Messages.Message
   }
 
   if (message.role === 'assistant')
-    return toClaudeAssistantMessageParam(message);
+    return toAnthropicAssistantMessageParam(message);
 
   if (message.role === 'tool_result')
-    return toClaudeToolResultMessage(message);
+    return toAnthropicToolResultMessage(message);
 
   throw new Error(`Unsupported message role: ${(message as any).role}`);
 }

@@ -27,12 +27,16 @@ export function cachedComplete(provider: types.Provider, options: types.CacheOpt
     const c = hideSecrets(conversation, secrets);
     const key = calculateSha1(JSON.stringify(c));
 
-    if (!process.env.NOCACHE && caches.before[key]) {
+    if (!process.env.TL_NO_CACHE && caches.before[key]) {
       caches.after[key] = caches.before[key];
       return unhideSecrets(caches.before[key] ?? caches.after[key], secrets);
     }
-    if (!process.env.NOCACHE && caches.after[key])
+    if (!process.env.TL_NO_CACHE && caches.after[key])
       return unhideSecrets(caches.after[key], secrets);
+
+    if (process.env.TL_FORCE_CACHE)
+      throw new Error('Cache missing but TL_FORCE_CACHE is set' + JSON.stringify(conversation, null, 2));
+
     const result = await provider.complete(conversation, options);
     caches.after[key] = hideSecrets(result, secrets);
     return result;

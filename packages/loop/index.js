@@ -14,4 +14,5 @@
  * limitations under the License.
  */
 
-module.exports = require('./lib/loop');
+module.exports.Loop = require('./lib/loop').Loop;
+module.exports.createMcpTools = require('./lib/mcp').createMcpTools;

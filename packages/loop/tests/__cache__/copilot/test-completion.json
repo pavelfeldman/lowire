@@ -4,16 +4,12 @@
       "role": "assistant",
       "content": [
         {
-          "type": "text",
-          "text": "Replying with \"Hello world\" as requested by the user"
-        },
-        {
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
             "result": "Hello world"
           },
-          "id": "toolu_vrtx_011apdLx4rYesdpwDnri6Hv6"
+          "id": "toolu_vrtx_01ELrJ34GSBPxXaSzxLP1vcb"
         }
       ]
     },

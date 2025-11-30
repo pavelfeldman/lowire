@@ -15,14 +15,9 @@
  */
 
 import path from 'path';
-import url from 'url';
-
-import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
-import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { ListRootsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 
 import { test, expect } from './fixtures';
-import { mcpTools } from '../lib/mcp/index';
+import { createMcpTools } from '../lib/mcp/index';
 
 test('integration', async ({ loop, server }, testInfo) => {
   server.setContent('/', `
@@ -30,29 +25,21 @@ test('integration', async ({ loop, server }, testInfo) => {
       <button>Welcome to lowire!</button>
     </html>
   `, 'text/html');
-  const client = await connectToPlaywrightMcp(testInfo.outputPath());
-  const toolSupport = await mcpTools(client);
+  const toolSupport = await createMcpTools({
+    playwright: {
+      command: 'npx',
+      args: ['playwright', 'run-mcp-server', '--headless', '--output-dir', path.join(testInfo.outputPath(), 'output')],
+      cwd: testInfo.outputPath(),
+      stderr: 'pipe',
+    }
+  }, {
+    rootDir: testInfo.outputPath()
+  });
   const result = await loop.run<{ result: string }>(
     `Navigate to ${server.PREFIX} via Playwright MCP and tell me what is on that page.
      Use snapshot in the navigation result, do not take snapshots or screenshots.`, {
     ...toolSupport
   });
+  await toolSupport.close();
   expect(result!.result).toContain('Welcome to lowire!');
 });
-
-async function connectToPlaywrightMcp(workspaceDir: string): Promise<Client> {
-  const transport = new StdioClientTransport({
-    command: 'npx',
-    args: ['playwright', 'run-mcp-server', '--headless', '--output-dir', path.join(workspaceDir, 'output')],
-    cwd: workspaceDir,
-    stderr: 'pipe',
-  });
-  const client = new Client({name: 'test', version: '1.0.0' }, { capabilities: { roots: {} } });
-  client.setRequestHandler(ListRootsRequestSchema, async request => {
-    return {
-      roots: [{ name: 'workspace', uri: url.pathToFileURL(workspaceDir).toString() }],
-    };
-  });
-  client.connect(transport);
-  return client;
-}

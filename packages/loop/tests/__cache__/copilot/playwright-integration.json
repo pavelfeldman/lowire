@@ -1,28 +1,25 @@
 {
-  "80c886ab371d4250a8afc524c4332b77ba6195a1": {
+  "2cfe117b4a8406313bd382be9eccfc4aac592ace": {
     "result": {
       "role": "assistant",
       "content": [
         {
-          "type": "text",
-          "text": "Navigate to localhost:<PORT> to see what content is on the page"
-        },
-        {
           "type": "tool_call",
-          "name": "browser_navigate",
+          "name": "playwright__browser_navigate",
           "arguments": {
-            "url": "http://localhost:<PORT>/"
+            "url": "http://localhost:<PORT>/",
+            "_intent": "Navigate to localhost:<PORT> to see what content is on the page"
           },
-          "id": "toolu_vrtx_01N5QNTcDNfDcymq4PzwMYxk"
+          "id": "toolu_vrtx_01Cx4i1awQvyPrY5CURWbTvj"
         }
       ]
     },
     "usage": {
-      "input": 3812,
-      "output": 90
+      "input": 4296,
+      "output": 92
     }
   },
-  "239afee10a7bba5abb9ab24287d9015c587af7e6": {
+  "4329caf5e00233563b0e7dfedb9e95317a90d485": {
     "result": {
       "role": "assistant",
       "content": [
@@ -32,13 +29,13 @@
           "arguments": {
             "result": "The page at http://localhost:<PORT>/ contains a button with the text \"Welcome to lowire!\""
           },
-          "id": "toolu_vrtx_01FTqhrefC3pCr6pxZ5knEph"
+          "id": "toolu_vrtx_01EfGByaSnb15QpLTZPbMqfa"
         }
       ]
     },
     "usage": {
-      "input": 3973,
-      "output": 74
+      "input": 4475,
+      "output": 101
     }
   }
 }

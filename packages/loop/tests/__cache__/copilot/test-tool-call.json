@@ -4,46 +4,39 @@
       "role": "assistant",
       "content": [
         {
-          "type": "text",
-          "text": "Add 2 and 3 together"
-        },
-        {
           "type": "tool_call",
           "name": "add",
           "arguments": {
+            "_intent": "Adding 2 and 3 together as requested by the user",
             "a": 2,
             "b": 3
           },
-          "id": "toolu_vrtx_014oRj3Niyq6nAGEREEjpEw9"
+          "id": "toolu_vrtx_01DV8iUB2tyZCHxry4AP9Kqc"
         }
       ]
     },
     "usage": {
       "input": 820,
-      "output": 93
+      "output": 98
     }
   },
-  "d72b981385c8cc0c0af6f09fe80c9b38a7fe953c": {
+  "86e1d03bbc51f1e1bdd61bcf02344260ba4277c2": {
     "result": {
       "role": "assistant",
       "content": [
-        {
-          "type": "text",
-          "text": "Report the sum of 2 and 3"
-        },
         {
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
             "sum": 5
           },
-          "id": "toolu_vrtx_014feshex1BU5wQjEaepAeuj"
+          "id": "toolu_vrtx_01UaDeAegaPNqbKbHoMJZddC"
         }
       ]
     },
     "usage": {
-      "input": 914,
-      "output": 79
+      "input": 935,
+      "output": 80
     }
   }
 }

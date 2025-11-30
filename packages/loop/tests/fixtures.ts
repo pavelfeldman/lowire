@@ -16,6 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import debug from 'debug';
 
 import { test as baseTest } from '@playwright/test';
 import { Loop } from '../lib/loop';
@@ -55,6 +56,7 @@ export const test = baseTest.extend<TestOptions & TestFixtures, WorkerFixtures>(
     const loop = new Loop(provider, {
       model,
       cache: { messages: cache, secrets: { PORT: String(_workerPort) } },
+      debug,
     })
     await use(loop);
     const dataAfter = JSON.stringify(loop.cache(), null, 2);

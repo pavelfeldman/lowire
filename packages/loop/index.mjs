@@ -15,3 +15,4 @@
  */
 
 export * from './lib/loop.js';
+export * from './lib/mcp.js';

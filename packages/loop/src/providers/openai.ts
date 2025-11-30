@@ -32,7 +32,7 @@ export class OpenAI implements types.Provider {
       tools: tools.length > 0 ? tools : undefined,
       tool_choice: conversation.tools.length > 0 ? 'auto' : undefined,
       parallel_tool_calls: false,
-    });
+    }, options);
 
     // Parse response output items
     const result: types.AssistantMessage = { role: 'assistant', content: [] };
@@ -63,7 +63,7 @@ export class OpenAI implements types.Provider {
   }
 }
 
-async function create(body: openai.OpenAI.Responses.ResponseCreateParamsNonStreaming): Promise<openai.OpenAI.Responses.Response> {
+async function create(createParams: openai.OpenAI.Responses.ResponseCreateParamsNonStreaming, options: types.CompletionOptions): Promise<openai.OpenAI.Responses.Response> {
   const apiKey = process.env.OPENAI_API_KEY!;
 
   const headers: Record<string, string> = {
@@ -72,16 +72,23 @@ async function create(body: openai.OpenAI.Responses.ResponseCreateParamsNonStrea
     'Copilot-Vision-Request': 'true',
   };
 
+  const debugBody = { ...createParams, tools: `${createParams.tools?.length ?? 0} tools` };
+  options.debug?.('lowire:openai-responses')('Request:', JSON.stringify(debugBody, null, 2));
+
   const response = await fetch(`https://api.openai.com/v1/responses`, {
     method: 'POST',
     headers,
-    body: JSON.stringify(body)
+    body: JSON.stringify(createParams)
   });
 
-  if (!response.ok)
+  if (!response.ok) {
+    options.debug?.('lowire:openai-responses')('Response:', response.status);
     throw new Error(`API error: ${response.status} ${response.statusText} ${await response.text()}`);
+  }
 
-  return await response.json() as openai.OpenAI.Responses.Response;
+  const responseBody = await response.json() as openai.OpenAI.Responses.Response;
+  options.debug?.('lowire:openai-responses')('Response:', JSON.stringify(responseBody, null, 2));
+  return responseBody;
 }
 
 function toResultContentPart(part: types.ResultPart): openai.OpenAI.Responses.ResponseInputText | openai.OpenAI.Responses.ResponseInputImage {

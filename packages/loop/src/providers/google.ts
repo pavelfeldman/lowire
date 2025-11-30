@@ -34,7 +34,7 @@ export class Google implements types.Provider {
       contents,
       tools: conversation.tools.length > 0 ? [{ functionDeclarations: conversation.tools.map(toGeminiTool) }] : undefined,
       generationConfig: { temperature: options.temperature },
-    });
+    }, options);
 
     const [candidate] = response.candidates ?? [];
     if (!candidate)
@@ -50,10 +50,14 @@ export class Google implements types.Provider {
   }
 }
 
-async function create(model: string, body: google.GenerateContentRequest): Promise<google.GenerateContentResponse> {
+async function create(model: string, createParams: google.GenerateContentRequest, options: types.CompletionOptions): Promise<google.GenerateContentResponse> {
   const apiKey = process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY;
   if (!apiKey)
     throw new Error('GEMINI_API_KEY or GOOGLE_API_KEY environment variable is required');
+
+
+  const debugBody = { ...createParams, tools: `${createParams.tools?.length ?? 0} tools` };
+  options.debug?.('lowire:google')('Request:', JSON.stringify(debugBody, null, 2));
 
   const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: 'POST',
@@ -61,13 +65,17 @@ async function create(model: string, body: google.GenerateContentRequest): Promi
       'Content-Type': 'application/json',
       'x-goog-api-key': apiKey,
     },
-    body: JSON.stringify(body)
+    body: JSON.stringify(createParams)
   });
 
-  if (!response.ok)
+  if (!response.ok) {
+    options.debug?.('lowire:google')('Response:', response.status);
     throw new Error(`API error: ${response.status} ${response.statusText} ${await response.text()}`);
+  }
 
-  return await response.json() as google.GenerateContentResponse;
+  const responseBody = await response.json() as google.GenerateContentResponse;
+  options.debug?.('lowire:google')('Response:', JSON.stringify(responseBody, null, 2));
+  return responseBody;
 }
 
 function toGeminiTool(tool: types.Tool) {
@@ -84,6 +92,7 @@ function stripUnsupportedSchemaFields(schema: any): any {
 
   const cleaned: any = Array.isArray(schema) ? [...schema] : { ...schema };
   delete cleaned.additionalProperties;
+  delete cleaned.$schema;
   for (const key in cleaned) {
     if (cleaned[key] && typeof cleaned[key] === 'object')
       cleaned[key] = stripUnsupportedSchemaFields(cleaned[key]);

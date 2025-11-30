@@ -4,14 +4,12 @@
       "role": "assistant",
       "content": [
         {
-          "type": "text",
-          "text": "First counter query"
-        },
-        {
           "type": "tool_call",
           "name": "counter",
-          "arguments": {},
-          "id": "toolu_vrtx_01JgXXcgkEUWcujygmAY3DPB"
+          "arguments": {
+            "_intent": "First counter query"
+          },
+          "id": "toolu_vrtx_013yXSL12Rei7mkxMW7Teoby"
         }
       ]
     },
@@ -20,84 +18,61 @@
       "output": 125
     }
   },
-  "8ca202c251eab6396f9741479ca87855309edfd9": {
+  "c6748861cfab786de0078d96179c11ecaefa1048": {
     "result": {
       "role": "assistant",
       "content": [
-        {
-          "type": "text",
-          "text": "Second counter query"
-        }
-      ]
-    },
-    "usage": {
-      "input": 815,
-      "output": 38
-    }
-  },
-  "b4c5b0607f64e6072dbf66ff74cb6a5751df2016": {
-    "result": {
-      "role": "assistant",
-      "content": [
-        {
-          "type": "text",
-          "text": "Second counter query"
-        },
         {
           "type": "tool_call",
           "name": "counter",
-          "arguments": {},
-          "id": "toolu_vrtx_01CKrfqt1qruRyWf8GMXYVvP"
+          "arguments": {
+            "_intent": "Second counter query"
+          },
+          "id": "toolu_vrtx_019bbVb26oVDTPi743a6mE1n"
         }
       ]
     },
     "usage": {
-      "input": 842,
+      "input": 831,
       "output": 53
     }
   },
-  "e588123f6bdda1fe33b5369af57113fe2affcf5d": {
+  "c5e8c5980efd07775b91cf762a0fabb8bc1b0c1c": {
     "result": {
       "role": "assistant",
       "content": [
-        {
-          "type": "text",
-          "text": "Third counter query"
-        },
         {
           "type": "tool_call",
           "name": "counter",
-          "arguments": {},
-          "id": "toolu_vrtx_01FLtGshYWbVagTWeFkCDJRQ"
+          "arguments": {
+            "_intent": "Third counter query"
+          },
+          "id": "toolu_vrtx_01WHwiK22X2zddPi98PPpE1g"
         }
       ]
     },
     "usage": {
-      "input": 893,
+      "input": 897,
       "output": 53
     }
   },
-  "373e14137b8fd0ca799182db9ff204af539a8fe8": {
+  "c6ff7ede24ff6cecb0227c0e23a9ef408dfde355": {
     "result": {
       "role": "assistant",
       "content": [
-        {
-          "type": "text",
-          "text": "Report the three counter values as comma-separated text without spaces"
-        },
         {
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
             "result": "43,73,136"
           },
-          "id": "toolu_vrtx_017yJLJSPi8soB1xKTopC1o5"
+          "id": "toolu_vrtx_01Jw4j1vYwDFvAMkjQWfy7LP"
         }
       ]
     },
     "usage": {
-      "input": 944,
-      "output": 85
+      "input": 963,
+      "output": 84
     }
   }
 }

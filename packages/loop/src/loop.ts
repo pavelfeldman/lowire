@@ -19,8 +19,6 @@ import { cachedComplete } from './cache';
 
 import type * as types from './types';
 
-export type Logger = (category: string, text: string, details?: string) => void;
-
 type Sizes = {
   headers: number;
   messages: number;
@@ -32,7 +30,6 @@ export type LoopOptions = types.CompletionOptions & {
   callTool?: types.ToolCallback;
   maxTurns?: number;
   resultSchema?: types.Schema;
-  log?: Logger;
   cache?: {
     messages: types.ReplayCache;
     secrets: Record<string, string>;
@@ -69,15 +66,14 @@ export class Loop {
       tools: allTools,
     };
 
-    const log = options.log ?? (() => {});
+    const debug = options.debug;
     const totalUsage: types.Usage = { input: 0, output: 0 };
 
-    log('loop:loop', `Starting ${this._provider.name} loop`, task);
+    debug?.('lowire:loop')(`Starting ${this._provider.name} loop`, task);
     const maxTurns = options.maxTurns || 100;
 
     for (let turn = 0; turn < maxTurns; ++turn) {
-      log('loop:turn', `${turn + 1} of (max ${maxTurns})`);
-
+      debug?.('lowire:loop')(`Turn ${turn + 1} of (max ${maxTurns})`);
       const status = await options.onBeforeTurn?.({ turn, conversation, sizes: this._sizes(conversation), totalUsage });
       if (status === 'stop')
         return undefined;
@@ -95,8 +91,8 @@ export class Loop {
       const text = assistantMessage.content.filter(part => part.type === 'text').map(part => part.text).join('\n');
       const toolCalls = assistantMessage.content.filter(part => part.type === 'tool_call') as types.ToolCallContentPart[];
 
-      log('loop:usage', `input: ${usage.input}, output: ${usage.output}`);
-      log('loop:assistant', text, JSON.stringify(assistantMessage.content, null, 2));
+      debug?.('lowire:loop')('Usage', `input: ${usage.input}, output: ${usage.output}`);
+      debug?.('lowire:loop')('Assistant', text, JSON.stringify(assistantMessage.content, null, 2));
 
       if (toolCalls.length === 0) {
         conversation.messages.push({
@@ -110,7 +106,7 @@ export class Loop {
       for (const toolCall of toolCalls) {
         const { name, arguments: args, id } = toolCall;
 
-        log('loop:call-tool', name, JSON.stringify(args, null, 2));
+        debug?.('lowire:loop')('Call tool', name, JSON.stringify(args, null, 2));
         if (name === 'report_result')
           return args;
 
@@ -121,7 +117,7 @@ export class Loop {
           });
 
           const text = result.content.filter(part => part.type === 'text').map(part => part.text).join('\n');
-          log('loop:tool-result', text, JSON.stringify(result, null, 2));
+          debug?.('lowire:loop')('Tool result', text, JSON.stringify(result, null, 2));
 
           toolResults.push({
             toolName: name,
@@ -130,7 +126,7 @@ export class Loop {
           });
         } catch (error) {
           const errorMessage = `Error while executing tool "${name}": ${error instanceof Error ? error.message : String(error)}\n\nPlease try to recover and complete the task.`;
-          log('loop:tool-error', errorMessage, String(error));
+          debug?.('lowire:loop')('Tool error', errorMessage, String(error));
 
           toolResults.push({
             toolName: name,

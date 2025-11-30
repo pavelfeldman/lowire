@@ -32,7 +32,7 @@ export class Anthropic implements types.Provider {
         type: 'enabled',
         budget_tokens: options.maxTokens ? Math.round(options.maxTokens / 10) : 1024,
       } : undefined,
-    });
+    }, options);
     const result = toAssistantMessage(response);
     const usage: types.Usage = {
       input: response.usage.input_tokens,
@@ -42,23 +42,30 @@ export class Anthropic implements types.Provider {
   }
 }
 
-async function create(body: anthropic.Anthropic.Messages.MessageCreateParamsNonStreaming): Promise<anthropic.Anthropic.Messages.Message> {
+async function create(createParams: anthropic.Anthropic.Messages.MessageCreateParamsNonStreaming, options: types.CompletionOptions): Promise<anthropic.Anthropic.Messages.Message> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     'x-api-key': process.env.ANTHROPIC_API_KEY!,
     'anthropic-version': '2023-06-01',
   };
 
+  const debugBody = { ...createParams, tools: `${createParams.tools?.length ?? 0} tools` };
+  options.debug?.('lowire:anthropic')('Request:', JSON.stringify(debugBody, null, 2));
+
   const response = await fetch(`https://api.anthropic.com/v1/messages`, {
     method: 'POST',
     headers,
-    body: JSON.stringify(body)
+    body: JSON.stringify(createParams)
   });
 
-  if (!response.ok)
+  if (!response.ok) {
+    options.debug?.('lowire:anthropic')('Response:', response.status);
     throw new Error(`API error: ${response.status} ${response.statusText} ${await response.text()}`);
+  }
+  const responseBody = await response.json() as anthropic.Anthropic.Messages.Message;
+  options.debug?.('lowire:anthropic')('Response:', JSON.stringify(responseBody, null, 2));
 
-  return await response.json() as anthropic.Anthropic.Messages.Message;
+  return responseBody;
 }
 
 function toContentPart(block: anthropic.Anthropic.Messages.ContentBlock): types.TextContentPart | types.ToolCallContentPart | types.ThinkingContentPart | null {

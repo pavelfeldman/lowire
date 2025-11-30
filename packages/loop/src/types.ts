@@ -115,11 +115,14 @@ export type Conversation = {
   tools: Tool[];
 };
 
+type Debug = (category: string) => (...args: any[]) => void;
+
 export type CompletionOptions = {
   model: string;
   maxTokens?: number;
   reasoning?: boolean;
   temperature?: number;
+  debug?: Debug;
 };
 
 export interface Provider {

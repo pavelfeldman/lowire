@@ -2,6 +2,7 @@
   "files": [],
   "references": [
     { "path": "./packages/loop/tsconfig.src.json" },
-    { "path": "./packages/loop/tsconfig.tests.json" }
+    { "path": "./packages/loop/tsconfig.tests.json" },
+    { "path": "./packages/playwright-loop/tsconfig.src.json" }
   ]
 }

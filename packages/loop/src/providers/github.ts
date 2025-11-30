@@ -47,20 +47,7 @@ export class Github extends OpenAICompletions {
   }
 
   override async complete(conversation: types.Conversation, options: types.CompletionOptions) {
-    const message = await super.complete(conversation, { ...options, injectIntent: true });
-    const textPart = message.result.content.find(part => part.type === 'text');
-    if (!textPart) {
-      const content: string[] = [];
-      const toolCalls = message.result.content.filter(part => part.type === 'tool_call');
-      for (const toolCall of toolCalls) {
-        content.push(toolCall.arguments?._intent ?? '');
-        delete toolCall.arguments._intent;
-      }
-      const text = content.join(' ').trim();
-      if (text.trim())
-        message.result.content.unshift({ type: 'text', text: content.join(' ') });
-    }
-    return message;
+    return await super.complete(conversation, { ...options, injectIntent: true });
   }
 }
 

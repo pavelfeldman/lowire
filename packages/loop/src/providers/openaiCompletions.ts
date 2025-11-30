@@ -59,13 +59,13 @@ export class OpenAICompletions implements types.Provider {
       tools: openaiTools,
       tool_choice: conversation.tools.length > 0 ? 'auto' : undefined,
       reasoning_effort: options.reasoning ? 'medium' : undefined,
-    }, endpoint);
+    }, endpoint, options);
 
     const result: types.AssistantMessage = { role: 'assistant', content: [] };
     const message = response.choices[0].message;
     if (message.content)
       result.content.push({ type: 'text', text: message.content });
-    result.content.push(...(message.tool_calls || []).map(toToolCall));
+    result.content.push(...(message.tool_calls || []).map(tc => toToolCall(tc, options)));
 
     const usage: types.Usage = {
       input: response.usage?.prompt_tokens ?? 0,
@@ -75,7 +75,7 @@ export class OpenAICompletions implements types.Provider {
   }
 }
 
-async function create(body: openai.OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming, endpoint: Endpoint): Promise<openai.OpenAI.Chat.Completions.ChatCompletion> {
+async function create(createParams: openai.OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming, endpoint: Endpoint, options: types.CompletionOptions): Promise<openai.OpenAI.Chat.Completions.ChatCompletion> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${endpoint.apiKey}`,
@@ -83,16 +83,23 @@ async function create(body: openai.OpenAI.Chat.Completions.ChatCompletionCreateP
     ...endpoint.headers
   };
 
+  const debugBody = { ...createParams, tools: `${createParams.tools?.length ?? 0} tools` };
+  options.debug?.('lowire:openai')('Request:', JSON.stringify(debugBody, null, 2));
+
   const response = await fetch(`${endpoint.baseUrl}/chat/completions`, {
     method: 'POST',
     headers,
-    body: JSON.stringify(body)
+    body: JSON.stringify(createParams),
   });
 
-  if (!response.ok)
+  if (!response.ok) {
+    options.debug?.('lowire:openai')('Response:', response.status);
     throw new Error(`API error: ${response.status} ${response.statusText} ${await response.text()}`);
+  }
 
-  return await response.json() as openai.OpenAI.Chat.Completions.ChatCompletion;
+  const responseBody = await response.json() as openai.OpenAI.Chat.Completions.ChatCompletion;
+  options.debug?.('lowire:openai')('Response:', JSON.stringify(responseBody, null, 2));
+  return responseBody;
 }
 
 function toOpenAIResultContentPart(part: types.ResultPart): openai.OpenAI.Chat.Completions.ChatCompletionContentPart {
@@ -181,13 +188,16 @@ function toOpenAITool(tool: types.Tool, options: { injectIntent?: boolean }): op
   };
 }
 
-function toToolCall(toolCall: openai.OpenAI.Chat.Completions.ChatCompletionMessageToolCall): types.ToolCallContentPart {
-  return {
+function toToolCall(toolCall: openai.OpenAI.Chat.Completions.ChatCompletionMessageToolCall, options: { injectIntent?: boolean }): types.ToolCallContentPart {
+  const result: types.ToolCallContentPart = {
     type: 'tool_call',
     name: toolCall.type === 'function' ? toolCall.function.name : toolCall.custom.name,
     arguments: JSON.parse(toolCall.type === 'function' ? toolCall.function.arguments : toolCall.custom.input),
     id: toolCall.id,
   };
+  if (result.name === 'report_result' && options.injectIntent && '_intent' in result.arguments)
+    delete result.arguments['_intent'];
+  return result;
 }
 
 const systemPrompt = (prompt: string) => `

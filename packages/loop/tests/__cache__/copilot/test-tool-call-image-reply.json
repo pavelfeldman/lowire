@@ -4,14 +4,12 @@
       "role": "assistant",
       "content": [
         {
-          "type": "text",
-          "text": "Capture the image to see what number is displayed on it"
-        },
-        {
           "type": "tool_call",
           "name": "capture_image",
-          "arguments": {},
-          "id": "toolu_vrtx_01NJ3tDAerGA2QHP4NadsWYK"
+          "arguments": {
+            "_intent": "Capture the image to see what number is displayed on it"
+          },
+          "id": "toolu_vrtx_01TRzcN4noE36UZmHWdtigPi"
         }
       ]
     },
@@ -20,27 +18,23 @@
       "output": 64
     }
   },
-  "a1e8c478ca5d0518f9ed3f326e3306b49e034982": {
+  "95e2f56d66c264ebe8dea47ad348f681c9842c99": {
     "result": {
       "role": "assistant",
       "content": [
-        {
-          "type": "text",
-          "text": "Report that the number 42 is visible in the captured image"
-        },
         {
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
             "result": 42
           },
-          "id": "toolu_vrtx_01DEdMMzQFaALBpjcL3dCVYo"
+          "id": "toolu_vrtx_017oghkMWTrrzgyZBfraHBuN"
         }
       ]
     },
     "usage": {
-      "input": 2413,
-      "output": 83
+      "input": 2429,
+      "output": 82
     }
   }
 }

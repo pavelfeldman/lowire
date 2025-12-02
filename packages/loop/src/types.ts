@@ -34,28 +34,24 @@ export type ToolCallback = (params: {
 // Messages
 
 export type BaseMessage = {
-  role: 'user' | 'assistant' | 'tool_result';
+  role: 'user' | 'assistant';
 };
 
 export type Message =
   | UserMessage
-  | AssistantMessage
-  | ToolResultMessage;
-
-// 1. User message
+  | AssistantMessage;
 
 export type UserMessage = BaseMessage & {
   role: 'user';
   content: string;
 };
 
-// 2. Assistant message
-
 export type AssistantMessage = BaseMessage & {
   role: 'assistant';
   content: (TextContentPart | ToolCallContentPart | ThinkingContentPart)[];
   openaiId?: string;
   openaiStatus?: 'completed' | 'incomplete' | 'in_progress';
+  toolError?: string;
 };
 
 export type TextContentPart = {
@@ -79,15 +75,7 @@ export type ToolCallContentPart = {
   googleThoughtSignature?: string;
   openaiId?: string;
   openaiStatus?: 'completed' | 'incomplete' | 'in_progress';
-};
-
-// 3. Tool result message
-
-export type ToolResultMessage = BaseMessage & {
-  role: 'tool_result';
-  toolName: string;
-  toolCallId: string;
-  result: ToolResult;
+  result?: ToolResult;
 };
 
 export type TextResultPart = {

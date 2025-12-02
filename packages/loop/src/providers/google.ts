@@ -139,6 +139,7 @@ function toGeminiContent(message: types.Message): google.Content[] {
 
   if (message.role === 'assistant') {
     const parts: GeminiThinkingPart[] = [];
+    const toolResults: google.Content[] = [];
 
     for (const part of message.content) {
       if (part.type === 'text') {
@@ -157,58 +158,68 @@ function toGeminiContent(message: types.Message): google.Content[] {
           },
           thoughtSignature: part.googleThoughtSignature,
         });
+        if (part.result)
+          toolResults.push(...toGeminiToolResult(part, part.result));
       }
+    }
+
+    if (message.toolError) {
+      toolResults.push({
+        role: 'user',
+        parts: [{
+          text: message.toolError,
+        }]
+      });
     }
 
     return [{
       role: 'model',
       parts
-    }];
-  }
-
-  if (message.role === 'tool_result') {
-    const responseContent: any = {};
-    const textParts: string[] = [];
-    const inlineDatas: any[] = [];
-
-    for (const part of message.result.content) {
-      if (part.type === 'text') {
-        textParts.push(part.text);
-      } else if (part.type === 'image') {
-        // Store image data for inclusion in response
-        inlineDatas.push({
-          inline_data: {
-            mime_type: part.mimeType,
-            data: part.data
-          }
-        });
-      }
-    }
-
-    if (textParts.length > 0)
-      responseContent.result = textParts.join('\n');
-
-    const result = [{
-      role: 'function',
-      parts: [{
-        functionResponse: {
-          name: message.toolName,
-          response: responseContent
-        }
-      }]
-    }];
-
-    if (inlineDatas.length > 0) {
-      result.push({
-        role: 'user',
-        parts: inlineDatas
-      });
-    }
-
-    return result;
+    }, ...toolResults];
   }
 
   throw new Error(`Unsupported message role: ${(message as any).role}`);
+}
+
+function toGeminiToolResult(call: types.ToolCallContentPart, toolResult: types.ToolResult): google.Content[] {
+  const responseContent: any = {};
+  const textParts: string[] = [];
+  const inlineDatas: any[] = [];
+
+  for (const part of toolResult.content) {
+    if (part.type === 'text') {
+      textParts.push(part.text);
+    } else if (part.type === 'image') {
+      // Store image data for inclusion in response
+      inlineDatas.push({
+        inline_data: {
+          mime_type: part.mimeType,
+          data: part.data
+        }
+      });
+    }
+  }
+
+  if (textParts.length > 0)
+    responseContent.result = textParts.join('\n');
+
+  const result: google.Content[] = [{
+    role: 'function',
+    parts: [{
+      functionResponse: {
+        name: call.name,
+        response: responseContent
+      }
+    }]
+  }];
+
+  if (inlineDatas.length > 0) {
+    result.push({
+      role: 'user',
+      parts: inlineDatas
+    });
+  }
+  return result;
 }
 
 const systemPrompt = (prompt: string) => `

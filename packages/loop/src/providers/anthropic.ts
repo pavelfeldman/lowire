@@ -26,7 +26,7 @@ export class Anthropic implements types.Provider {
       max_tokens: options.maxTokens ?? 32768,
       temperature: options.temperature,
       system: systemPrompt(conversation.systemPrompt),
-      messages: conversation.messages.map(toAnthropicMessagePart),
+      messages: conversation.messages.map(toAnthropicMessageParts).flat(),
       tools: conversation.tools.map(toAnthropicTool),
       thinking: options.reasoning ? {
         type: 'enabled',
@@ -133,8 +133,9 @@ function toAnthropicTool(tool: types.Tool): anthropic.Anthropic.Messages.Tool {
   };
 }
 
-function toAnthropicAssistantMessageParam(message: types.AssistantMessage): anthropic.Anthropic.Messages.MessageParam {
+function toAnthropicAssistantMessageParam(message: types.AssistantMessage): anthropic.Anthropic.Messages.MessageParam[] {
   const content: anthropic.Anthropic.Messages.ContentBlock[] = [];
+  const toolResults: anthropic.Anthropic.Messages.MessageParam[] = [];
 
   for (const part of message.content) {
     if (part.type === 'text') {
@@ -149,6 +150,8 @@ function toAnthropicAssistantMessageParam(message: types.AssistantMessage): anth
         name: part.name,
         input: part.arguments
       });
+      if (part.result)
+        toolResults.push(toAnthropicToolResultMessage(part, part.result));
       continue;
     }
 
@@ -162,18 +165,28 @@ function toAnthropicAssistantMessageParam(message: types.AssistantMessage): anth
     }
   }
 
-  return {
+  if (message.toolError) {
+    toolResults.push({
+      role: 'user',
+      content: [{
+        type: 'text',
+        text: message.toolError,
+      }]
+    });
+  }
+
+  return [{
     role: 'assistant',
     content
-  };
+  }, ...toolResults];
 }
 
-function toAnthropicToolResultMessage(message: types.ToolResultMessage): anthropic.Anthropic.Messages.MessageParam {
+function toAnthropicToolResultMessage(call: types.ToolCallContentPart, result: types.ToolResult): anthropic.Anthropic.Messages.MessageParam {
   const toolResult: anthropic.Anthropic.Messages.ToolResultBlockParam = {
     type: 'tool_result',
-    tool_use_id: message.toolCallId,
-    content: message.result.content.map(toAnthropicResultParam),
-    is_error: message.result.isError,
+    tool_use_id: call.id,
+    content: result.content.map(toAnthropicResultParam),
+    is_error: result.isError,
   };
 
   return {
@@ -182,19 +195,16 @@ function toAnthropicToolResultMessage(message: types.ToolResultMessage): anthrop
   };
 }
 
-function toAnthropicMessagePart(message: types.Message): anthropic.Anthropic.Messages.MessageParam {
+function toAnthropicMessageParts(message: types.Message): anthropic.Anthropic.Messages.MessageParam[] {
   if (message.role === 'user') {
-    return {
+    return [{
       role: 'user',
       content: message.content
-    };
+    }];
   }
 
   if (message.role === 'assistant')
     return toAnthropicAssistantMessageParam(message);
-
-  if (message.role === 'tool_result')
-    return toAnthropicToolResultMessage(message);
 
   throw new Error(`Unsupported message role: ${(message as any).role}`);
 }

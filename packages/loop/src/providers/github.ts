@@ -33,7 +33,7 @@ export class Github implements types.Provider {
       role: 'system',
       content: systemPrompt(conversation.systemPrompt)
     };
-    const openaiMessages = [systemMessage, ...conversation.messages.map(toCopilotMessage)];
+    const openaiMessages = [systemMessage, ...conversation.messages.map(toCopilotMessages).flat()];
     const openaiTools = conversation.tools.map(t => toCopilotTool(t));
 
     const bearer = await this._bearer();
@@ -111,12 +111,12 @@ function toCopilotResultContentPart(part: types.ResultPart): openai.OpenAI.Chat.
   throw new Error(`Cannot convert content part of type ${(part as any).type} to text content part`);
 }
 
-function toCopilotMessage(message: types.Message): openai.OpenAI.Chat.Completions.ChatCompletionMessageParam {
+function toCopilotMessages(message: types.Message): openai.OpenAI.Chat.Completions.ChatCompletionMessageParam[] {
   if (message.role === 'user') {
-    return {
+    return [{
       role: 'user',
       content: message.content
-    };
+    }];
   }
 
   if (message.role === 'assistant') {
@@ -138,6 +138,7 @@ function toCopilotMessage(message: types.Message): openai.OpenAI.Chat.Completion
       assistantMessage.content = textParts;
 
     const toolCalls: openai.OpenAI.Chat.Completions.ChatCompletionMessageToolCall[] = [];
+    const toolResultMessages: openai.OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [];
     for (const toolCall of toolCallParts) {
       const args = { ...toolCall.arguments };
       if (toolIntents.has(toolCall.id))
@@ -150,20 +151,29 @@ function toCopilotMessage(message: types.Message): openai.OpenAI.Chat.Completion
           arguments: JSON.stringify(args)
         }
       });
+      if (toolCall.result) {
+        toolResultMessages.push({
+          role: 'tool',
+          tool_call_id: toolCall.id,
+          content: toolCall.result.content.map(toCopilotResultContentPart) as openai.OpenAI.Chat.Completions.ChatCompletionContentPartText[],
+        });
+      }
     }
 
     if (toolCalls.length > 0)
       assistantMessage.tool_calls = toolCalls;
 
-    return assistantMessage;
-  }
+    if (message.toolError) {
+      toolResultMessages.push({
+        role: 'user',
+        content: [{
+          type: 'text',
+          text: message.toolError,
+        }]
+      });
+    }
 
-  if (message.role === 'tool_result') {
-    return {
-      role: 'tool',
-      tool_call_id: message.toolCallId,
-      content: message.result.content.map(toCopilotResultContentPart) as openai.OpenAI.Chat.Completions.ChatCompletionContentPartText[],
-    };
+    return [assistantMessage, ...toolResultMessages];
   }
 
   throw new Error(`Unsupported message role: ${(message as any).role}`);

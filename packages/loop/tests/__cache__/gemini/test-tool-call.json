@@ -20,7 +20,7 @@
       "output": 18
     }
   },
-  "507fcbba292cc52e089db30ee050e26abf69a967": {
+  "70b519a20148f479174e6c447305680ed435f7db": {
     "result": {
       "role": "assistant",
       "content": [
@@ -30,8 +30,8 @@
           "arguments": {
             "sum": 5
           },
-          "id": "call_4wml6ziihjn",
-          "googleThoughtSignature": "CpkBAXLI2nzPeCEwi6YHnYKfIzAA5Uo2hkVUzIfeufNrGLw7jujrIFmRoABgqW6GIaRn+KEdeX5EvlJsav7bGtwoouOsy/FroXUsJII/h/ZnL3OJX9FwE5+Sx955ZMQ1f2XrooFbCZMSpYztNR9PF+DRgPAO23ekXMzcNtpog6mOXF5mFMOBK2+8cEqF0heryyMXNvvyq9if79fP"
+          "id": "call_i2mkebu1hhd",
+          "googleThoughtSignature": "CqsBAXLI2nwzbsFc3pfJ0pPuKX9Rl0h87isEZRyDe7a/Jz5keWx5U9XnNDFFyoC++9S8zs7NzQnXvoycqFw9o7N36G+hPry2TUnzlMT707BGv8PCp0JEC6o9f1Tf27wv0FMQVw0E/kIPwEV08bX+4XV6rBulCtrjve9MU42wF7EUP3SDPRCs24H0p5vwKnEl6qe0tWeZWxIdNWjH2OJUf/t2HllKMAlGcUG8F/XU"
         }
       ]
     },

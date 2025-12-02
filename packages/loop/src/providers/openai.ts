@@ -140,16 +140,16 @@ function toResponseInputItems(message: types.Message): openai.OpenAI.Responses.R
       items.push(outputMessage);
     }
 
-    items.push(...toolCallParts.map(toFunctionToolCall));
-    return items;
-  }
+    if (message.toolError) {
+      items.push({
+        type: 'message',
+        role: 'user',
+        content: message.toolError
+      });
+    }
 
-  if (message.role === 'tool_result') {
-    return [{
-      type: 'function_call_output',
-      call_id: message.toolCallId,
-      output: message.result.content.map(toResultContentPart),
-    } as openai.OpenAI.Responses.ResponseInputItem.FunctionCallOutput];
+    items.push(...toolCallParts.map(toFunctionToolCall).flat());
+    return items;
   }
 
   throw new Error(`Unsupported message role: ${(message as any).role}`);
@@ -165,15 +165,23 @@ function toOpenAIFunctionTool(tool: types.Tool): openai.OpenAI.Responses.Functio
   };
 }
 
-function toFunctionToolCall(toolCall: types.ToolCallContentPart): openai.OpenAI.Responses.ResponseFunctionToolCall {
-  return {
+function toFunctionToolCall(toolCall: types.ToolCallContentPart): openai.OpenAI.Responses.ResponseInputItem[] {
+  const result: openai.OpenAI.Responses.ResponseInputItem[] = [{
     type: 'function_call',
     call_id: toolCall.id,
     name: toolCall.name,
     arguments: JSON.stringify(toolCall.arguments),
     id: toolCall.openaiId!,
     status: toolCall.openaiStatus!,
-  };
+  }];
+  if (toolCall.result) {
+    result.push({
+      type: 'function_call_output',
+      call_id: toolCall.id,
+      output: toolCall.result.content.map(toResultContentPart),
+    } as openai.OpenAI.Responses.ResponseInputItem.FunctionCallOutput);
+  }
+  return result;
 }
 
 function toToolCall(functionCall: openai.OpenAI.Responses.ResponseFunctionToolCall): types.ToolCallContentPart {

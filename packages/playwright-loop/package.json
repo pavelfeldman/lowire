@@ -1,6 +1,6 @@
 {
   "name": "@lowire/playwright-loop",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Small playwright loop",
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
   "license": "Apache-2.0",
   "scripts": {},
   "dependencies": {
-    "@lowire/loop": "^0.0.2",
+    "@lowire/loop": "^0.0.3",
     "@modelcontextprotocol/sdk": "^1.23.0",
     "debug": "^4.4.3"
   }

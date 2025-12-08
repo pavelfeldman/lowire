@@ -29,6 +29,12 @@ export type LoopOptions = types.CompletionOptions & {
     messages: types.ReplayCache;
     secrets: Record<string, string>;
   };
+  beforeTurn?: (params: {
+    turn: number;
+    conversation: types.Conversation;
+    summarizedConversation?: types.Conversation;
+    usage: types.Usage;
+  }) => 'break' | 'continue' | void;
   summarize?: boolean;
 };
 
@@ -42,7 +48,11 @@ export class Loop {
     this._loopOptions = options;
   }
 
-  async run<T>(task: string, runOptions: Omit<LoopOptions, 'model'> & { model?: string } = {}): Promise<T> {
+  async run<T>(task: string, runOptions: Omit<LoopOptions, 'model'> & { model?: string } = {}): Promise<{
+    result?: T
+    status: 'ok' | 'break',
+    usage: types.Usage
+  }> {
     const options: LoopOptions = { ...this._loopOptions, ...runOptions };
     const allTools: types.Tool[] = [...options.tools || []];
     allTools.push({
@@ -74,6 +84,10 @@ export class Loop {
       } : undefined;
 
       const summarizedConversation = options.summarize ? this._summarizeConversation(task, conversation, options) : conversation;
+      const status = options.beforeTurn?.({ turn, conversation, summarizedConversation, usage: totalUsage });
+      if (status === 'break')
+        return { status: 'break', usage: totalUsage };
+
       debug?.('lowire:loop')(`Request`, JSON.stringify({ ...summarizedConversation, tools: `${summarizedConversation.tools.length} tools` }, null, 2));
       const { result: assistantMessage, usage } = await cachedComplete(this._provider, summarizedConversation, caches, options);
       const text = assistantMessage.content.filter(part => part.type === 'text').map(part => part.text).join('\n');
@@ -94,7 +108,7 @@ export class Loop {
         const { name, arguments: args } = toolCall;
         debug?.('lowire:loop')('Call tool', name, JSON.stringify(args, null, 2));
         if (name === 'report_result')
-          return args;
+          return { result: args as T, status: 'ok', usage: totalUsage };
 
         try {
           const result = await options.callTool!({

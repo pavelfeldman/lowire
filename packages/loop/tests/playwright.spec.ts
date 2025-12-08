@@ -35,7 +35,7 @@ test('integration', async ({ loop, server }, testInfo) => {
   }, {
     rootDir: testInfo.outputPath()
   });
-  const result = await loop.run<{ result: string }>(
+  const { result } = await loop.run<{ result: string }>(
     `Navigate to ${server.PREFIX} via Playwright MCP and tell me what is on that page.
      Use snapshot in the navigation result, do not take snapshots or screenshots.`, {
     ...toolSupport

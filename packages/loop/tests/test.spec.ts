@@ -21,12 +21,12 @@ import { test, expect } from './fixtures';
 import * as types from '../lib/types';
 
 test('completion', async ({ loop }) => {
-  const result = await loop.run('This is a test, reply with just "Hello world"');
+  const { result } = await loop.run('This is a test, reply with just "Hello world"');
   expect(result).toEqual({ result: 'Hello world' });
 });
 
 test('typed reply', async ({ loop }) => {
-  const result = await loop.run('Reply with 42 using the given schema', {
+  const { result } = await loop.run('Reply with 42 using the given schema', {
     resultSchema: { type: 'object', properties: { magic: { type: 'number' } }, required: ['magic'] },
   });
   expect(result).toEqual({ magic: 42 });
@@ -61,7 +61,7 @@ test('tool call', async ({ loop }) => {
     return { content: [{ type: 'text', text: JSON.stringify({ result: a + b }) }] };
   };
 
-  const result = await loop.run('Use add tool to add 2 and 3.', { tools, callTool, resultSchema });
+  const { result } = await loop.run('Use add tool to add 2 and 3.', { tools, callTool, resultSchema });
   expect(result).toEqual({ sum: 5 });
 });
 
@@ -90,6 +90,6 @@ test('tool call - image reply', async ({ loop, provider }) => {
     required: ['result'],
   };
 
-  const result = await loop.run('Capture the image and tell me what number you see on it', { tools, callTool, resultSchema });
+  const { result } = await loop.run('Capture the image and tell me what number you see on it', { tools, callTool, resultSchema });
   expect(result).toEqual({ result: 42 });
 });

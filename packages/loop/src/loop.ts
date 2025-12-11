@@ -51,7 +51,8 @@ export class Loop {
   async run<T>(task: string, runOptions: Omit<LoopOptions, 'model'> & { model?: string } = {}): Promise<{
     result?: T
     status: 'ok' | 'break',
-    usage: types.Usage
+    usage: types.Usage,
+    turns: number,
   }> {
     const options: LoopOptions = { ...this._loopOptions, ...runOptions };
     const allTools: types.Tool[] = [...options.tools || []];
@@ -70,13 +71,17 @@ export class Loop {
     };
 
     const debug = options.debug;
+    let budgetTokens = options.maxTokens ?? 100_000;
     const totalUsage: types.Usage = { input: 0, output: 0 };
 
     debug?.('lowire:loop')(`Starting ${this._provider.name} loop`, task);
     const maxTurns = options.maxTurns || 100;
 
-    for (let turn = 0; turn < maxTurns; ++turn) {
-      debug?.('lowire:loop')(`Turn ${turn + 1} of (max ${maxTurns})`);
+    for (let turns = 0; turns < maxTurns; ++turns) {
+      if (budgetTokens <= 0)
+        throw new Error(`Budget tokens ${options.maxTokens} exhausted`);
+
+      debug?.('lowire:loop')(`Turn ${turns + 1} of (max ${maxTurns})`);
       const caches = options.cache ? {
         input: options.cache.messages,
         output: this._cacheOutput,
@@ -84,18 +89,23 @@ export class Loop {
       } : undefined;
 
       const summarizedConversation = options.summarize ? this._summarizeConversation(task, conversation, options) : conversation;
-      const status = options.beforeTurn?.({ turn, conversation, summarizedConversation, usage: totalUsage });
+      const status = options.beforeTurn?.({ turn: turns, conversation, summarizedConversation, usage: totalUsage });
       if (status === 'break')
-        return { status: 'break', usage: totalUsage };
+        return { status: 'break', usage: totalUsage, turns };
 
       debug?.('lowire:loop')(`Request`, JSON.stringify({ ...summarizedConversation, tools: `${summarizedConversation.tools.length} tools` }, null, 2));
-      const { result: assistantMessage, usage } = await cachedComplete(this._provider, summarizedConversation, caches, options);
+      const { result: assistantMessage, usage } = await cachedComplete(this._provider, summarizedConversation, caches, {
+        ...options,
+        maxTokens: budgetTokens,
+      });
       const intent = assistantMessage.content.filter(part => part.type === 'text').map(part => part.text).join('\n');
       debug?.('lowire:loop')('Usage', `input: ${usage.input}, output: ${usage.output}`);
       debug?.('lowire:loop')('Assistant', intent, JSON.stringify(assistantMessage.content, null, 2));
 
       totalUsage.input += usage.input;
       totalUsage.output += usage.output;
+      budgetTokens -= usage.input + usage.output;
+
       conversation.messages.push(assistantMessage);
 
       const toolCalls = assistantMessage.content.filter(part => part.type === 'tool_call') as types.ToolCallContentPart[];
@@ -108,7 +118,7 @@ export class Loop {
         const { name, arguments: args } = toolCall;
         debug?.('lowire:loop')('Call tool', name, JSON.stringify(args, null, 2));
         if (name === 'report_result')
-          return { result: args as T, status: 'ok', usage: totalUsage };
+          return { result: args as T, status: 'ok', usage: totalUsage, turns };
 
         try {
           const result = await options.callTool!({

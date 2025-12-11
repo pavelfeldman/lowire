@@ -21,16 +21,17 @@ export class Anthropic implements types.Provider {
   readonly name = 'anthropic';
 
   async complete(conversation: types.Conversation, options: types.CompletionOptions) {
+    const maxTokens = Math.min(options.maxTokens ?? 32768, 32768);
     const response = await create({
       model: options.model,
-      max_tokens: options.maxTokens ?? 32768,
+      max_tokens: maxTokens,
       temperature: options.temperature,
       system: systemPrompt(conversation.systemPrompt),
       messages: conversation.messages.map(toAnthropicMessageParts).flat(),
       tools: conversation.tools.map(toAnthropicTool),
       thinking: options.reasoning ? {
         type: 'enabled',
-        budget_tokens: options.maxTokens ? Math.round(options.maxTokens / 10) : 1024,
+        budget_tokens: options.maxTokens ? Math.round(maxTokens / 10) : 1024,
       } : undefined,
     }, options);
     const result = toAssistantMessage(response);

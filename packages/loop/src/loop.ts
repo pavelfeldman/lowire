@@ -90,9 +90,9 @@ export class Loop {
 
       debug?.('lowire:loop')(`Request`, JSON.stringify({ ...summarizedConversation, tools: `${summarizedConversation.tools.length} tools` }, null, 2));
       const { result: assistantMessage, usage } = await cachedComplete(this._provider, summarizedConversation, caches, options);
-      const text = assistantMessage.content.filter(part => part.type === 'text').map(part => part.text).join('\n');
+      const intent = assistantMessage.content.filter(part => part.type === 'text').map(part => part.text).join('\n');
       debug?.('lowire:loop')('Usage', `input: ${usage.input}, output: ${usage.output}`);
-      debug?.('lowire:loop')('Assistant', text, JSON.stringify(assistantMessage.content, null, 2));
+      debug?.('lowire:loop')('Assistant', intent, JSON.stringify(assistantMessage.content, null, 2));
 
       totalUsage.input += usage.input;
       totalUsage.output += usage.output;
@@ -116,6 +116,7 @@ export class Loop {
             arguments: {
               ...args,
               _meta: {
+                'dev.lowire/intent': intent,
                 'dev.lowire/history': true,
                 'dev.lowire/state': true,
               }

@@ -20,7 +20,34 @@ import { summarizeConversation } from './summary';
 
 import type * as types from './types';
 
-export type LoopOptions = types.CompletionOptions & {
+export type LoopEvents = {
+  onBeforeTurn?: (params: {
+    conversation: types.Conversation;
+    totalUsage: types.Usage;
+    budgetTokens: number;
+  }) => Promise<'break' | 'continue' | void>;
+  onAfterTurn?: (params: {
+    assistantMessage: types.AssistantMessage;
+    totalUsage: types.Usage;
+    budgetTokens: number;
+  }) => Promise<'break' | 'continue' | void>;
+  onBeforeToolCall?: (params: {
+    assistantMessage: types.AssistantMessage;
+    toolCall: types.ToolCallContentPart;
+  }) => Promise<'allowed' | 'disallowed' | void>;
+  onAfterToolCall?: (params: {
+    assistantMessage: types.AssistantMessage;
+    toolCall: types.ToolCallContentPart;
+    result: types.ToolResult;
+  }) => Promise<'allowed' | 'disallowed' | void>;
+  onToolCallError?: (params: {
+    assistantMessage: types.AssistantMessage;
+    toolCall: types.ToolCallContentPart;
+    error: Error;
+  }) => Promise<void>;
+};
+
+export type LoopOptions = types.CompletionOptions & LoopEvents & {
   tools?: types.Tool[];
   callTool?: types.ToolCallback;
   maxTurns?: number;
@@ -29,12 +56,6 @@ export type LoopOptions = types.CompletionOptions & {
     messages: types.ReplayCache;
     secrets: Record<string, string>;
   };
-  beforeTurn?: (params: {
-    turn: number;
-    conversation: types.Conversation;
-    summarizedConversation?: types.Conversation;
-    usage: types.Usage;
-  }) => 'break' | 'continue' | void;
   summarize?: boolean;
 };
 
@@ -89,8 +110,8 @@ export class Loop {
       } : undefined;
 
       const summarizedConversation = options.summarize ? this._summarizeConversation(task, conversation, options) : conversation;
-      const status = options.beforeTurn?.({ turn: turns, conversation, summarizedConversation, usage: totalUsage });
-      if (status === 'break')
+      const beforeStatus = await options.onBeforeTurn?.({ conversation: summarizedConversation, totalUsage, budgetTokens });
+      if (beforeStatus === 'break')
         return { status: 'break', usage: totalUsage, turns };
 
       debug?.('lowire:loop')(`Request`, JSON.stringify({ ...summarizedConversation, tools: `${summarizedConversation.tools.length} tools` }, null, 2));
@@ -98,16 +119,20 @@ export class Loop {
         ...options,
         maxTokens: budgetTokens,
       });
+
       const intent = assistantMessage.content.filter(part => part.type === 'text').map(part => part.text).join('\n');
-      debug?.('lowire:loop')('Usage', `input: ${usage.input}, output: ${usage.output}`);
-      debug?.('lowire:loop')('Assistant', intent, JSON.stringify(assistantMessage.content, null, 2));
 
       totalUsage.input += usage.input;
       totalUsage.output += usage.output;
       budgetTokens -= usage.input + usage.output;
 
-      conversation.messages.push(assistantMessage);
+      debug?.('lowire:loop')('Usage', `input: ${usage.input}, output: ${usage.output}`);
+      debug?.('lowire:loop')('Assistant', intent, JSON.stringify(assistantMessage.content, null, 2));
+      const afterStatus = await options.onAfterTurn?.({ assistantMessage, totalUsage, budgetTokens });
+      if (afterStatus === 'break')
+        return { status: 'break', usage: totalUsage, turns };
 
+      conversation.messages.push(assistantMessage);
       const toolCalls = assistantMessage.content.filter(part => part.type === 'tool_call') as types.ToolCallContentPart[];
       if (toolCalls.length === 0) {
         assistantMessage.toolError = 'Error: tool call is expected in every assistant message. Call the "report_result" tool when the task is complete.';
@@ -119,6 +144,15 @@ export class Loop {
         debug?.('lowire:loop')('Call tool', name, JSON.stringify(args, null, 2));
         if (name === 'report_result')
           return { result: args as T, status: 'ok', usage: totalUsage, turns };
+
+        const status = await options.onBeforeToolCall?.({ assistantMessage, toolCall });
+        if (status === 'disallowed') {
+          toolCall.result = {
+            content: [{ type: 'text', text: 'Tool call is disallowed.' }],
+            isError: true,
+          };
+          continue;
+        }
 
         try {
           const result = await options.callTool!({
@@ -135,24 +169,24 @@ export class Loop {
           const text = result.content.filter(part => part.type === 'text').map(part => part.text).join('\n');
           debug?.('lowire:loop')('Tool result', text, JSON.stringify(result, null, 2));
 
+          const status = await options.onAfterToolCall?.({ assistantMessage, toolCall, result });
+          if (status === 'disallowed') {
+            toolCall.result = {
+              content: [{ type: 'text', text: 'Tool result is disallowed to be reported.' }],
+              isError: true,
+            };
+            continue;
+          }
+
           toolCall.result = result;
         } catch (error) {
           const errorMessage = `Error while executing tool "${name}": ${error instanceof Error ? error.message : String(error)}\n\nPlease try to recover and complete the task.`;
-          debug?.('lowire:loop')('Tool error', errorMessage, String(error));
+          await options.onToolCallError?.({ assistantMessage, toolCall, error });
 
           toolCall.result = {
             content: [{ type: 'text', text: errorMessage }],
             isError: true,
           };
-
-          // Skip remaining tool calls for this iteration
-          for (const remainingToolCall of toolCalls.slice(toolCalls.indexOf(toolCall) + 1)) {
-            remainingToolCall.result = {
-              content: [{ type: 'text', text: `This tool call is skipped due to previous error.` }],
-              isError: true,
-            };
-          }
-          break;
         }
       }
     }

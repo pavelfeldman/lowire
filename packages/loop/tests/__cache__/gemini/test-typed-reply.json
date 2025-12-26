@@ -1,5 +1,5 @@
 {
-  "52d0f9e9b176941094a11b9d1dd062880ce79098": {
+  "cf9cf3e33c393b4a6a955074e0fe24a71c630b6a": {
     "result": {
       "role": "assistant",
       "content": [
@@ -7,16 +7,17 @@
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
-            "magic": 42
+            "magic": 42,
+            "_is_done": true
           },
-          "id": "call_z1uy9ing3n8",
-          "googleThoughtSignature": "CvsBAXLI2nyoe865EFriBJeCpIvI0Pc8Y7zD7psgz47j2zAbYxgLun7iQWmL8g4ITi+tZGZ020KQVTkC2RzmihqHFGCA2W9BqvqS4jmbnLDZVpBblzDQRkDp/d1LI70T8/fZs9vvq3mwDFJL6gu6ifgHISfyP2eYdzUv70KCZwlEx+ExLJDqLsNep2X1rP9QYg5QfmmDo52UbjkzRMKqRXmUp/5zNBCNlBKYD5VWPovQqX/7dL1LRXHGGYND87zfjxgWhdRD8LDrpAqrcYJZXcwrtYIm9Al9irnF+9uVEyBn/LPMIyQ8JWUfRZL8eMSIQZ2G6hDLeNIA5ZqwTzw="
+          "id": "call_qjwi0nquc",
+          "googleThoughtSignature": "CsYBAXLI2nyE7Sj4AmSAOS9QHtF9KxCM6h4WyRDIS9aEAlJxB+olLEpZ2fdj9/iXFERWovI098bCGhT7kTs5qDD+aFUu6RXHR3QcbPjc3//JsXokGwOQyPF3IvtE/K4vLHhTTng0ROF5vf2AfBKyCrkdGtREIWEpCgz/rYzUAK1xWInBzLhiHRRGBDkaOJ0K+xm3Q23zsV3dM/C8Xw26EeC/o3WteJ3rgxCp+ziU5nG5CwbtJcDrILaWKnZnLmKsCxwZRSA2zInO"
         }
       ]
     },
     "usage": {
-      "input": 138,
-      "output": 16
+      "input": 186,
+      "output": 22
     }
   }
 }

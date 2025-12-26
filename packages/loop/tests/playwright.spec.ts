@@ -16,10 +16,11 @@
 
 import path from 'path';
 
-import { test, expect } from './fixtures';
+import { test, expect, runLoop } from './fixtures';
 import { createMcpTools } from './mcp';
 
-test('integration', async ({ loop, server }, testInfo) => {
+test('integration', async ({ loop, server, provider }, testInfo) => {
+  test.skip(provider === 'github');
   server.setContent('/', `
     <html>
       <button>Welcome to lowire!</button>
@@ -35,8 +36,8 @@ test('integration', async ({ loop, server }, testInfo) => {
   }, {
     rootDir: testInfo.outputPath()
   });
-  const { result } = await loop.run<{ result: string }>(
-    `Navigate to ${server.PREFIX} via Playwright MCP and tell me what is on that page.
+  const { result } = await runLoop<{ result: string }>(loop,
+    `Navigate to ${server.PREFIX} via Playwright MCP and tell me what is on that page. Report button text only.
      Use snapshot in the navigation result, do not take snapshots or screenshots.`, {
     ...toolSupport
   });

@@ -1,5 +1,5 @@
 {
-  "52d0f9e9b176941094a11b9d1dd062880ce79098": {
+  "cf9cf3e33c393b4a6a955074e0fe24a71c630b6a": {
     "result": {
       "role": "assistant",
       "content": [
@@ -7,17 +7,18 @@
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
-            "magic": 42
+            "magic": 42,
+            "_is_done": true
           },
-          "id": "call_tkrFezZkeybV35Hn0op7a2Z9",
-          "openaiId": "fc_071fb40adc5829aa0069274b224d2c81a3a3246902fa607568",
+          "id": "call_nvyfNuoDSPRdQGfyncxS3M0g",
+          "openaiId": "fc_08101520cf8d786000694e0d47a1e0819080eace9b4eb8b1fe",
           "openaiStatus": "completed"
         }
       ]
     },
     "usage": {
-      "input": 136,
-      "output": 15
+      "input": 173,
+      "output": 21
     }
   }
 }

@@ -1,5 +1,5 @@
 {
-  "f7f517c999eccfd2cd2f0b0602eb4f8e8b9d80dc": {
+  "332ebb7da0769fa091278718f6eb25f0f6591a18": {
     "result": {
       "role": "assistant",
       "content": [
@@ -7,16 +7,17 @@
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
-            "result": "Hello world"
+            "result": "Hello world",
+            "_is_done": true
           },
-          "id": "call_qc06rkbldwp",
-          "googleThoughtSignature": "CrYBAXLI2nwi3kTx+rBBEtAuCrKpOWc1/Bnb7rkFmNsgBSzSGi8We+MtHpvAzUSyxZLahbxfTZWnhsx3OWeAbiJ85ergPqHoDJuwhfhljdI0ZZxEDdaYBRWlG/pN/uPuV44aaF1e1xEeNfROABU69g7bzt/YMST0a6lOD0LCnEnmLGDvbnw5RM2/DsfnMXV1oZ8v65lHZMeVWW5JZRtDNYp2ANNIiO6jown/1V7GKqCJAQzOjYKRewI="
+          "id": "call_pblh2cb21fa",
+          "googleThoughtSignature": "Ct0BAXLI2nx0xYdT5UyCsoZ26NBykSxSIWrsmMXTpt6vzVEZkQDceAY4Mnh7fvMnQjEIgUzieqDwDTERw8hDUOHiy0K8Gpa6xARw7McQOr/Xhvlph0EAa1URts2e7vj+arAz2gDSMZnvTFOceMjsVC7Q9znuBpsQ9muWhqSxYmd2laAVrKXs4eZPpxIatRT7qlGg2lJwL2KnKLW2cKkWfv2mdweVILQ2fVYLgbj/v71sSgepGQ9t1qG9E0+a0pXZCHdtbdyf5ZORnuWz5QI0Zk0d8nQznaTeiw2H3aufGq4="
         }
       ]
     },
     "usage": {
-      "input": 141,
-      "output": 16
+      "input": 189,
+      "output": 22
     }
   }
 }

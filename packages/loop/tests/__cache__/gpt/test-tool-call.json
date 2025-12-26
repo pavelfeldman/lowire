@@ -1,5 +1,5 @@
 {
-  "b88d95ad2a255a13dd6c58b28e716a191e91939f": {
+  "ce63693780037d6e2105f8961cad18c540cef658": {
     "result": {
       "role": "assistant",
       "content": [
@@ -8,20 +8,21 @@
           "name": "add",
           "arguments": {
             "a": 2,
-            "b": 3
+            "b": 3,
+            "_is_done": false
           },
-          "id": "call_0S9TBEIdGBsaLtrxcToFkmGv",
-          "openaiId": "fc_08665671e010237e0069274b220880819f8c287cb9e1bd7cad",
+          "id": "call_AitAY43gokTgPyc502hvrJHI",
+          "openaiId": "fc_0ea82331fdda0f2400694e0d47756c8192b85ed719e64dcca3",
           "openaiStatus": "completed"
         }
       ]
     },
     "usage": {
-      "input": 186,
-      "output": 18
+      "input": 245,
+      "output": 24
     }
   },
-  "af974da4f0cd1f830880b5e6b0e400720c165546": {
+  "1f5b679ff568708e935b924ce38943c8ead8c803": {
     "result": {
       "role": "assistant",
       "content": [
@@ -29,17 +30,18 @@
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
-            "sum": 5
+            "sum": 5,
+            "_is_done": true
           },
-          "id": "call_0OQYZtbpHCXDptE35O9roo3D",
-          "openaiId": "fc_08665671e010237e00692e1aac2be8819faf7f97fdaf74cbab",
+          "id": "call_QKTuyI0AyFygdNZaB7JEf2wH",
+          "openaiId": "fc_0ea82331fdda0f2400694e0d4836d0819299146f9b52bbc7aa",
           "openaiStatus": "completed"
         }
       ]
     },
     "usage": {
-      "input": 216,
-      "output": 15
+      "input": 281,
+      "output": 21
     }
   }
 }

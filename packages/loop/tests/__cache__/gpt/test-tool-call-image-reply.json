@@ -1,30 +1,26 @@
 {
-  "a0180cb5480b1cf1601baba65c19593d8f5e08d8": {
+  "013e5206d7da4a70334e89d3ec99235bf1ad3690": {
     "result": {
       "role": "assistant",
       "content": [
         {
-          "type": "text",
-          "text": "I will capture the image now to identify the number on it."
-        },
-        {
           "type": "tool_call",
           "name": "capture_image",
-          "arguments": {},
-          "id": "call_bx1vHhKZ805iUyNXeStTFgw9",
-          "openaiId": "fc_0602e4c085eab1970069274b240eb081a1814ea62ab9bb1eb0",
+          "arguments": {
+            "_is_done": false
+          },
+          "id": "call_VyxSAolRzMMBde6Er1ks9lFr",
+          "openaiId": "fc_0c93686ed591749400694e0d47864c8193837bdc97a616aa84",
           "openaiStatus": "completed"
         }
-      ],
-      "openaiId": "msg_0602e4c085eab1970069274b22ac4081a1908d99dc1e10b444",
-      "openaiStatus": "completed"
+      ]
     },
     "usage": {
-      "input": 164,
-      "output": 26
+      "input": 225,
+      "output": 17
     }
   },
-  "9d597c7627b5a4e1c7c99269e4ae679af032fe5f": {
+  "8bcf290cd2bf115086e6a8dc42b43afcaa2b2198": {
     "result": {
       "role": "assistant",
       "content": [
@@ -32,17 +28,18 @@
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
-            "result": 42
+            "result": 42,
+            "_is_done": true
           },
-          "id": "call_wbsT5urTMKFHZHSzWioobzmF",
-          "openaiId": "fc_0602e4c085eab19700692e1aac7f4481a1ae0d79dc5f12e5e6",
+          "id": "call_AIu1Kykz0U9oVx0xI0KeUGDQ",
+          "openaiId": "fc_0c93686ed591749400694e0d48841c81938667839f5d5222c3",
           "openaiStatus": "completed"
         }
       ]
     },
     "usage": {
-      "input": 963,
-      "output": 15
+      "input": 1015,
+      "output": 21
     }
   }
 }

@@ -52,7 +52,6 @@ export type LoopOptions = types.CompletionOptions & LoopEvents & {
   tools?: types.Tool[];
   callTool?: types.ToolCallback;
   maxTurns?: number;
-  resultSchema?: types.Schema;
   cache?: {
     messages: types.ReplayCache;
     secrets: Record<string, string>;
@@ -70,19 +69,14 @@ export class Loop {
     this._loopOptions = options;
   }
 
-  async run<T>(task: string, runOptions: Omit<LoopOptions, 'model'> & { model?: string } = {}): Promise<{
-    result?: T
+  async run(task: string, runOptions: Omit<LoopOptions, 'model'> & { model?: string } = {}): Promise<{
+    result?: types.ToolResult;
     status: 'ok' | 'break',
     usage: types.Usage,
     turns: number,
   }> {
     const options: LoopOptions = { ...this._loopOptions, ...runOptions };
-    const allTools: types.Tool[] = [...options.tools || []];
-    allTools.push({
-      name: 'report_result',
-      description: 'Report the result of the task.',
-      inputSchema: options.resultSchema ?? defaultResultSchema,
-    });
+    const allTools: types.Tool[] = [...(options.tools || []).map(wrapToolWithIsDone)];
 
     const conversation: types.Conversation = {
       systemPrompt,
@@ -144,8 +138,6 @@ export class Loop {
       for (const toolCall of toolCalls) {
         const { name, arguments: args } = toolCall;
         debug?.('lowire:loop')('Call tool', name, JSON.stringify(args, null, 2));
-        if (name === 'report_result')
-          return { result: args as T, status: 'ok', usage: totalUsage, turns };
 
         const status = await options.onBeforeToolCall?.({ assistantMessage, toolCall });
         if (status === 'break')
@@ -185,6 +177,8 @@ export class Loop {
           }
 
           toolCall.result = result;
+          if (args._is_done)
+            return { result, status: 'ok', usage: totalUsage, turns };
         } catch (error) {
           const errorMessage = `Error while executing tool "${name}": ${error instanceof Error ? error.message : String(error)}\n\nPlease try to recover and complete the task.`;
           const status = await options.onToolCallError?.({ assistantMessage, toolCall, error });
@@ -220,15 +214,18 @@ export class Loop {
   }
 }
 
-const defaultResultSchema: types.Schema = {
-  type: 'object',
-  properties: {
-    result: {
-      type: 'string',
-    },
-  },
-  required: ['result'],
-};
+function wrapToolWithIsDone(tool: types.Tool): types.Tool {
+  const inputSchema = { ...tool.inputSchema };
+  inputSchema.properties = {
+    ...inputSchema.properties,
+    _is_done: { type: 'boolean', description: 'Whether the task is complete. If false, agentic loop will continue to perform the task.' },
+  };
+  inputSchema.required = [...(inputSchema.required || []), '_is_done'];
+  return {
+    ...tool,
+    inputSchema,
+  };
+}
 
 const systemPrompt = `
 You are an autonomous agent designed to complete tasks by interacting with tools. Perform the user task.

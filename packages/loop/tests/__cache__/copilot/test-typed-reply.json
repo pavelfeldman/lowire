@@ -1,26 +1,27 @@
 {
-  "52d0f9e9b176941094a11b9d1dd062880ce79098": {
+  "cf9cf3e33c393b4a6a955074e0fe24a71c630b6a": {
     "result": {
       "role": "assistant",
       "content": [
         {
           "type": "text",
-          "text": "Reporting the value 42 as requested by the user",
-          "copilotToolCallId": "toolu_vrtx_01FeDHDSxGaXykKX4SMw1vPw"
+          "text": "Report the result as requested, which is 42.",
+          "copilotToolCallId": "call_usfNM1m42bLiOsFXszGny44u"
         },
         {
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
+            "_is_done": true,
             "magic": 42
           },
-          "id": "toolu_vrtx_01FeDHDSxGaXykKX4SMw1vPw"
+          "id": "call_usfNM1m42bLiOsFXszGny44u"
         }
       ]
     },
     "usage": {
-      "input": 694,
-      "output": 81
+      "input": 197,
+      "output": 35
     }
   }
 }

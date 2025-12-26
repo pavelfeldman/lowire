@@ -1,25 +1,26 @@
 {
-  "52d0f9e9b176941094a11b9d1dd062880ce79098": {
+  "cf9cf3e33c393b4a6a955074e0fe24a71c630b6a": {
     "result": {
       "role": "assistant",
       "content": [
         {
           "type": "text",
-          "text": "I'll report the result with the value 42 as requested."
+          "text": "I'll report the result with the value 42."
         },
         {
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
-            "magic": 42
+            "magic": 42,
+            "_is_done": true
           },
-          "id": "toolu_01D13NtiK1jzNDhUnpCnDcMj"
+          "id": "toolu_01HbnGDdE3wnxjuWvpscYEgy"
         }
       ]
     },
     "usage": {
-      "input": 655,
-      "output": 68
+      "input": 710,
+      "output": 84
     }
   }
 }

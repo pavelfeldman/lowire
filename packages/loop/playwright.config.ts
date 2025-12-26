@@ -19,7 +19,7 @@ export default defineConfig<TestOptions>({
       name: 'copilot',
       use: {
         provider: 'github',
-        model: 'claude-sonnet-4.5',
+        model: 'gpt-4.1',
       }
     },
     {

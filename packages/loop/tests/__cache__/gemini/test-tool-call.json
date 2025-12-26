@@ -1,5 +1,5 @@
 {
-  "b88d95ad2a255a13dd6c58b28e716a191e91939f": {
+  "ce63693780037d6e2105f8961cad18c540cef658": {
     "result": {
       "role": "assistant",
       "content": [
@@ -7,20 +7,21 @@
           "type": "tool_call",
           "name": "add",
           "arguments": {
+            "_is_done": false,
             "a": 2,
             "b": 3
           },
-          "id": "call_l0gpqcdm0et",
-          "googleThoughtSignature": "CqsBAXLI2ny4yiRZ6ANKz1pN5DxZJm402/lZPKtR7XLfsfV+S7LGIZo+3nVB9e6s4LSD2yuJtqKd/sHYuShKHXsM3nKP1DJxSd7i+pHegEhXNTkl3kTPRpenGPsRiXU/gJ+XnC5jR2sB4wVyfDjdFoD18MiiMrxYZAw0gQFMjLLZ0mEviZ6452Gp/OUDWfIPt1G3z6UsIYylyMda87nhnFYq1yYndMPx8gUOyim4"
+          "id": "call_6dg8920sikr",
+          "googleThoughtSignature": "Cq0BAXLI2ny2d3cxcszkehS81i1cV0ZbdX75z7fjMUai09Qmj1U04SbT9OpVU32IFtwoTZKwIDni0b518sYLR87iTP8ubdn2j1k+7rdrvf4kyj2yfBAkhr9Ycb4F8J24MxgTQSq496nPq2/0UtnPQgYYwew10fKxag7DxzNrKBl/AgKMIBM44KUMkvsTMmXry6tjxhC37ZFHf/UwecPS+s1z0zdeNpi9lWc6GJuXpIo="
         }
       ]
     },
     "usage": {
-      "input": 203,
-      "output": 18
+      "input": 286,
+      "output": 24
     }
   },
-  "70b519a20148f479174e6c447305680ed435f7db": {
+  "01aade021f6403a34009d97838e1c4d9aa1a1c16": {
     "result": {
       "role": "assistant",
       "content": [
@@ -28,16 +29,17 @@
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
-            "sum": 5
+            "sum": 5,
+            "_is_done": true
           },
-          "id": "call_i2mkebu1hhd",
-          "googleThoughtSignature": "CqsBAXLI2nwzbsFc3pfJ0pPuKX9Rl0h87isEZRyDe7a/Jz5keWx5U9XnNDFFyoC++9S8zs7NzQnXvoycqFw9o7N36G+hPry2TUnzlMT707BGv8PCp0JEC6o9f1Tf27wv0FMQVw0E/kIPwEV08bX+4XV6rBulCtrjve9MU42wF7EUP3SDPRCs24H0p5vwKnEl6qe0tWeZWxIdNWjH2OJUf/t2HllKMAlGcUG8F/XU"
+          "id": "call_00kpzthvp7hsv",
+          "googleThoughtSignature": "CrUBAXLI2nyISN5T3hlL1RBpHcB1bUnVqG6UsZXCJ5oK/sOIIhevjUJY3/xR0/3yb+fRpSBu6pa+oyjAHlx/cFEpUyJablMHA2fW9sYJL2SYnG/RXNy020khEQUEx+v7xe0JMyv7i4mprJK6kIE+c0F3+IGB2rRr5juKcKQ9y4s2Ob/YF9j0a7f86UMGwAMsWfeNqOahSR9Y+vpLX2ZjeAFU/PLaeSMYDPyPZw5kgWRidWjJ3OcbkQ=="
         }
       ]
     },
     "usage": {
-      "input": 238,
-      "output": 15
+      "input": 327,
+      "output": 21
     }
   }
 }

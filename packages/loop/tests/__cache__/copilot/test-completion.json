@@ -1,26 +1,27 @@
 {
-  "f7f517c999eccfd2cd2f0b0602eb4f8e8b9d80dc": {
+  "332ebb7da0769fa091278718f6eb25f0f6591a18": {
     "result": {
       "role": "assistant",
       "content": [
         {
           "type": "text",
-          "text": "Responding to test request with \"Hello world\"",
-          "copilotToolCallId": "toolu_vrtx_0185ZFJsuYeSn6GMBP4fHj1x"
+          "text": "Reporting the result as instructed by the user, only replying with 'Hello world'.",
+          "copilotToolCallId": "call_jOQL3PcnC4hioIgn8KPn1RSD"
         },
         {
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
+            "_is_done": true,
             "result": "Hello world"
           },
-          "id": "toolu_vrtx_0185ZFJsuYeSn6GMBP4fHj1x"
+          "id": "call_jOQL3PcnC4hioIgn8KPn1RSD"
         }
       ]
     },
     "usage": {
-      "input": 697,
-      "output": 81
+      "input": 200,
+      "output": 42
     }
   }
 }

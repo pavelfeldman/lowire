@@ -16,7 +16,7 @@
 
 export type Schema = {
   type: 'object';
-  properties?: unknown | null;
+  properties?: Record<string, unknown> | null;
   required?: Array<string> | null;
 };
 

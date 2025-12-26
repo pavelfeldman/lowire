@@ -1,5 +1,5 @@
 {
-  "f7f517c999eccfd2cd2f0b0602eb4f8e8b9d80dc": {
+  "332ebb7da0769fa091278718f6eb25f0f6591a18": {
     "result": {
       "role": "assistant",
       "content": [
@@ -7,15 +7,16 @@
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
-            "result": "Hello world"
+            "result": "Hello world",
+            "_is_done": true
           },
-          "id": "toolu_01C9qDfLdjS3jAbpmAGW26CD"
+          "id": "toolu_01T3NsmQbmwSYmZTuprcmu3G"
         }
       ]
     },
     "usage": {
-      "input": 658,
-      "output": 54
+      "input": 713,
+      "output": 73
     }
   }
 }

@@ -10,15 +10,15 @@
             "result": "Hello world",
             "_is_done": true
           },
-          "id": "call_T8psBaBywfLb0R0cjjxXsbXF",
-          "openaiId": "fc_0047772f9cddc69600694e0d4787ac81968af8c0136cd5ca37",
+          "id": "call_vVGNKmUxqq5lewstleQZHIEg",
+          "openaiId": "fc_0b6e049d9b3578d800695c47b2466c8193896b80a77a600c6d",
           "openaiStatus": "completed"
         }
       ]
     },
     "usage": {
-      "input": 176,
-      "output": 22
+      "input": 256,
+      "output": 25
     }
   }
 }

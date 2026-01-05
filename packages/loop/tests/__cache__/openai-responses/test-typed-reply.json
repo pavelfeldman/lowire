@@ -1,0 +1,24 @@
+{
+  "cf9cf3e33c393b4a6a955074e0fe24a71c630b6a": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool_call",
+          "name": "report_result",
+          "arguments": {
+            "magic": 42,
+            "_is_done": true
+          },
+          "id": "call_6mpmmzC0IPmsBr2kjlj5o0NF",
+          "openaiId": "fc_055e68f6a8e91a8400695c47b3319c819cb678506bc0020192",
+          "openaiStatus": "completed"
+        }
+      ]
+    },
+    "usage": {
+      "input": 253,
+      "output": 24
+    }
+  }
+}

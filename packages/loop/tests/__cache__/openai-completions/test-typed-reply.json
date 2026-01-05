@@ -10,15 +10,13 @@
             "magic": 42,
             "_is_done": true
           },
-          "id": "call_nvyfNuoDSPRdQGfyncxS3M0g",
-          "openaiId": "fc_08101520cf8d786000694e0d47a1e0819080eace9b4eb8b1fe",
-          "openaiStatus": "completed"
+          "id": "call_9tPzww6HYapb1yPQjOAGL1pn"
         }
       ]
     },
     "usage": {
-      "input": 173,
-      "output": 21
+      "input": 255,
+      "output": 23
     }
   }
 }

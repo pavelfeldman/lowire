@@ -11,18 +11,16 @@
             "b": 3,
             "_is_done": false
           },
-          "id": "call_AitAY43gokTgPyc502hvrJHI",
-          "openaiId": "fc_0ea82331fdda0f2400694e0d47756c8192b85ed719e64dcca3",
-          "openaiStatus": "completed"
+          "id": "call_5Zq4vXRpeEnd5gb3efBgkiFF"
         }
       ]
     },
     "usage": {
-      "input": 245,
-      "output": 24
+      "input": 327,
+      "output": 26
     }
   },
-  "1f5b679ff568708e935b924ce38943c8ead8c803": {
+  "ef9bf59a7ea754d115b9a3d31df6e4ea3353d15e": {
     "result": {
       "role": "assistant",
       "content": [
@@ -33,15 +31,13 @@
             "sum": 5,
             "_is_done": true
           },
-          "id": "call_QKTuyI0AyFygdNZaB7JEf2wH",
-          "openaiId": "fc_0ea82331fdda0f2400694e0d4836d0819299146f9b52bbc7aa",
-          "openaiStatus": "completed"
+          "id": "call_Fmfg7agwz5b0XtS6GPZTdp3d"
         }
       ]
     },
     "usage": {
-      "input": 281,
-      "output": 21
+      "input": 368,
+      "output": 23
     }
   }
 }

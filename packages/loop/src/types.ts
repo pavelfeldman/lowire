@@ -58,7 +58,6 @@ export type TextContentPart = {
   type: 'text';
   text: string;
   googleThoughtSignature?: string;
-  copilotToolCallId?: string;
 };
 
 export type ThinkingContentPart = {
@@ -111,12 +110,13 @@ export type Conversation = {
 export type Debug = (category: string) => (...args: any[]) => void;
 
 export type CompletionOptions = {
-  api: 'openai' | 'anthropic' | 'google',
-  apiEndpoint?: string,
-  apiKey: string,
+  api: 'openai' | 'anthropic' | 'google';
+  apiEndpoint?: string;
+  apiKey: string;
+  apiVersion?: string;
   model: string;
   maxTokens?: number;
-  reasoning?: boolean;
+  reasoning?: 'none' | 'medium' | 'high';
   temperature?: number;
   debug?: Debug;
 };

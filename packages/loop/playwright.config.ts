@@ -19,17 +19,27 @@ export default defineConfig<TestOptions>({
       name: 'azure-sonnet',
       use: {
         api: 'anthropic',
-        apiKey: process.env.AZURE_API_KEY,
-        apiEndpoint: process.env.AZURE_ENDPOINT,
+        apiKey: process.env.AZURE_SONNET_API_KEY,
+        apiEndpoint: process.env.AZURE_SONNET_ENDPOINT,
         model: 'claude-sonnet-4-5',
       }
     },
     {
-      name: 'openai',
+      name: 'openai-completions',
       use: {
         api: 'openai',
         apiKey: process.env.OPENAI_API_KEY,
-        model: 'gpt-4.1',
+        apiVersion: 'v1/chat/completions',
+        model: 'gpt-5.2',
+      }
+    },
+    {
+      name: 'openai-responses',
+      use: {
+        api: 'openai',
+        apiKey: process.env.OPENAI_API_KEY,
+        apiVersion: 'v1/responses',
+        model: 'gpt-5.2',
       }
     },
     {

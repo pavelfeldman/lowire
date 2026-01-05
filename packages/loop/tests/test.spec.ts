@@ -66,6 +66,7 @@ test('tool call', async ({ loop }) => {
 });
 
 test('tool call - image reply', async ({ loop }) => {
+  test.skip(test.info().project.name === 'openai-completions', 'Completions are stubborn with images');
   const tools: types.Tool[] = [
     {
       name: 'capture_image',

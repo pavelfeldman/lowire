@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-import { OpenAI } from './openai';
 import { Anthropic } from './anthropic';
 import { Google } from './google';
+import { OpenAI } from './openai';
 
-import * as types from '../types';
+import type * as types from '../types';
 
-export function getProvider(loopName: 'openai' | 'anthropic' | 'google'): types.Provider {
-  if (loopName === 'openai')
+export function getProvider(api: 'openai' | 'anthropic' | 'google'): types.Provider {
+  if (api === 'openai')
     return new OpenAI();
-  if (loopName === 'anthropic')
+  if (api === 'anthropic')
     return new Anthropic();
-  if (loopName === 'google')
+  if (api === 'google')
     return new Google();
-  throw new Error(`Unknown loop LLM: ${loopName}`);
+  throw new Error(`Unknown loop LLM: ${api}`);
 }

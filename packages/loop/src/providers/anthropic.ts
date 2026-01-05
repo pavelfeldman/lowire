@@ -46,14 +46,14 @@ export class Anthropic implements types.Provider {
 async function create(createParams: anthropic.Anthropic.Messages.MessageCreateParamsNonStreaming, options: types.CompletionOptions): Promise<anthropic.Anthropic.Messages.Message> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    'x-api-key': process.env.ANTHROPIC_API_KEY!,
+    'x-api-key': options.apiKey,
     'anthropic-version': '2023-06-01',
   };
 
   const debugBody = { ...createParams, tools: `${createParams.tools?.length ?? 0} tools` };
   options.debug?.('lowire:anthropic')('Request:', JSON.stringify(debugBody, null, 2));
 
-  const response = await fetch(`https://api.anthropic.com/v1/messages`, {
+  const response = await fetch(options.apiEndpoint ?? `https://api.anthropic.com/v1/messages`, {
     method: 'POST',
     headers,
     body: JSON.stringify(createParams)

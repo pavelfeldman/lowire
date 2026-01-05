@@ -1,0 +1,49 @@
+{
+  "013e5206d7da4a70334e89d3ec99235bf1ad3690": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "text",
+          "text": "I'll help you capture an image and identify the number on it."
+        },
+        {
+          "type": "tool_call",
+          "name": "capture_image",
+          "arguments": {
+            "_is_done": false
+          },
+          "id": "toolu_01N1LPDHHwZMc42eAp4RDK7i"
+        }
+      ]
+    },
+    "usage": {
+      "input": 808,
+      "output": 70
+    }
+  },
+  "ea051957bdcf234471823cc607853e9070839f54": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "text",
+          "text": "Perfect! I can see the number **42** in the captured image. Now I'll report this result."
+        },
+        {
+          "type": "tool_call",
+          "name": "report_result",
+          "arguments": {
+            "result": 42,
+            "_is_done": true
+          },
+          "id": "toolu_011Bn6enQuj2xuBNUzwZZwnP"
+        }
+      ]
+    },
+    "usage": {
+      "input": 2468,
+      "output": 95
+    }
+  }
+}

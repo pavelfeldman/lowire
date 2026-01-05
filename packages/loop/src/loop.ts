@@ -64,12 +64,12 @@ export class Loop {
   private _loopOptions: LoopOptions;
   private _cacheOutput: types.ReplayCache = {};
 
-  constructor(loopName: 'openai' | 'github' | 'anthropic' | 'google', options: LoopOptions) {
-    this._provider = getProvider(loopName);
+  constructor(options: LoopOptions) {
+    this._provider = getProvider(options.api);
     this._loopOptions = options;
   }
 
-  async run(task: string, runOptions: Omit<LoopOptions, 'model'> & { model?: string } = {}): Promise<{
+  async run(task: string, runOptions: Omit<LoopOptions, 'model' | 'api' | 'apiKey'> & { model?: string } = {}): Promise<{
     result?: types.ToolResult;
     status: 'ok' | 'break',
     usage: types.Usage,

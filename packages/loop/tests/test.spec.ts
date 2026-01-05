@@ -65,8 +65,7 @@ test('tool call', async ({ loop }) => {
   expect(result).toEqual({ sum: 5 });
 });
 
-test('tool call - image reply', async ({ loop, provider }) => {
-  test.skip(provider === 'github');
+test('tool call - image reply', async ({ loop }) => {
   const tools: types.Tool[] = [
     {
       name: 'capture_image',

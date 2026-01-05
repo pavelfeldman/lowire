@@ -111,6 +111,9 @@ export type Conversation = {
 export type Debug = (category: string) => (...args: any[]) => void;
 
 export type CompletionOptions = {
+  api: 'openai' | 'anthropic' | 'google',
+  apiEndpoint?: string,
+  apiKey: string,
   model: string;
   maxTokens?: number;
   reasoning?: boolean;

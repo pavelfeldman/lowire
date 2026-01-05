@@ -64,18 +64,16 @@ export class OpenAI implements types.Provider {
 }
 
 async function create(createParams: openai.OpenAI.Responses.ResponseCreateParamsNonStreaming, options: types.CompletionOptions): Promise<openai.OpenAI.Responses.Response> {
-  const apiKey = process.env.OPENAI_API_KEY!;
-
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${apiKey}`,
+    'Authorization': `Bearer ${options.apiKey}`,
     'Copilot-Vision-Request': 'true',
   };
 
   const debugBody = { ...createParams, tools: `${createParams.tools?.length ?? 0} tools` };
   options.debug?.('lowire:openai-responses')('Request:', JSON.stringify(debugBody, null, 2));
 
-  const response = await fetch(`https://api.openai.com/v1/responses`, {
+  const response = await fetch(options.apiEndpoint ?? `https://api.openai.com/v1/responses`, {
     method: 'POST',
     headers,
     body: JSON.stringify(createParams)

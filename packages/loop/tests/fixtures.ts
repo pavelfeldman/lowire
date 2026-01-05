@@ -27,7 +27,9 @@ import type * as types from '../src/types';
 export { expect } from '@playwright/test';
 
 export type TestOptions = {
-  provider: 'openai' | 'github' | 'anthropic' | 'google';
+  api: 'openai' | 'anthropic' | 'google';
+  apiKey: string;
+  apiEndpoint?: string;
   model: string;
 };
 
@@ -42,9 +44,11 @@ type WorkerFixtures = {
 };
 
 export const test = baseTest.extend<TestOptions & TestFixtures, WorkerFixtures>({
-  provider: ['github', { option: true }],
+  api: ['openai', { option: true }],
+  apiKey: ['', { option: true }],
+  apiEndpoint: [undefined, { option: true }],
   model: ['', { option: true }],
-  loop: async ({ provider, _workerPort, model }, use, testInfo) => {
+  loop: async ({ api, apiKey, apiEndpoint, _workerPort, model }, use, testInfo) => {
     const cacheFile = path.join(__dirname, '__cache__', testInfo.project.name, sanitizeFileName(test.info().titlePath.join(' ')) + '.json');
     const dataBefore = await fs.promises.readFile(cacheFile, 'utf-8').catch(() => '{}');
     let cache: types.ReplayCache = {};
@@ -53,11 +57,14 @@ export const test = baseTest.extend<TestOptions & TestFixtures, WorkerFixtures>(
     } catch {
       cache = {};
     }
-    const loop = new Loop(provider, {
+    const loop = new Loop({
+      api,
+      apiEndpoint,
+      apiKey,
       model,
       cache: { messages: cache, secrets: { PORT: String(_workerPort) } },
       debug,
-    })
+    });
     await use(loop);
     const dataAfter = JSON.stringify(loop.cache(), null, 2);
     if (dataBefore !== dataAfter) {
@@ -87,7 +94,7 @@ function sanitizeFileName(name: string): string {
   return name.replace('.spec.ts', '').replace(/[^a-zA-Z0-9_]+/g, '-');
 }
 
-export async function runLoop<T>(loop: Loop, task: string, options: Omit<LoopOptions, 'model'> & { resultSchema?: types.Schema, model?: string } = {}): Promise<{ result?: T, usage: types.Usage, turns: number, status: 'ok' | 'break' }> {
+export async function runLoop<T>(loop: Loop, task: string, options: Omit<LoopOptions, 'model' | 'api' | 'apiKey'> & { resultSchema?: types.Schema, model?: string } = {}): Promise<{ result?: T, usage: types.Usage, turns: number, status: 'ok' | 'break' }> {
   const tools: types.Tool[] = [
     ...options.tools || [],
     {

@@ -20,7 +20,7 @@
     "watch": "concurrently \"tsc --project packages/loop/tsconfig.src.json --watch\" \"tsc --project packages/playwright-loop/tsconfig.src.json --watch\"",
     "clean": "rm -rf packages/loop/lib",
     "test": "playwright test -c packages/loop/playwright.config.ts",
-    "ctest": "playwright test -c packages/loop/playwright.config.ts --project=copilot",
+    "atest": "playwright test -c packages/loop/playwright.config.ts --project=azure-sonnet",
     "deploy": "npm run clean && npm run build && cd packages/loop && npm publish",
     "lint": "eslint . && tsc --project packages/loop/tsconfig.src.json --noEmit && tsc --project packages/loop/tsconfig.tests.json --noEmit",
     "lint-fix": "eslint . --fix"

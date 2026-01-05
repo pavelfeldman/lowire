@@ -16,30 +16,35 @@ export default defineConfig<TestOptions>({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'copilot',
+      name: 'azure-sonnet',
       use: {
-        provider: 'github',
-        model: 'gpt-4.1',
+        api: 'anthropic',
+        apiKey: process.env.AZURE_API_KEY,
+        apiEndpoint: process.env.AZURE_ENDPOINT,
+        model: 'claude-sonnet-4-5',
       }
     },
     {
-      name: 'gpt',
+      name: 'openai',
       use: {
-        provider: 'openai',
+        api: 'openai',
+        apiKey: process.env.OPENAI_API_KEY,
         model: 'gpt-4.1',
       }
     },
     {
       name: 'claude',
       use: {
-        provider: 'anthropic',
+        api: 'anthropic',
+        apiKey: process.env.ANTHROPIC_API_KEY,
         model: 'claude-sonnet-4-5',
       }
     },
     {
       name: 'gemini',
       use: {
-        provider: 'google',
+        api: 'google',
+        apiKey: process.env.GEMINI_API_KEY,
         model: 'gemini-2.5-flash',
       }
     },

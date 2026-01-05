@@ -19,8 +19,7 @@ import path from 'path';
 import { test, expect, runLoop } from './fixtures';
 import { createMcpTools } from './mcp';
 
-test('integration', async ({ loop, server, provider }, testInfo) => {
-  test.skip(provider === 'github');
+test('integration', async ({ loop, server }, testInfo) => {
   server.setContent('/', `
     <html>
       <button>Welcome to lowire!</button>

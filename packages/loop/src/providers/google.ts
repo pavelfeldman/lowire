@@ -51,19 +51,14 @@ export class Google implements types.Provider {
 }
 
 async function create(model: string, createParams: google.GenerateContentRequest, options: types.CompletionOptions): Promise<google.GenerateContentResponse> {
-  const apiKey = process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY;
-  if (!apiKey)
-    throw new Error('GEMINI_API_KEY or GOOGLE_API_KEY environment variable is required');
-
-
   const debugBody = { ...createParams, tools: `${createParams.tools?.length ?? 0} tools` };
   options.debug?.('lowire:google')('Request:', JSON.stringify(debugBody, null, 2));
 
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+  const response = await fetch(options.apiEndpoint ?? `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-goog-api-key': apiKey,
+      'x-goog-api-key': options.apiKey,
     },
     body: JSON.stringify(createParams)
   });

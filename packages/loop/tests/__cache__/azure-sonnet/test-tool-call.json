@@ -5,49 +5,47 @@
       "content": [
         {
           "type": "text",
-          "text": "Add 2 and 3 to get their sum.",
-          "copilotToolCallId": "call_kRIZu0SAqKz02t5Ex3US9YKO"
+          "text": "I'll add 2 and 3 using the add tool, then report the result."
         },
         {
           "type": "tool_call",
           "name": "add",
           "arguments": {
-            "_is_done": false,
             "a": 2,
-            "b": 3
+            "b": 3,
+            "_is_done": false
           },
-          "id": "call_kRIZu0SAqKz02t5Ex3US9YKO"
+          "id": "toolu_01Wb6VzagfurpgkwRR3pFaUD"
         }
       ]
     },
     "usage": {
-      "input": 282,
-      "output": 37
+      "input": 854,
+      "output": 108
     }
   },
-  "67c763fa522bcf93037abf9c5dc2f322dda239de": {
+  "c90a432d8dfb35ce418d0e153fcaa802f2c998f6": {
     "result": {
       "role": "assistant",
       "content": [
         {
           "type": "text",
-          "text": "Report the result of adding 2 and 3.",
-          "copilotToolCallId": "call_eA5i6GBI4iVWVfWEnRfDSEgR"
+          "text": "Now I'll report the result of the addition."
         },
         {
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
-            "_is_done": true,
-            "sum": 5
+            "sum": 5,
+            "_is_done": true
           },
-          "id": "call_eA5i6GBI4iVWVfWEnRfDSEgR"
+          "id": "toolu_019Vt62Knq2Vp2xBpD2uFLWq"
         }
       ]
     },
     "usage": {
-      "input": 327,
-      "output": 35
+      "input": 978,
+      "output": 83
     }
   }
 }

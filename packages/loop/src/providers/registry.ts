@@ -15,17 +15,14 @@
  */
 
 import { OpenAI } from './openai';
-import { Github } from './github';
 import { Anthropic } from './anthropic';
 import { Google } from './google';
 
 import * as types from '../types';
 
-export function getProvider(loopName: 'openai' | 'github' | 'anthropic' | 'google'): types.Provider {
+export function getProvider(loopName: 'openai' | 'anthropic' | 'google'): types.Provider {
   if (loopName === 'openai')
     return new OpenAI();
-  if (loopName === 'github')
-    return new Github();
   if (loopName === 'anthropic')
     return new Anthropic();
   if (loopName === 'google')

@@ -5,23 +5,22 @@
       "content": [
         {
           "type": "text",
-          "text": "Report the result as requested, which is 42.",
-          "copilotToolCallId": "call_usfNM1m42bLiOsFXszGny44u"
+          "text": "I'll report the result with the value 42."
         },
         {
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
-            "_is_done": true,
-            "magic": 42
+            "magic": 42,
+            "_is_done": true
           },
-          "id": "call_usfNM1m42bLiOsFXszGny44u"
+          "id": "toolu_01AJPLyzar8urMGzZWLu23pr"
         }
       ]
     },
     "usage": {
-      "input": 197,
-      "output": 35
+      "input": 710,
+      "output": 84
     }
   }
 }

@@ -27,10 +27,9 @@ import type * as types from '../src/types';
 export { expect } from '@playwright/test';
 
 export type TestOptions = {
-  api: 'openai' | 'anthropic' | 'google';
+  api: 'openai' | 'openai-compatible' | 'anthropic' | 'google';
   apiKey: string;
   apiEndpoint?: string;
-  apiVersion?: string;
   model: string;
   reasoning?: 'none' | 'medium' | 'high';
 };
@@ -46,13 +45,12 @@ type WorkerFixtures = {
 };
 
 export const test = baseTest.extend<TestOptions & TestFixtures, WorkerFixtures>({
-  api: ['openai', { option: true }],
+  api: ['openai-compatible', { option: true }],
   apiKey: ['', { option: true }],
   apiEndpoint: [undefined, { option: true }],
-  apiVersion: [undefined, { option: true }],
   model: ['', { option: true }],
   reasoning: ['none', { option: true }],
-  loop: async ({ api, apiKey, apiEndpoint, apiVersion, _workerPort, model, reasoning }, use, testInfo) => {
+  loop: async ({ api, apiKey, apiEndpoint, _workerPort, model, reasoning }, use, testInfo) => {
     const cacheFile = path.join(__dirname, '__cache__', testInfo.project.name, sanitizeFileName(test.info().titlePath.join(' ')) + '.json');
     const dataBefore = await fs.promises.readFile(cacheFile, 'utf-8').catch(() => '{}');
     let cache: types.ReplayCache = {};
@@ -65,7 +63,6 @@ export const test = baseTest.extend<TestOptions & TestFixtures, WorkerFixtures>(
       api,
       apiEndpoint,
       apiKey,
-      apiVersion,
       model,
       reasoning,
       cache: { messages: cache, secrets: { PORT: String(_workerPort) } },

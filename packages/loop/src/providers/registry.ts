@@ -17,12 +17,15 @@
 import { Anthropic } from './anthropic';
 import { Google } from './google';
 import { OpenAI } from './openai';
+import { OpenAICompatible } from './openaiCompatible';
 
 import type * as types from '../types';
 
-export function getProvider(api: 'openai' | 'anthropic' | 'google'): types.Provider {
+export function getProvider(api: 'openai' | 'openai-compatible' | 'anthropic' | 'google'): types.Provider {
   if (api === 'openai')
     return new OpenAI();
+  if (api === 'openai-compatible')
+    return new OpenAICompatible();
   if (api === 'anthropic')
     return new Anthropic();
   if (api === 'google')

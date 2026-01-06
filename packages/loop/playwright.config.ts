@@ -27,9 +27,8 @@ export default defineConfig<TestOptions>({
     {
       name: 'openai-completions',
       use: {
-        api: 'openai',
+        api: 'openai-compatible',
         apiKey: process.env.OPENAI_API_KEY,
-        apiVersion: 'v1/chat/completions',
         model: 'gpt-5.2',
       }
     },
@@ -38,7 +37,6 @@ export default defineConfig<TestOptions>({
       use: {
         api: 'openai',
         apiKey: process.env.OPENAI_API_KEY,
-        apiVersion: 'v1/responses',
         model: 'gpt-5.2',
       }
     },

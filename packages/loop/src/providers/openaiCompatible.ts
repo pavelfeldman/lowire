@@ -18,7 +18,15 @@ import type * as openai from 'openai';
 import type * as types from '../types';
 import type { ReasoningEffort } from 'openai/resources/shared';
 
-export async function complete(conversation: types.Conversation, options: types.CompletionOptions) {
+export class OpenAICompatible implements types.Provider {
+  readonly name: string = 'openai-compatible';
+
+  async complete(conversation: types.Conversation, options: types.CompletionOptions) {
+    return complete(conversation, options);
+  }
+}
+
+async function complete(conversation: types.Conversation, options: types.CompletionOptions) {
   // Convert generic messages to OpenAI format
   const systemMessage: openai.OpenAI.Chat.Completions.ChatCompletionSystemMessageParam = {
     role: 'system',

@@ -29,7 +29,7 @@ export class Anthropic implements types.Provider {
       system: systemPrompt(conversation.systemPrompt),
       messages: conversation.messages.map(toAnthropicMessageParts).flat(),
       tools: conversation.tools.map(toAnthropicTool),
-      thinking: options.reasoning !== 'none' ? {
+      thinking: options.reasoning && options.reasoning !== 'none' ? {
         type: 'enabled',
         budget_tokens: options.maxTokens ? Math.round(maxTokens / 10) : 1024,
       } : undefined,

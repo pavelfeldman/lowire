@@ -1,5 +1,5 @@
 {
-  "ce63693780037d6e2105f8961cad18c540cef658": {
+  "35b9fe1b88defe79e34c565705c7fb4ff4cf7be1": {
     "result": {
       "role": "assistant",
       "content": [
@@ -7,21 +7,21 @@
           "type": "tool_call",
           "name": "add",
           "arguments": {
-            "_is_done": false,
+            "b": 3,
             "a": 2,
-            "b": 3
+            "_is_done": false
           },
-          "id": "call_6dg8920sikr",
-          "googleThoughtSignature": "Cq0BAXLI2ny2d3cxcszkehS81i1cV0ZbdX75z7fjMUai09Qmj1U04SbT9OpVU32IFtwoTZKwIDni0b518sYLR87iTP8ubdn2j1k+7rdrvf4kyj2yfBAkhr9Ycb4F8J24MxgTQSq496nPq2/0UtnPQgYYwew10fKxag7DxzNrKBl/AgKMIBM44KUMkvsTMmXry6tjxhC37ZFHf/UwecPS+s1z0zdeNpi9lWc6GJuXpIo="
+          "id": "call_sc6nedcytlb",
+          "googleThoughtSignature": "CvEBAXLI2nwNybCMNLqMZUMkyxUkUO6OlS4QaX5aCuuCAl+Sg+xW0MRmMxO7Q27sSdnq/pKiB8VaX2mjN4g3Bm53VaRVdEYJEU9CDMuPEzr6HpGdP+p7SqYyWUBmromQmoDLdmzBtknASd4/XkWUM31t788buJFbVu3hJBZKHfNAOHkQ7pTFFpYb2VVzk5VJWLaDuStc4qA1WA1brmNl3G48cTzRt9YcS53TMzVzOfFH4w/uwpnst7LJKuWjPPdBWx8m0xs8+PQ1PMNVvkSeCFNaqe3bMY9rtS/3w4nxdyf5Q2UZwevzV/oWOERfY/nthM0xJQ=="
         }
       ]
     },
     "usage": {
-      "input": 286,
+      "input": 323,
       "output": 24
     }
   },
-  "01aade021f6403a34009d97838e1c4d9aa1a1c16": {
+  "2628b7af5d0592d81f0847db6694376cc5d742e6": {
     "result": {
       "role": "assistant",
       "content": [
@@ -29,16 +29,16 @@
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
-            "sum": 5,
-            "_is_done": true
+            "_is_done": true,
+            "sum": 5
           },
-          "id": "call_00kpzthvp7hsv",
-          "googleThoughtSignature": "CrUBAXLI2nyISN5T3hlL1RBpHcB1bUnVqG6UsZXCJ5oK/sOIIhevjUJY3/xR0/3yb+fRpSBu6pa+oyjAHlx/cFEpUyJablMHA2fW9sYJL2SYnG/RXNy020khEQUEx+v7xe0JMyv7i4mprJK6kIE+c0F3+IGB2rRr5juKcKQ9y4s2Ob/YF9j0a7f86UMGwAMsWfeNqOahSR9Y+vpLX2ZjeAFU/PLaeSMYDPyPZw5kgWRidWjJ3OcbkQ=="
+          "id": "call_tw5cwts2zyf",
+          "googleThoughtSignature": "CpkBAXLI2nznh5obmgkv40d2pCs7GGkhSWLeL5En/1oyALJBtA1YH6oegpOnkUvQsCFrSfCH5NmAj4ycoC8ghJVmRqzjGtG2iAVDL3C30qe1HUlTrDITCqvIDohfgCpBO8LLiexxJhumgMFktDGiHwOigH/CrdhY6UUZcJ6aTXEyFNcye51cCOWJDy9LfeLjFuQeTdo1vXkmT03C"
         }
       ]
     },
     "usage": {
-      "input": 327,
+      "input": 364,
       "output": 21
     }
   }

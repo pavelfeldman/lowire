@@ -1,5 +1,5 @@
 {
-  "e78961453ede739ad4213717c9717574bc1f0cac": {
+  "64db6a583868beef5e09a54bc19e5b0cd4ee39ce": {
     "result": {
       "role": "assistant",
       "content": [
@@ -7,19 +7,19 @@
           "type": "tool_call",
           "name": "playwright__browser_navigate",
           "arguments": {
-            "url": "http://localhost:<PORT>/",
+            "url": "http://localhost:%PORT%/",
             "_is_done": false
           },
-          "id": "call_jxWTvYQlF5CA5tyiJxlXMmE5"
+          "id": "call_WYDjzC96dySxQjyLjbdLfrR0"
         }
       ]
     },
     "usage": {
-      "input": 2310,
+      "input": 2345,
       "output": 33
     }
   },
-  "157441c4767cb726c3e15059c1e9203f4a18f5c7": {
+  "fc2f2864639ba264537036971c9a5fa7dcd0d201": {
     "result": {
       "role": "assistant",
       "content": [
@@ -30,12 +30,12 @@
             "result": "Welcome to lowire!",
             "_is_done": true
           },
-          "id": "call_KVhUeTif5Ok8iRHW3XYgkIbJ"
+          "id": "call_wITLkGZtOMHPuHnCUwU12kzy"
         }
       ]
     },
     "usage": {
-      "input": 2418,
+      "input": 2453,
       "output": 27
     }
   }

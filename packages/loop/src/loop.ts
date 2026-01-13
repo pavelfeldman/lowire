@@ -52,10 +52,8 @@ export type LoopOptions = types.CompletionOptions & LoopEvents & {
   tools?: types.Tool[];
   callTool?: types.ToolCallback;
   maxTurns?: number;
-  cache?: {
-    messages: types.ReplayCache;
-    secrets: Record<string, string>;
-  };
+  cache?: types.ReplayCache;
+  secrets?: Record<string, string>;
   summarize?: boolean;
 };
 
@@ -99,9 +97,8 @@ export class Loop {
 
       debug?.('lowire:loop')(`Turn ${turns + 1} of (max ${maxTurns})`);
       const caches = options.cache ? {
-        input: options.cache.messages,
+        input: options.cache,
         output: this._cacheOutput,
-        secrets: options.cache.secrets
       } : undefined;
 
       const summarizedConversation = options.summarize ? this._summarizeConversation(task, conversation, options) : conversation;
@@ -228,5 +225,7 @@ function wrapToolWithIsDone(tool: types.Tool): types.Tool {
 }
 
 const systemPrompt = `
-You are an autonomous agent designed to complete tasks by interacting with tools. Perform the user task.
+- You are an autonomous agent designed to complete tasks by interacting with tools.
+- Perform the user task.
+- If you see text surrounded by %, it is a secret and you should preserve it as such. It will be replaced with the actual value before the tool call.
 `;

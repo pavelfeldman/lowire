@@ -1,5 +1,5 @@
 {
-  "332ebb7da0769fa091278718f6eb25f0f6591a18": {
+  "1cf7f06ec923439fbc497f60d739202f49e53b5f": {
     "result": {
       "role": "assistant",
       "content": [
@@ -7,16 +7,16 @@
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
-            "result": "Hello world",
-            "_is_done": true
+            "_is_done": true,
+            "result": "Hello world"
           },
-          "id": "call_pblh2cb21fa",
-          "googleThoughtSignature": "Ct0BAXLI2nx0xYdT5UyCsoZ26NBykSxSIWrsmMXTpt6vzVEZkQDceAY4Mnh7fvMnQjEIgUzieqDwDTERw8hDUOHiy0K8Gpa6xARw7McQOr/Xhvlph0EAa1URts2e7vj+arAz2gDSMZnvTFOceMjsVC7Q9znuBpsQ9muWhqSxYmd2laAVrKXs4eZPpxIatRT7qlGg2lJwL2KnKLW2cKkWfv2mdweVILQ2fVYLgbj/v71sSgepGQ9t1qG9E0+a0pXZCHdtbdyf5ZORnuWz5QI0Zk0d8nQznaTeiw2H3aufGq4="
+          "id": "call_hvs3nhye6i7",
+          "googleThoughtSignature": "CpkCAXLI2nzNmCBmodR4YNuHJJu+qd8jGGiECNXKyx7sLWe+mXPTXwiJSAsUluZTCRhxfJguyRTpUCKo//cT1mQAJJuLrF3uSiYUPnIRaiTMwyByw3iDjO+a5Y7oZ1VRT6QH3K57M95lLyb5BsCEwkLVkJddBl/R9J3RRopFy3alhv725+DkyAYXzaEnCdd7av8HomUDWT4l2AMHiT6IbN6mXXVqPl2B4YTG5jv1LI1dLOqowp5AISfCzKSzLDaGd8QrSVdsJMqHGoN0qXz5qp95komHHPG6aX9Rx0wfXuQmZK5X7X8XvommzOliQqm/jj++T4ibKFv0/NmHUs5XaJkNQglCciIywvDIVom3aFQiPMJQux3iW4wkZ64="
         }
       ]
     },
     "usage": {
-      "input": 189,
+      "input": 226,
       "output": 22
     }
   }

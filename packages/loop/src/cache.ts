@@ -18,49 +18,51 @@ import crypto from 'crypto';
 
 import type * as types from './types';
 
-type ReplayCaches = {
+export type ReplayCaches = {
   input: types.ReplayCache;
   output: types.ReplayCache;
-  secrets: Record<string, string>;
 };
 
-export async function cachedComplete(provider: types.Provider, conversation: types.Conversation, caches: ReplayCaches | undefined, options: types.CompletionOptions): ReturnType<types.Provider['complete']> {
+export async function cachedComplete(provider: types.Provider, conversation: types.Conversation, caches: ReplayCaches | undefined, options: types.CompletionOptions & { secrets?: Record<string, string> }): ReturnType<types.Provider['complete']> {
+  const c = hideSecrets(conversation, options.secrets);
+  const result = await cachedCompleteNoSecrets(provider, c, caches, options);
+  return unhideSecrets(result, options.secrets);
+}
+
+async function cachedCompleteNoSecrets(provider: types.Provider, conversation: types.Conversation, caches: ReplayCaches | undefined, options: types.CompletionOptions): ReturnType<types.Provider['complete']> {
   if (!caches)
     return await provider.complete(conversation, options);
 
-  const secrets = caches.secrets || {};
-  const c = hideSecrets(conversation, secrets);
-  const key = calculateSha1(JSON.stringify(c));
-
+  const key = calculateSha1(JSON.stringify(conversation));
   if (!process.env.LOWIRE_NO_CACHE && caches.input[key]) {
     caches.output[key] = caches.input[key];
-    return unhideSecrets(caches.input[key] ?? caches.output[key], secrets);
+    return caches.input[key] ?? caches.output[key];
   }
 
   if (!process.env.LOWIRE_NO_CACHE && caches.output[key])
-    return unhideSecrets(caches.output[key], secrets);
+    return caches.output[key];
 
   if (process.env.LOWIRE_FORCE_CACHE)
     throw new Error('Cache missing but TL_FORCE_CACHE is set' + JSON.stringify(conversation, null, 2));
 
   const result = await provider.complete(conversation, options);
-  caches.output[key] = hideSecrets(result, secrets);
+  caches.output[key] = result;
   return result;
 }
 
 type Reply = { result: types.AssistantMessage, usage: types.Usage };
 
-function hideSecrets<T>(conversation: T, secrets: Record<string, string>): T {
+function hideSecrets<T>(conversation: T, secrets: Record<string, string> = {}): T {
   let text = JSON.stringify(conversation);
   for (const [key, value] of Object.entries(secrets))
-    text = text.replaceAll(value, `<${key}>`);
+    text = text.replaceAll(value, `%${key}%`);
   return JSON.parse(text);
 }
 
-function unhideSecrets(message: Reply, secrets: Record<string, string>): Reply {
+function unhideSecrets(message: Reply, secrets: Record<string, string> = {}): Reply {
   let text = JSON.stringify(message);
   for (const [key, value] of Object.entries(secrets))
-    text = text.replaceAll(`<${key}>`, value);
+    text = text.replaceAll(`%${key}%`, value);
   return JSON.parse(text);
 }
 

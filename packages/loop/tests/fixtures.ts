@@ -65,7 +65,8 @@ export const test = baseTest.extend<TestOptions & TestFixtures, WorkerFixtures>(
       apiKey,
       model,
       reasoning,
-      cache: { messages: cache, secrets: { PORT: String(_workerPort) } },
+      cache,
+      secrets: { PORT: String(_workerPort) },
       debug,
     });
     await use(loop);

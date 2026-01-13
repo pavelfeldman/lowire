@@ -1,5 +1,5 @@
 {
-  "e78961453ede739ad4213717c9717574bc1f0cac": {
+  "64db6a583868beef5e09a54bc19e5b0cd4ee39ce": {
     "result": {
       "role": "assistant",
       "content": [
@@ -7,21 +7,21 @@
           "type": "tool_call",
           "name": "playwright__browser_navigate",
           "arguments": {
-            "url": "http://localhost:<PORT>/",
+            "url": "http://localhost:%PORT%/",
             "_is_done": false
           },
-          "id": "call_f6nnh678kNdBC2SmB386CTU3",
-          "openaiId": "fc_0549f18c2ee1fdd200695c47b47e50819db31958bd245b2fa6",
+          "id": "call_IEJWFBDsW8JWbgXj2d7ZSR9X",
+          "openaiId": "fc_0e66b0642162c643006965c6dc6874819596540634b4b69ce9",
           "openaiStatus": "completed"
         }
       ]
     },
     "usage": {
-      "input": 2308,
+      "input": 2343,
       "output": 34
     }
   },
-  "fa8890cbfbb199b24715016df0140c7f0ccb8c0d": {
+  "b996c506e56c61bfa2594cde01d5c8ca78dc782a": {
     "result": {
       "role": "assistant",
       "content": [
@@ -32,14 +32,14 @@
             "result": "Welcome to lowire!",
             "_is_done": true
           },
-          "id": "call_83dvKS2Fvi6SdAAUk0p4DvkJ",
-          "openaiId": "fc_0549f18c2ee1fdd200695c47b6723c819db24c66c3032fb792",
+          "id": "call_sbEHYmSbK181NiAnRS7ESv5O",
+          "openaiId": "fc_0e66b0642162c643006965c6de53748195b7d9230eae714e96",
           "openaiStatus": "completed"
         }
       ]
     },
     "usage": {
-      "input": 2417,
+      "input": 2452,
       "output": 28
     }
   }

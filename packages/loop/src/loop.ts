@@ -174,7 +174,7 @@ export class Loop {
           }
 
           toolCall.result = result;
-          if (args._is_done)
+          if (args._is_done && !result.isError)
             return { result, status: 'ok', usage: totalUsage, turns };
         } catch (error) {
           const errorMessage = `Error while executing tool "${name}": ${error instanceof Error ? error.message : String(error)}\n\nPlease try to recover and complete the task.`;

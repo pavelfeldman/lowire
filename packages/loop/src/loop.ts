@@ -190,8 +190,6 @@ export class Loop {
       }
     }
 
-    if (options.summarize)
-      return this._summarizeConversation(task, conversation, options) as any;
     throw new Error('Failed to perform step, max attempts reached');
   }
 

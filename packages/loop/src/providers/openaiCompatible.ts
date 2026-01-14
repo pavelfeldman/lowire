@@ -81,6 +81,7 @@ async function create(createParams: openai.OpenAI.Chat.Completions.ChatCompletio
     method: 'POST',
     headers,
     body: JSON.stringify(createParams),
+    signal: options.signal,
   });
 
   if (!response.ok) {

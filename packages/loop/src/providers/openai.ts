@@ -81,7 +81,8 @@ async function create(createParams: openai.OpenAI.Responses.ResponseCreateParams
   const response = await fetch(options.apiEndpoint ?? `https://api.openai.com/v1/responses`, {
     method: 'POST',
     headers,
-    body: JSON.stringify(createParams)
+    body: JSON.stringify(createParams),
+    signal: options.signal,
   });
 
   if (!response.ok) {

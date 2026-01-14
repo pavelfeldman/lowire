@@ -56,7 +56,8 @@ async function create(createParams: anthropic.Anthropic.Messages.MessageCreatePa
   const response = await fetch(options.apiEndpoint ?? `https://api.anthropic.com/v1/messages`, {
     method: 'POST',
     headers,
-    body: JSON.stringify(createParams)
+    body: JSON.stringify(createParams),
+    signal: options.signal,
   });
 
   if (!response.ok) {

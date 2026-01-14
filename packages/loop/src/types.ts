@@ -117,6 +117,7 @@ export type CompletionOptions = {
   maxTokens?: number;
   reasoning?: 'none' | 'medium' | 'high';
   temperature?: number;
+  signal?: AbortSignal;
   debug?: Debug;
 };
 

@@ -60,7 +60,8 @@ async function create(model: string, createParams: google.GenerateContentRequest
       'Content-Type': 'application/json',
       'x-goog-api-key': options.apiKey,
     },
-    body: JSON.stringify(createParams)
+    body: JSON.stringify(createParams),
+    signal: options.signal,
   });
 
   if (!response.ok) {

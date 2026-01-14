@@ -1,6 +1,6 @@
 {
   "name": "@lowire/loop",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Small agentic loop",
   "repository": {
     "type": "git",
@@ -14,8 +14,7 @@
     "name": "Microsoft Corporation"
   },
   "license": "Apache-2.0",
-  "scripts": {
-  },
+  "scripts": {},
   "exports": {
     ".": {
       "import": "./index.mjs",

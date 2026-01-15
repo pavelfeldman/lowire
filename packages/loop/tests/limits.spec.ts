@@ -56,7 +56,9 @@ test('should respect max tool call retries', async ({ createLoop }) => {
   const loop = createLoop({ maxToolCallRetries: 2 });
 
   const tools: types.Tool[] = [pushTool];
+  let attempts = 0;
   const callTool: types.ToolCallback = async () => {
+    attempts++;
     return {
       content: [
         { type: 'text', text: 'Could not push value at this time, please try again.' },
@@ -68,6 +70,7 @@ test('should respect max tool call retries', async ({ createLoop }) => {
   const response = await runLoop(loop, 'Use the tool push to push the number 1.', { tools, callTool, omitReportResult: true });
   expect(response.status).toBe('error');
   expect(response.error).toBe('Failed to perform action after 2 tool call retries');
+  expect(attempts).toBe(3);
 });
 
 const pushTool: types.Tool = {

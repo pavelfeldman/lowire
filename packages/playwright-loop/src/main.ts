@@ -35,10 +35,28 @@ async function main() {
     rootDir: process.cwd()
   });
 
-  const ll = new loop.Loop('github', {
-    model: 'claude-sonnet-4.5',
+  const ll = new loop.Loop({
+    api: 'anthropic',
+    apiEndpoint: process.env.ANTHROPIC_ENDPOINT!,
+    apiKey: process.env.ANTHROPIC_API_KEY!,
+    model: 'claude-sonnet-4-5',
     tools,
     callTool: params => callToolAdapter(callTool, params),
+    onBeforeTurn: ({ conversation, totalUsage, budgetTokens }) => {
+      console.log('Before turn:', { totalUsage, budgetTokens });
+    },
+    onAfterTurn: ({ assistantMessage, totalUsage, budgetTokens }) => {
+      console.log('After turn:', assistantMessage, totalUsage, budgetTokens);
+    },
+    onBeforeToolCall: ({ assistantMessage, toolCall }) => {
+      console.log('Before tool call:', assistantMessage, toolCall);
+    },
+    onAfterToolCall: ({ assistantMessage, toolCall, result }) => {
+      console.log('After tool call:', assistantMessage, toolCall, result);
+    },
+    onToolCallError: ({ assistantMessage, toolCall, error }) => {
+      console.log('Tool call error:', assistantMessage, toolCall, error);
+    },
   });
 
   const task = 'Navigate to https://demo.playwright.dev/todomvc/ and perform acceptance testing of the functionality';

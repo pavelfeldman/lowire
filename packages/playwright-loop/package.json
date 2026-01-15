@@ -16,7 +16,7 @@
   "license": "Apache-2.0",
   "scripts": {},
   "dependencies": {
-    "@lowire/loop": "^0.0.3",
+    "@lowire/loop": "^0.0.20",
     "@modelcontextprotocol/sdk": "^1.23.0",
     "debug": "^4.4.3"
   }

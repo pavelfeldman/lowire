@@ -113,6 +113,7 @@ export type CompletionOptions = {
   api: 'openai' | 'openai-compatible' | 'anthropic' | 'google';
   apiEndpoint?: string;
   apiKey: string;
+  apiTimeout?: number;
   model: string;
   maxTokens?: number;
   reasoning?: 'none' | 'medium' | 'high';

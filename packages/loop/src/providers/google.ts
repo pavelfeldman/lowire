@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { fetchWithTimeout } from '../fetchWithTimeout';
+
 import type * as google from '@google/generative-ai';
 import type * as types from '../types';
 
@@ -54,7 +56,7 @@ async function create(model: string, createParams: google.GenerateContentRequest
   const debugBody = { ...createParams, tools: `${createParams.tools?.length ?? 0} tools` };
   options.debug?.('lowire:google')('Request:', JSON.stringify(debugBody, null, 2));
 
-  const response = await fetch(options.apiEndpoint ?? `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+  const response = await fetchWithTimeout(options.apiEndpoint ?? `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -62,6 +64,7 @@ async function create(model: string, createParams: google.GenerateContentRequest
     },
     body: JSON.stringify(createParams),
     signal: options.signal,
+    timeout: options.apiTimeout
   });
 
   if (!response.ok) {

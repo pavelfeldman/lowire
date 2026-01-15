@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { fetchWithTimeout } from '../fetchWithTimeout';
+
 import type * as openai from 'openai';
 import type * as types from '../types';
 import type { Reasoning } from 'openai/resources/shared';
@@ -78,11 +80,12 @@ async function create(createParams: openai.OpenAI.Responses.ResponseCreateParams
   const debugBody = { ...createParams, tools: `${createParams.tools?.length ?? 0} tools` };
   options.debug?.('lowire:openai-responses')('Request:', JSON.stringify(debugBody, null, 2));
 
-  const response = await fetch(options.apiEndpoint ?? `https://api.openai.com/v1/responses`, {
+  const response = await fetchWithTimeout(options.apiEndpoint ?? `https://api.openai.com/v1/responses`, {
     method: 'POST',
     headers,
     body: JSON.stringify(createParams),
     signal: options.signal,
+    timeout: options.apiTimeout
   });
 
   if (!response.ok) {

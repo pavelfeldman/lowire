@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { fetchWithTimeout } from '../fetchWithTimeout';
+
 import type * as anthropic from '@anthropic-ai/sdk';
 import type * as types from '../types';
 
@@ -53,11 +55,12 @@ async function create(createParams: anthropic.Anthropic.Messages.MessageCreatePa
   const debugBody = { ...createParams, tools: `${createParams.tools?.length ?? 0} tools` };
   options.debug?.('lowire:anthropic')('Request:', JSON.stringify(debugBody, null, 2));
 
-  const response = await fetch(options.apiEndpoint ?? `https://api.anthropic.com/v1/messages`, {
+  const response = await fetchWithTimeout(options.apiEndpoint ?? `https://api.anthropic.com/v1/messages`, {
     method: 'POST',
     headers,
     body: JSON.stringify(createParams),
     signal: options.signal,
+    timeout: options.apiTimeout
   });
 
   if (!response.ok) {

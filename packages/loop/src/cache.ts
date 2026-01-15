@@ -43,7 +43,7 @@ async function cachedCompleteNoSecrets(provider: types.Provider, conversation: t
     return caches.output[key];
 
   if (process.env.LOWIRE_FORCE_CACHE)
-    throw new Error('Cache missing but TL_FORCE_CACHE is set' + JSON.stringify(conversation, null, 2));
+    throw new Error('Cache missing but LOWIRE_FORCE_CACHE is set' + JSON.stringify(conversation, null, 2));
 
   const result = await provider.complete(conversation, options);
   caches.output[key] = result;

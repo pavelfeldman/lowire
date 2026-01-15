@@ -52,6 +52,8 @@ export type LoopOptions = types.CompletionOptions & LoopEvents & {
   tools?: types.Tool[];
   callTool?: types.ToolCallback;
   maxTurns?: number;
+  maxToolCalls?: number;
+  maxToolCallRetries?: number;
   cache?: types.ReplayCache;
   secrets?: Record<string, string>;
   summarize?: boolean;
@@ -86,14 +88,18 @@ export class Loop {
     };
 
     const debug = options.debug;
-    let budgetTokens = options.maxTokens;
+    const budget = {
+      tokens: options.maxTokens,
+      toolCalls: options.maxToolCalls,
+      toolCallRetries: options.maxToolCallRetries,
+    };
     const totalUsage: types.Usage = { input: 0, output: 0 };
 
-    debug?.('lowire:loop')(`Starting ${this._provider.name} loop`, task);
+    debug?.('lowire:loop')(`Starting ${this._provider.name} loop\n${task}`);
     const maxTurns = options.maxTurns || 100;
 
     for (let turns = 0; turns < maxTurns; ++turns) {
-      if (options.maxTokens && budgetTokens !== undefined && budgetTokens <= 0)
+      if (options.maxTokens && budget.tokens !== undefined && budget.tokens <= 0)
         throw new Error(`Budget tokens ${options.maxTokens} exhausted`);
 
       debug?.('lowire:loop')(`Turn ${turns + 1} of (max ${maxTurns})`);
@@ -103,14 +109,14 @@ export class Loop {
       } : undefined;
 
       const summarizedConversation = options.summarize ? this._summarizeConversation(task, conversation, options) : conversation;
-      await options.onBeforeTurn?.({ conversation: summarizedConversation, totalUsage, budgetTokens });
+      await options.onBeforeTurn?.({ conversation: summarizedConversation, totalUsage, budgetTokens: budget.tokens });
       if (abortController?.signal.aborted)
         return { status: 'break', usage: totalUsage, turns };
 
       debug?.('lowire:loop')(`Request`, JSON.stringify({ ...summarizedConversation, tools: `${summarizedConversation.tools.length} tools` }, null, 2));
       const { result: assistantMessage, usage } = await cachedComplete(this._provider, summarizedConversation, caches, {
         ...options,
-        maxTokens: budgetTokens,
+        maxTokens: budget.tokens,
         signal: abortController?.signal,
       });
 
@@ -118,12 +124,12 @@ export class Loop {
 
       totalUsage.input += usage.input;
       totalUsage.output += usage.output;
-      if (budgetTokens !== undefined)
-        budgetTokens -= usage.input + usage.output;
+      if (budget.tokens !== undefined)
+        budget.tokens -= usage.input + usage.output;
 
       debug?.('lowire:loop')('Usage', `input: ${usage.input}, output: ${usage.output}`);
       debug?.('lowire:loop')('Assistant', intent, JSON.stringify(assistantMessage.content, null, 2));
-      await options.onAfterTurn?.({ assistantMessage, totalUsage, budgetTokens });
+      await options.onAfterTurn?.({ assistantMessage, totalUsage, budgetTokens: budget.tokens });
       if (abortController?.signal.aborted)
         return { status: 'break', usage: totalUsage, turns };
 
@@ -135,6 +141,9 @@ export class Loop {
       }
 
       for (const toolCall of toolCalls) {
+        if (budget.toolCalls !== undefined && --budget.toolCalls < 0)
+          throw new Error(`Failed to perform step, max tool calls (${options.maxToolCalls}) reached`);
+
         const { name, arguments: args } = toolCall;
         debug?.('lowire:loop')('Call tool', name, JSON.stringify(args, null, 2));
 
@@ -190,6 +199,13 @@ export class Loop {
           };
         }
       }
+
+      const hasErrors = toolCalls.some(toolCall => toolCall.result?.isError);
+      if (!hasErrors)
+        budget.toolCallRetries = options.maxToolCallRetries;
+
+      if (hasErrors && budget.toolCallRetries !== undefined && --budget.toolCallRetries < 0)
+        throw new Error(`Failed to perform action after ${options.maxToolCallRetries} tool call retries`);
     }
 
     throw new Error('Failed to perform step, max attempts reached');

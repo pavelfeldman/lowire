@@ -1,0 +1,77 @@
+{
+  "7a55f963a1ba55c740959787252a9c8f811b1daf": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 1,
+            "_is_done": true
+          },
+          "id": "call_azf8vexczq7",
+          "googleThoughtSignature": "CuoBAXLI2nwaoQ+aHr13QqMK9DE/qxXcS0d6I0XZhhdXAUWxuyTFvRYIoWv9wID0aDPlKQZ5gYIjbgip/6UVzL85oEdQtDJ8UIYHuZwlEpDSqeGzuMPWWpR/ql3f7h65MUv+i7u1VAifuKIi6hmQcUPcjK8XfvWgnyO7pX6fYVj/ealEy0EenA4iOwXmgcUracIKFvkQZS/GylHYEGRQo6434TvAKbSJcLL23+jC7d60/a7OHqHjSj4my8krE/wEWKLapl1jlWxXOpfCeD+Vx4XaK6R4EXCxwcR4bC8g7SpweG/GpUuvpjIn/Onw"
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 216,
+      "output": 19
+    }
+  },
+  "4697914f52adb764f15c5704dd7f1ab2494663df": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "text",
+          "text": "The tool responded with an error: \"Could not push value at this time, please try again.\" I will try to push the number 1 again."
+        },
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 1,
+            "_is_done": true
+          },
+          "id": "call_ho9pxkjv0xg"
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 259,
+      "output": 50
+    }
+  },
+  "4fcfb4a82cf3acaa9d072fd0acbf28daa7d20f42": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 1,
+            "_is_done": true
+          },
+          "id": "call_oif6l1bb4os",
+          "googleThoughtSignature": "CssEAXLI2nx8OqzdNvaVWbhWCBn90cZmEHyUKspBt/JlASK0sBH6SLnDa/bpaP4xjkPzTSb4Zk7dOPueOhwlhwHOc1MBYS/m6URECSoYImtEMoxdkQe+pxnWSGytNXmxZs5V5oNpkFq9I4SaFw9FpLyh1EeSGp/3+b383q7pGdMtlWewhIWPxtdjIeSGS6VOncQ7kO+gGfnWkY0QNCDFJiYccAs5P3kBmmBctCjwNx71rT0lJGa4tlzPywcC/S73ocH2D07MZCPNvRQe9ankEDYJvnA4vijTc6ifHa3682IPdBqcuFelnEMzbgiFCfFVZEM7idy6q83ZWToY3uly+7v4LNuUMsTFeW1zxyFDOumA7yKgTS3I4PLfk917YnJTNZgpXlVZ6JtIvfaGlcYi8Q3n9MbHXvGe6m9MgFXR/NDPn4LAgqay7e2E8hlxIkcSHDqeCwfO1UOy2bnhlzuMXR4iWY9l2n48t/WIZwekmx1H5SFB6N8XQzeE5lKf6uAz2sWuVj+WRkr8pRF11NE2Q07zaqT3RSo3TZxq2JLKWcC8xhLlFTqB6IBNOZK3AWj6K4GIOZyJkz4zL8AT2nkCYhTFKO5nbWs3875tQVmcOyKtFJ6kSIQGME9Q+mGWzHWSHnG62iQWTNUU+jN+TEvIiBgMSv6QkslvKs3mDJDj6c3PPvHe3481E2eZc3aG1Qo1hj9XKsSO6JbhHPD7AYIoKP+Q1G4B31o8BdU5Mp6VeDTrdSWhDWV22OPy8WKK62K5iaiBZDOKd1wMVezkuiU="
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 333,
+      "output": 19
+    }
+  }
+}

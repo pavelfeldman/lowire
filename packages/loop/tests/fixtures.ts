@@ -112,21 +112,19 @@ function sanitizeFileName(name: string): string {
   return name.replace('.spec.ts', '').replace(/[^a-zA-Z0-9_]+/g, '-');
 }
 
-export async function runLoop<T>(loop: Loop, task: string, options: Omit<LoopOptions, 'model' | 'api' | 'apiKey'> & { resultSchema?: types.Schema, model?: string } = {}): Promise<{ result?: T, usage: types.Usage, turns: number, status: 'ok' | 'break' | 'error', error?: string }> {
-  const tools: types.Tool[] = [
-    ...options.tools || [],
-    {
-      name: 'report_result',
-      description: 'Report the result of the task.',
-      inputSchema: options.resultSchema ?? { type: 'object', properties: { result: { type: 'string' } }, required: ['result'] },
-    },
-  ];
+export async function runLoop<T>(loop: Loop, task: string, options: Omit<LoopOptions, 'model' | 'api' | 'apiKey'> & { resultSchema?: types.Schema, model?: string, omitReportResult?: boolean } = {}): Promise<{ result?: T, usage: types.Usage, turns: number, status: 'ok' | 'break' | 'error', error?: string }> {
+  const reportResult = {
+    name: 'report_result',
+    description: 'Report the result of the task.',
+    inputSchema: options.resultSchema ?? { type: 'object', properties: { result: { type: 'string' } }, required: ['result'] },
+  };
+  const tools: types.Tool[] = options.omitReportResult ? (options.tools || []) : [...(options.tools || []), reportResult];
   const callTool: types.ToolCallback = async (params: { name: string, arguments: any }) => {
-    if (params.name === 'report_result')
+    if (params.name === 'report_result' && !options.omitReportResult)
       return { content: [{ type: 'text', text: JSON.stringify(params.arguments) }] };
     return options.callTool!(params);
   };
-  const response = await loop.run(task + '\nCall "report_result" tool to report the result.', { ...options, tools, callTool });
+  const response = await loop.run(task + (options.omitReportResult ? '' : '\nCall "report_result" tool to report the result.'), { ...options, tools, callTool });
   const part = response.result?.content.find(part => part.type === 'text');
   const result = part ? JSON.parse(part.text) : undefined;
   if (result) {

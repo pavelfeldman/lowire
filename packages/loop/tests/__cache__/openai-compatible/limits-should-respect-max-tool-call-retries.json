@@ -1,0 +1,71 @@
+{
+  "7a55f963a1ba55c740959787252a9c8f811b1daf": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 1,
+            "_is_done": true
+          },
+          "id": "call_60gyvNoTXQ99RqFqcbXAtxlG"
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 288,
+      "output": 22
+    }
+  },
+  "7a1232356b7cddc5cca300b5881a73954c73ed56": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 1,
+            "_is_done": true
+          },
+          "id": "call_BaKdyyhmdQvsPi8pKhFUREHJ"
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 332,
+      "output": 22
+    }
+  },
+  "662ad04c77f2e2ffd21b98ca0dca8cb31d057713": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 1,
+            "_is_done": true
+          },
+          "id": "call_kDvAXp1ll1gpAzIARgkW1y2X"
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 376,
+      "output": 22
+    }
+  }
+}

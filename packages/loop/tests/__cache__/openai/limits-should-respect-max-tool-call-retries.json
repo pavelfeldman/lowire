@@ -1,0 +1,77 @@
+{
+  "7a55f963a1ba55c740959787252a9c8f811b1daf": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 1,
+            "_is_done": true
+          },
+          "id": "call_Qyo1vDafxPAb2cSuxtFXSy6Y",
+          "openaiId": "fc_09ab9a9a2c6a57de006969711b70bc8192942667d64567dffd",
+          "openaiStatus": "completed"
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 286,
+      "output": 23
+    }
+  },
+  "9b39d94b5ee0d402284f088d9da7abef360f9c16": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 1,
+            "_is_done": true
+          },
+          "id": "call_8fMyahLCFxH30aVqX9uHrSDS",
+          "openaiId": "fc_09ab9a9a2c6a57de006969711d0ee88192ad2686bf1eee2589",
+          "openaiStatus": "completed"
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 331,
+      "output": 23
+    }
+  },
+  "e0e2f436eb7123872cba2fc79a54cd2c10d2cd50": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 1,
+            "_is_done": true
+          },
+          "id": "call_siunc3EUKeicV6aFPOgAqzNq",
+          "openaiId": "fc_09ab9a9a2c6a57de006969711eb1cc8192bdf43b2f00a77cd3",
+          "openaiStatus": "completed"
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 376,
+      "output": 23
+    }
+  }
+}

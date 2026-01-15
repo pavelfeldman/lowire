@@ -1,0 +1,102 @@
+{
+  "15c3c58fd9ce390b9e9647a823faef81496a0f56": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 1,
+            "_is_done": false
+          },
+          "id": "call_dBsex29XCuFJfP4kHym3QjCu",
+          "openaiId": "fc_071a05c6a4aa390a0069696f5a5418819081d9762674e608c6",
+          "openaiStatus": "completed"
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 349,
+      "output": 23
+    }
+  },
+  "330d245d5bd462cc4ba30292a87767bf07157a44": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 2,
+            "_is_done": false
+          },
+          "id": "call_I8GRTTAOTfdK8MF2tU44bBqT",
+          "openaiId": "fc_071a05c6a4aa390a0069696f5b5c54819085ea23038ab376e1",
+          "openaiStatus": "completed"
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 374,
+      "output": 23
+    }
+  },
+  "f3744be4edc76833e98539da0386a8ac89af61ea": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 3,
+            "_is_done": false
+          },
+          "id": "call_ZWTbJQGms9AHNgPv5z2KM7UI",
+          "openaiId": "fc_071a05c6a4aa390a0069696f5c8a0081909cb0ca8a9395bec1",
+          "openaiStatus": "completed"
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 399,
+      "output": 23
+    }
+  },
+  "4e2f9cf1a13f51b2f6f9f4fb7c89498c01e25a28": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 4,
+            "_is_done": false
+          },
+          "id": "call_hx4uAgKDWMPZycf3D4kRMCI2",
+          "openaiId": "fc_071a05c6a4aa390a0069696f5e179c8190a4615049ae0c99dc",
+          "openaiStatus": "completed"
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 424,
+      "output": 23
+    }
+  }
+}

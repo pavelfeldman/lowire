@@ -1,0 +1,98 @@
+{
+  "15c3c58fd9ce390b9e9647a823faef81496a0f56": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "_is_done": false,
+            "value": 1
+          },
+          "id": "call_c1sfpui24l",
+          "googleThoughtSignature": "CtwCAXLI2nw4cy98y4lKSnG8e0zashWGI6BIlvWJskKo5q8jGpnn36HORJ+UDz7wT9Rx08++4gZS5AUN8APDaX9tOt6yLIl5TxMSXN+M9/2kJwGMxLWvvLfSy2Hov6+RwcnZsiw0zEKXUJDWgrk33frfPblk4UrLqMK9CU0bWN5JOxnXLZHdQBfbYhVxcVTh+uFMLxjWmWer6ZlivVA0occW3JruUyaB6uhqjdBRQxkmmYzdRveIcOs9kZoa5APS9IJosAreWyfH28Sf9ugUbX1QeITmoiIsFZmhEAQVssZkbYNTsJKaZeBX/7XK/dpQyuLzwicohL2HXzLw5NQM7ZjDJlKXwqe7rpz1c3FXBp2g5YXUxK54OI5yVhBK36QI1hA24e90c5zZmMcHuTnsNMQnVkrxN/kYJ2ki4uJAFk4aJoCQiOCNP/vGHPdtGkTVTUVxQ/sGSbteFMlrpAjj"
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 308,
+      "output": 19
+    }
+  },
+  "842b4c55527ed8a2b073994ccecfc88856e94a41": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "_is_done": false,
+            "value": 2
+          },
+          "id": "call_rh0l2ecphy",
+          "googleThoughtSignature": "CloBcsjafFZ0wHzdT/18pfEi5tY0eLbM4R3JSK1xEJ5r51L4EXL+U8mGzqGrQHsdFS24Y+RImIpjuGHicVBn6j5xUUvA6gq8+BKAJTBPGmM0CamPw6aGMNl1meI="
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 336,
+      "output": 19
+    }
+  },
+  "8f2ef89da4a5c9c4102ece100669c3af3e5181e2": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 3,
+            "_is_done": false
+          },
+          "id": "call_rusd9lxfh59",
+          "googleThoughtSignature": "CloBcsjafPX7lUIm5DFJ46atzrdGUkgAIBPKKe3rXYiKniaTVVw3WFV+Sr91oqDqtdcNmAsCD+A0x4EsN913AWqGbCRueCwirVzpJcmeB4rRjyGaUB8HHqCMBoY="
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 364,
+      "output": 19
+    }
+  },
+  "dfc9d1b78b299a40b230b0bf87b5a9cb0c3df737": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "_is_done": false,
+            "value": 4
+          },
+          "id": "call_s4r6qeh4m9h",
+          "googleThoughtSignature": "CloBcsjafM1v0AxxFgwu1sYf7KcAI9d3ajp+uX44FLoXf/r3V8HrOmymAWOn2f0cQ1qs+5ZP6lMBwyAPSHsvBHS+Yqd59XdIfgiQr0113YHQfCYgxw37Mu4pq6s="
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 392,
+      "output": 19
+    }
+  }
+}

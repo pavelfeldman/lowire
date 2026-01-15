@@ -1,0 +1,83 @@
+{
+  "7a55f963a1ba55c740959787252a9c8f811b1daf": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "text",
+          "text": "I'll push the number 1 to the stack."
+        },
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 1,
+            "_is_done": true
+          },
+          "id": "toolu_017ZPTdAT6ADXcp9fL7jGXAq"
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 747,
+      "output": 83
+    }
+  },
+  "e51faafc0b60989d4fd5b1f235d8b663dab7ca9d": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "text",
+          "text": "Let me try pushing the number 1 again."
+        },
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 1,
+            "_is_done": true
+          },
+          "id": "toolu_01EkzJ77vZhhQLah997zr9ep"
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 861,
+      "output": 82
+    }
+  },
+  "40e6917b16726171f02e09ee8e13863b57321f31": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "text",
+          "text": "I'll attempt to push the value 1 once more."
+        },
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 1,
+            "_is_done": true
+          },
+          "id": "toolu_01U7tG3u39E2rArxLnpSJkRu"
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 974,
+      "output": 84
+    }
+  }
+}

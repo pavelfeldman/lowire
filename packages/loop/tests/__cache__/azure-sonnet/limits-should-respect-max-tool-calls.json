@@ -1,0 +1,65 @@
+{
+  "15c3c58fd9ce390b9e9647a823faef81496a0f56": {
+    "result": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "text",
+          "text": "I'll push the numbers 1, 2, 3, 4, and 5 to the stack, then report the result."
+        },
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 1,
+            "_is_done": false
+          },
+          "id": "toolu_01L9RcSjFkbqxvpzaewLsTXN"
+        },
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 2,
+            "_is_done": false
+          },
+          "id": "toolu_0185sgXoutgtAxsyA9LWeUzk"
+        },
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 3,
+            "_is_done": false
+          },
+          "id": "toolu_01KWt97L9G9Cva6foMcgvVy9"
+        },
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 4,
+            "_is_done": false
+          },
+          "id": "toolu_01BA8GQZzH8f8eaqN8Um4Fao"
+        },
+        {
+          "type": "tool_call",
+          "name": "push",
+          "arguments": {
+            "value": 5,
+            "_is_done": false
+          },
+          "id": "toolu_01NR9pdnHQW1R3JA1p1o7j56"
+        }
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
+    },
+    "usage": {
+      "input": 862,
+      "output": 313
+    }
+  }
+}

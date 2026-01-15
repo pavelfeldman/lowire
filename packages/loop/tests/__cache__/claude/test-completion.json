@@ -1,5 +1,5 @@
 {
-  "1cf7f06ec923439fbc497f60d739202f49e53b5f": {
+  "ecf24575c6e4a313c2ae987ca890d5ca068dedc1": {
     "result": {
       "role": "assistant",
       "content": [
@@ -10,9 +10,12 @@
             "result": "Hello world",
             "_is_done": true
           },
-          "id": "toolu_017mL6sneMZZCj135R7vQiyf"
+          "id": "toolu_01QNhhT4QCWemyC4XDGKzWkd"
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
       "input": 751,

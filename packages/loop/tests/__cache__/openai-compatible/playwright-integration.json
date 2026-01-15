@@ -1,5 +1,5 @@
 {
-  "64db6a583868beef5e09a54bc19e5b0cd4ee39ce": {
+  "bff83b9c0f6dd6b422e062e8edf7f3954708a93f": {
     "result": {
       "role": "assistant",
       "content": [
@@ -10,16 +10,19 @@
             "url": "http://localhost:%PORT%/",
             "_is_done": false
           },
-          "id": "call_WYDjzC96dySxQjyLjbdLfrR0"
+          "id": "call_UXHO7xsCUtCINkJUyyvtTXEM"
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
       "input": 2345,
       "output": 33
     }
   },
-  "fc2f2864639ba264537036971c9a5fa7dcd0d201": {
+  "9192a70b9fefb63a824b5d21347490a1ac575e1e": {
     "result": {
       "role": "assistant",
       "content": [
@@ -30,9 +33,12 @@
             "result": "Welcome to lowire!",
             "_is_done": true
           },
-          "id": "call_wITLkGZtOMHPuHnCUwU12kzy"
+          "id": "call_e4E0J0SuOymoEBFcFOKzch9i"
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
       "input": 2453,

@@ -25,7 +25,7 @@ export default defineConfig<TestOptions>({
       }
     },
     {
-      name: 'openai-completions',
+      name: 'openai-compatible',
       use: {
         api: 'openai-compatible',
         apiKey: process.env.OPENAI_API_KEY,
@@ -33,7 +33,7 @@ export default defineConfig<TestOptions>({
       }
     },
     {
-      name: 'openai-responses',
+      name: 'openai',
       use: {
         api: 'openai',
         apiKey: process.env.OPENAI_API_KEY,

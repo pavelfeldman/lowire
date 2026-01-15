@@ -1,5 +1,5 @@
 {
-  "5ca8036d9c76d62a2329e97c4262174f599ddc1c": {
+  "2f47d3a59cdc90af282d9cec440203c46e279578": {
     "result": {
       "role": "assistant",
       "content": [
@@ -10,10 +10,13 @@
             "magic": 42,
             "_is_done": true
           },
-          "id": "call_aw8rp3oprr7",
-          "googleThoughtSignature": "CsoBAXLI2ny3fjV15lbibXvB8cZCMw8Jyfbp+LCKeJB3VEsjYkCqFKGL/5sUAkou2bIcMc/88qui8YfZbC1eyy5H3nC1tY6OvvTiNkngolPxc1LPwS7Xmn9tNPtbvhCDfDqHqPm+c++vwCmTWSep4hdX0TN/xlQ8jL8mlNbyVxcfxmvfls7Dl4AVE6EyFFIP87FAhD4/crW32IikOuHs2ivb9endi4FTvLp+YYJEG4HY/plnsB3537ZrBssam/4uvK1+vwQdaNhS+L0agQ=="
+          "id": "call_wiir814ljnl",
+          "googleThoughtSignature": "CrACAXLI2nwpZD/Ue3g4b4d/SmjWJEldxUJhl0OdzIFlIdolQnmwT5TiaIkOqLuPRU2e5rLqUwbTDOGh6JmoeHfw3xlaCfdXlejmu13OgAsBvSlmH3giRujHvijioVxv2jNnImSg55MnsVSXdTkYzP8l9b5G9ZRo/0AHDf5Xz8JkUe1Ls+FHOFAifYzeFR62n6+taaWlmxpTFRhV7W2TBIjT6Mb4AhPfEw7Ftw26N+9amfjIIBvB7YxCzXWNnEn9jKo9SDkZt3KXMvHEIX7O2WBX4rxVM6nrS3L5FK4YspIx7lwgAaVsbCeAjZ8nTkuPUao0q4szD3/v2L2NhCQfLc6okB6Studzs3N99AyjzrkpdpuUwa/7npaU5fQ8QUA6JUY8wSEqCEuIOziVZOmA7Kdcqw=="
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
       "input": 223,

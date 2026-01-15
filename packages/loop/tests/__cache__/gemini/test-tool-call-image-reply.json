@@ -1,5 +1,5 @@
 {
-  "1ea2d6e1c3b3283bac9ac9dd357c3f5649ddc51a": {
+  "fd0eb150bf13c45aa781faf930628e710cc555e8": {
     "result": {
       "role": "assistant",
       "content": [
@@ -9,17 +9,20 @@
           "arguments": {
             "_is_done": false
           },
-          "id": "call_7pksb2ukeg6",
-          "googleThoughtSignature": "CokCAXLI2nxOH62nnHKTxVzGdXmaBQ0S20bpz+psWyxPYBotGFsj/Ufb4kg/EiuDkUVXUDXuVG14ZXOg+srUBODeEyj3qGP/DU7cCUnH+x4UCMiQuu55doTq/cJFLEKNObvMS7NKZiMoNWfCTmhxjFclzzOrQWJbHoTzHGvAoonj5Qyc9Zn9BKwSl9RTTG/jMTWlv3mlj7Dkhn3IUGtC4WVN+o5JAnCNBvQ2EA7vnKT2bkB09JIzsefbX1Bdrzw9ip49r9Q+9+02S5y4nISWbQ8dE+l0TET0h5DhHxgAbcug2mn4ptTNO5VKdjCYMmNdXJqAFFLojTibZfgOC6fRP8h1M/nm5QXkb8PZHA=="
+          "id": "call_ryzftqomvsn",
+          "googleThoughtSignature": "CuwBAXLI2nxbVQRHoiMPVfjgrPnouhTEZL84rSrhmQZvs/XlwcXUZlgvy9X1sQ/xPgZNRPF1/V7K7CvsBuzIc/VLZ+OVGMzq3Bnlma39+CDiFrm9653DfreFBdrA/crTC1OUyxeI+aqMJuyjH5cqpxYVGJZ+qMUeNMwtehPvGrcJ06p+PBJl9W9ND+MYqodWG3Ir+ruQcM+wEYMma9JG4XLdR3IRsg74h8bLmQUiCjx0U2oe492ooWzGvk8IAfkaoiWepQOwQJQJnPlfLiie6Y7GetWQQZlzOBTAyjR4jEhQ8Q9WP8u8glgVuaXzroQ="
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
       "input": 293,
       "output": 16
     }
   },
-  "1354ec997f1975168d29da54a96efff88f1f1767": {
+  "be7e1ae10fb3a4dbc50f4270883e6e21ff141431": {
     "result": {
       "role": "assistant",
       "content": [
@@ -30,10 +33,13 @@
             "_is_done": true,
             "result": 42
           },
-          "id": "call_dvdhtqlb59v",
-          "googleThoughtSignature": "CrMBAXLI2nydtSZTR1Ah89WIwsPsG0rPB+e2cWV2AIBai6OZ0op2L/cO8b/2kczv7o7OYWi/RgezM3ot7sTZ9ygsvM1vP2Zn/nNG2g9lBVLUb7/C6mChz+RijAl87Zda4cd5yXQVE10+YZmqAAeOgbiABXcImGTuvSd5BNw71BLMqtUeBPUZSKYIxj7bCHGuYW8biZQ9Wp3773swLg6Y8RUvGUe9lZF30atDRybnlBiwa3yJmjE="
+          "id": "call_v38vhq8lgz",
+          "googleThoughtSignature": "Cq0BAXLI2nwVcC94BBQmkXzZoHG2xKMP5cU031NntCZHLGmAJk2LGMdzRMu334Y5U09YatNfvc0BbW5mB60sWcN7Rk0vhAPAyY8e7HATN0yJ2enm0VzrRRGsxI4dl1uEuiKX3neUxWEvxT5BoUNRW1A9dExEUyAdJViP8uu+1xIuYulLaQF4N6qKeY0o7TLyZEGU+rr8IOBit+8T9Cmf6rXw0Nac+2hX7T7L5kOLrTI="
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
       "input": 579,

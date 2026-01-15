@@ -1,5 +1,5 @@
 {
-  "35b9fe1b88defe79e34c565705c7fb4ff4cf7be1": {
+  "5a3f6c5b1f960ac920dfb0dff81dee8f860bbe49": {
     "result": {
       "role": "assistant",
       "content": [
@@ -11,16 +11,19 @@
             "b": 3,
             "_is_done": false
           },
-          "id": "call_r631hHhxYgVUxJaCgXC46r4F"
+          "id": "call_NtsF5aAJ2HXtgxx7dTUjZo3J"
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
       "input": 362,
       "output": 26
     }
   },
-  "2193c6e95bac0574df9b411603095fdde5b4fcd4": {
+  "ef3381c083adb7ee6f7f6000d007c340cd639c76": {
     "result": {
       "role": "assistant",
       "content": [
@@ -31,9 +34,12 @@
             "sum": 5,
             "_is_done": true
           },
-          "id": "call_gZLUdE389QzIXcPd3XTpxoS5"
+          "id": "call_hegygmCExwLaknuWBpz5IkMW"
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
       "input": 403,

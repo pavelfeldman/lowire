@@ -1,5 +1,5 @@
 {
-  "35b9fe1b88defe79e34c565705c7fb4ff4cf7be1": {
+  "5a3f6c5b1f960ac920dfb0dff81dee8f860bbe49": {
     "result": {
       "role": "assistant",
       "content": [
@@ -11,18 +11,21 @@
             "b": 3,
             "_is_done": false
           },
-          "id": "call_u6svhjIXyaKjcBX7HEOstZ5A",
-          "openaiId": "fc_0a1827b8627622f3006965c6db2354819cbb334504ed3dd7a3",
+          "id": "call_X1ss9zSBxGrgc1HyEpcuOfF0",
+          "openaiId": "fc_0469d3c47496e758006969679b9fac8190823e21027aa52a5e",
           "openaiStatus": "completed"
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
       "input": 360,
       "output": 27
     }
   },
-  "7c8e1e625eae0235ce08fc945c8f9d518c8d2402": {
+  "5a61450e6e511d1081b7987c01a0b7f2e9f11b40": {
     "result": {
       "role": "assistant",
       "content": [
@@ -33,11 +36,14 @@
             "sum": 5,
             "_is_done": true
           },
-          "id": "call_RwfURdnhvrvNhgTJdG6tePx4",
-          "openaiId": "fc_0a1827b8627622f3006965c6dbe8ec819c8cb7c85718ddc54e",
+          "id": "call_iu7pzxqp3pYW0XiUAGgsC2lL",
+          "openaiId": "fc_0469d3c47496e758006969679cb2d08190a2d38343ee888d34",
           "openaiStatus": "completed"
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
       "input": 402,

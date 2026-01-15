@@ -1,5 +1,5 @@
 {
-  "35b9fe1b88defe79e34c565705c7fb4ff4cf7be1": {
+  "5a3f6c5b1f960ac920dfb0dff81dee8f860bbe49": {
     "result": {
       "role": "assistant",
       "content": [
@@ -15,16 +15,19 @@
             "b": 3,
             "_is_done": false
           },
-          "id": "toolu_01Uj7RuN6z3dHh7A85Lx8BrL"
+          "id": "toolu_01L796vkxoVt5ZanFbq9Y6eU"
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
       "input": 892,
       "output": 108
     }
   },
-  "fc44b6b676c6c9c54973ebc43facb7bfdec3c302": {
+  "f63d8a07b5fc59dca6dc60b501126fd8d5fbbeee": {
     "result": {
       "role": "assistant",
       "content": [
@@ -39,9 +42,12 @@
             "sum": 5,
             "_is_done": true
           },
-          "id": "toolu_01WjzuxcgK5Q78VtX75e6PC4"
+          "id": "toolu_013E7ogJfiN3X8QyhVdmuN43"
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
       "input": 1016,

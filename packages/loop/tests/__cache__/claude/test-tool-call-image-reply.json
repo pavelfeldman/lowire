@@ -1,11 +1,11 @@
 {
-  "1ea2d6e1c3b3283bac9ac9dd357c3f5649ddc51a": {
+  "fd0eb150bf13c45aa781faf930628e710cc555e8": {
     "result": {
       "role": "assistant",
       "content": [
         {
           "type": "text",
-          "text": "I'll capture the image first and then report the number I see on it."
+          "text": "I'll capture the image and report the number I see on it."
         },
         {
           "type": "tool_call",
@@ -13,16 +13,19 @@
           "arguments": {
             "_is_done": false
           },
-          "id": "toolu_016JHfDLTU9D7N57VvHt48DU"
+          "id": "toolu_01MEGJTSYtEb7CJhbfaBcq7V"
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
       "input": 846,
-      "output": 72
+      "output": 70
     }
   },
-  "7c55609e171d21b7e022cac7ec91dfde443c0379": {
+  "7cb1c10a57f47b28578ac150aa1b2175c4fcde6b": {
     "result": {
       "role": "assistant",
       "content": [
@@ -37,12 +40,15 @@
             "result": 42,
             "_is_done": true
           },
-          "id": "toolu_01VTkWJtHSQ6eRQB8VYaqi2R"
+          "id": "toolu_01TAVJDbsxhUQ8mrFynmkrPQ"
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
-      "input": 2508,
+      "input": 2506,
       "output": 92
     }
   }

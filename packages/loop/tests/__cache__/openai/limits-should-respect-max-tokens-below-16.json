@@ -1,0 +1,16 @@
+{
+  "fa688838d1fa31106ba7fcf268c1550d7c6eed19": {
+    "result": {
+      "role": "assistant",
+      "content": [],
+      "stopReason": {
+        "code": "other",
+        "message": "Invalid 'max_output_tokens': integer below minimum value. Expected a value >= 16, but got 10 instead."
+      }
+    },
+    "usage": {
+      "input": 0,
+      "output": 0
+    }
+  }
+}

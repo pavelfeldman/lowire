@@ -1,5 +1,5 @@
 {
-  "64db6a583868beef5e09a54bc19e5b0cd4ee39ce": {
+  "bff83b9c0f6dd6b422e062e8edf7f3954708a93f": {
     "result": {
       "role": "assistant",
       "content": [
@@ -7,20 +7,23 @@
           "type": "tool_call",
           "name": "playwright__browser_navigate",
           "arguments": {
-            "url": "http://localhost:%PORT%/",
-            "_is_done": false
+            "_is_done": false,
+            "url": "http://localhost:%PORT%/"
           },
-          "id": "call_klz4nerubt",
-          "googleThoughtSignature": "CoUCAXLI2nwX7gqACM66/rFGf5CiU3/SWTy366NSdb8ZcyTDxWRoaPwlybUyJYYcgRckavQohIFR3pWDWFuQaWpUeq5MdT/6aVHOTzu2ptzYT5ErPLfkWsV93C0hnq/ExA//JCWDxG2X4/nOg5y1xt1/3kDrnzlyWh+qtne4F2MhBZggJRd2wvuXFq6JmofzHneVBDOlmbzUWY6L0SPHvK5CfM0DXVS9PSlEqljGL3N8IDK+4Iutc0NgOXRxg05wf1z+3IVL0nviENmxJDZQgHtBQjYVdVAkOdg93gUa0JnpjTsr0Itp3XAp7FWgtFBqbpmHbyMbw0lGxQDfDOUGOBQ0io6xjT83"
+          "id": "call_u19wzituz",
+          "googleThoughtSignature": "CvACAXLI2nwt/D55/mOsjKg7qiak7piDeG4V+3u2vlVwPiAlSMZUpk0V+n+DolR/S+4fVhu+6d26akkJsTLf4F74CFkU+W4zHhKEqOA8f+JtQh0+cceZsXPn99pHkI0tmis5jczguKICMPx63z2q9lCT3aOgGLD15ljYp2ciz+NmVqjNAnaJ+9hZN9fBj3Jg3LAb7EFjBWAAHi6yynMEfdCZBdgI6tt5DZQa/u8RJby08MgLUmLQra5FwFcoQiyGa09YaOPJeT/P9AHKpghzxgpAzaX/twT8u3foJdCR4ue2ZhYc9lxpFiuu1bB5ndzkHWPpDTetZew1e9U2rCA+5A29p84DbkDz7oL9qsVtyRKQ30Iwq08UtCUxbUyr6zsxxlZ71jdxWL5SABdmRxABUwIz9OkWJ6B69KAeHcjWGgbyjr2QiigoNehFiPc7QsaM5vqZddngG6uO5Nw1CluBjUUcyt1Jfvcedi+POkCn+vF7WoU="
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
       "input": 3094,
       "output": 29
     }
   },
-  "b347439e13aad1aa31bc22ff74ee112794949ddb": {
+  "9b301e1548fec7eda0ff0c5bd14d0399601e6c44": {
     "result": {
       "role": "assistant",
       "content": [
@@ -31,10 +34,13 @@
             "result": "Welcome to lowire!",
             "_is_done": true
           },
-          "id": "call_81t65fcu0vl",
-          "googleThoughtSignature": "Co8BAXLI2nzvRv8dAwqze+e7VEUGXb+e5RhSDgS48DA0yEC+RYoZplhamCbgD3bMpU4ppo+MMKbP7avc+EkAYM6UJIXnx/adoLsNgABxCTArvrKtxhEXos5NCTg49OxPOuNtQZYQZfPdAPy97MntYjAhbBP9SpA0RkXEF9SQ92ef5qFHJSOLDYZeUYSvh+5Yjhw="
+          "id": "call_28nxlgrotde",
+          "googleThoughtSignature": "CssBAXLI2nzMwLK6N7GAs8nOK1+2o7rtWRP+8AWydc9BXwH/9iigsZyEg32kXWE/+gxyJIVjJGLOZ3b7pM2TA4jEpgXe5jKQNtCFe3PayZk8bHCU4mWb6E69+IIiKQOJb6YJe8P4ce6Nv83aKHegLxKEiPoyTXCtyZsEA5HicbF0PXYPiLA1Mk9Yv+VLryO+1oihooI3JPUQm3nGvRsiykyzYkLLgR5rbvWLmyiAoYMP9gLWXFEwH5F65Rd0J6xFSgxYAUBdGaLLo5zJq6k="
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
       "input": 3216,

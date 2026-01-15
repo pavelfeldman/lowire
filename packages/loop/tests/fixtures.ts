@@ -36,6 +36,7 @@ export type TestOptions = {
 
 type TestFixtures = {
   loop: Loop;
+  createLoop: (options: Omit<LoopOptions, 'model' | 'api' | 'apiKey'>) => Loop;
   server: TestServer;
 };
 
@@ -50,7 +51,12 @@ export const test = baseTest.extend<TestOptions & TestFixtures, WorkerFixtures>(
   apiEndpoint: [undefined, { option: true }],
   model: ['', { option: true }],
   reasoning: ['none', { option: true }],
-  loop: async ({ api, apiKey, apiEndpoint, _workerPort, model, reasoning }, use, testInfo) => {
+
+  loop: async ({ createLoop }, use) => {
+    await use(createLoop({}));
+  },
+
+  createLoop: async ({ api, apiKey, apiEndpoint, _workerPort, model, reasoning }, use, testInfo) => {
     const cacheFile = path.join(__dirname, '__cache__', testInfo.project.name, sanitizeFileName(test.info().titlePath.join(' ')) + '.json');
     const dataBefore = await fs.promises.readFile(cacheFile, 'utf-8').catch(() => '{}');
     let cache: types.ReplayCache = {};
@@ -59,21 +65,29 @@ export const test = baseTest.extend<TestOptions & TestFixtures, WorkerFixtures>(
     } catch {
       cache = {};
     }
-    const loop = new Loop({
-      api,
-      apiEndpoint,
-      apiKey,
-      model,
-      reasoning,
-      cache,
-      secrets: { PORT: String(_workerPort) },
-      debug,
+
+    let loop: Loop | undefined;
+    await use(params => {
+      loop = new Loop({
+        api,
+        apiEndpoint,
+        apiKey,
+        model,
+        reasoning,
+        cache,
+        secrets: { PORT: String(_workerPort) },
+        debug,
+        ...params,
+      });
+      return loop;
     });
-    await use(loop);
-    const dataAfter = JSON.stringify(loop.cache(), null, 2);
-    if (dataBefore !== dataAfter) {
-      await fs.promises.mkdir(path.dirname(cacheFile), { recursive: true });
-      await fs.promises.writeFile(cacheFile, dataAfter);
+
+    if (loop) {
+      const dataAfter = JSON.stringify(loop.cache(), null, 2);
+      if (dataBefore !== dataAfter) {
+        await fs.promises.mkdir(path.dirname(cacheFile), { recursive: true });
+        await fs.promises.writeFile(cacheFile, dataAfter);
+      }
     }
   },
 

@@ -1,25 +1,22 @@
 {
-  "ecf24575c6e4a313c2ae987ca890d5ca068dedc1": {
+  "b1a356179a4b13221f3b54648c99fa147a594996": {
     "result": {
       "role": "assistant",
       "content": [
         {
           "type": "tool_call",
           "name": "report_result",
-          "arguments": {
-            "result": "Hello world",
-            "_is_done": true
-          },
-          "id": "toolu_01Nd4KedPLzf8eCfHvsJrcAt"
+          "arguments": {},
+          "id": "toolu_0167g3iYJVFh33AtFKy3wyB1"
         }
       ],
       "stopReason": {
-        "code": "ok"
+        "code": "max_tokens"
       }
     },
     "usage": {
       "input": 751,
-      "output": 73
+      "output": 20
     }
   }
 }

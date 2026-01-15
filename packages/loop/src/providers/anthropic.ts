@@ -22,7 +22,7 @@ import type * as types from '../types';
 export class Anthropic implements types.Provider {
   readonly name = 'anthropic';
 
-  async complete(conversation: types.Conversation, options: types.CompletionOptions) {
+  async complete(conversation: types.Conversation, options: types.CompletionOptions): Promise<{ result: types.AssistantMessage, usage: types.Usage }> {
     const maxTokens = Math.min(options.maxTokens ?? 32_768, 32_768);
     const response = await create({
       model: options.model,
@@ -124,9 +124,20 @@ function toAnthropicResultParam(part: types.ResultPart): anthropic.Anthropic.Mes
 }
 
 function toAssistantMessage(message: anthropic.Anthropic.Messages.Message): types.AssistantMessage {
+  const stopReason: types.AssistantMessage['stopReason'] = { code: 'ok' };
+  if (message.stop_reason === 'max_tokens') {
+    stopReason.code = 'max_tokens';
+  } else if (message.stop_reason === 'tool_use') {
+    stopReason.code = 'ok';
+  } else {
+    stopReason.code = 'other';
+    stopReason.message = `Unexpected stop reason: ${message.stop_reason}`;
+  }
+
   return {
     role: 'assistant',
     content: message.content.map(toContentPart).filter(Boolean) as types.AssistantMessage['content'],
+    stopReason,
   };
 }
 

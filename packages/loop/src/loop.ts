@@ -115,11 +115,21 @@ export class Loop {
         return { status: 'break', usage: totalUsage, turns };
 
       debug?.('lowire:loop')(`Request`, JSON.stringify({ ...summarizedConversation, tools: `${summarizedConversation.tools.length} tools` }, null, 2));
+      const tokenEstimate = Math.floor(JSON.stringify(summarizedConversation).length / 4);
+      if (budget.tokens !== undefined && tokenEstimate >= budget.tokens)
+        return { status: 'error', error: `Input token estimate ${tokenEstimate} exceeds budget ${budget.tokens}`, usage: totalUsage, turns };
+
       const { result: assistantMessage, usage } = await cachedComplete(this._provider, summarizedConversation, caches, {
         ...options,
-        maxTokens: budget.tokens,
+        maxTokens: budget.tokens !== undefined ? budget.tokens - tokenEstimate : undefined,
         signal: abortController?.signal,
       });
+
+      if (assistantMessage.stopReason.code === 'max_tokens')
+        return { status: 'error', error: `Max tokens exhausted`, usage: totalUsage, turns };
+
+      if (assistantMessage.stopReason.code === 'other')
+        return { status: 'error', error: assistantMessage.stopReason.message, usage: totalUsage, turns };
 
       const intent = assistantMessage.content.filter(part => part.type === 'text').map(part => part.text).join('\n');
 

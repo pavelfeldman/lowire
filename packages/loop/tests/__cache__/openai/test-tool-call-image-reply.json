@@ -1,5 +1,5 @@
 {
-  "1ea2d6e1c3b3283bac9ac9dd357c3f5649ddc51a": {
+  "fd0eb150bf13c45aa781faf930628e710cc555e8": {
     "result": {
       "role": "assistant",
       "content": [
@@ -9,18 +9,21 @@
           "arguments": {
             "_is_done": false
           },
-          "id": "call_5QkHlJdkUVtUxpvEJ5xJtIe9",
-          "openaiId": "fc_0b5000a2e00e9fef006965c6db3c0081919e65111ce46bce8f",
+          "id": "call_1nd9rvf0n84T8W9AvC6Pmnle",
+          "openaiId": "fc_016793af6eb26fcc006969679b93708197827f995805876522",
           "openaiStatus": "completed"
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
       "input": 340,
       "output": 20
     }
   },
-  "22f4fe72ef063978a668cf49ed9f21d2aa8a6f0e": {
+  "3f31a67d21bf7e7aad1bd422884f605f6ee87a62": {
     "result": {
       "role": "assistant",
       "content": [
@@ -31,11 +34,14 @@
             "result": 42,
             "_is_done": true
           },
-          "id": "call_2D31gfnT7gY1DOFFbxDX6ROf",
-          "openaiId": "fc_0b5000a2e00e9fef006965c6dd72048191a7b01b431ae66d52",
+          "id": "call_LC1YX1Dj4EXfPfSgiuLQQTGO",
+          "openaiId": "fc_016793af6eb26fcc006969679d32588197b1457586c0a92159",
           "openaiStatus": "completed"
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
       "input": 2117,

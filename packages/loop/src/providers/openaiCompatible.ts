@@ -23,12 +23,12 @@ import type { ReasoningEffort } from 'openai/resources/shared';
 export class OpenAICompatible implements types.Provider {
   readonly name: string = 'openai-compatible';
 
-  async complete(conversation: types.Conversation, options: types.CompletionOptions) {
+  async complete(conversation: types.Conversation, options: types.CompletionOptions): Promise<{ result: types.AssistantMessage, usage: types.Usage }> {
     return complete(conversation, options);
   }
 }
 
-async function complete(conversation: types.Conversation, options: types.CompletionOptions) {
+async function complete(conversation: types.Conversation, options: types.CompletionOptions): Promise<{ result: types.AssistantMessage, usage: types.Usage }> {
   // Convert generic messages to OpenAI format
   const systemMessage: openai.OpenAI.Chat.Completions.ChatCompletionSystemMessageParam = {
     role: 'system',
@@ -37,9 +37,9 @@ async function complete(conversation: types.Conversation, options: types.Complet
   const openaiMessages = [systemMessage, ...conversation.messages.map(toCompletionsMessages).flat()];
   const openaiTools = conversation.tools.map(t => toCompletionsTool(t));
 
-  const response = await create({
+  const { response, error } = await create({
     model: options.model,
-    max_tokens: options.maxTokens,
+    max_completion_tokens: options.maxTokens,
     temperature: options.temperature,
     messages: openaiMessages,
     tools: openaiTools,
@@ -48,10 +48,17 @@ async function complete(conversation: types.Conversation, options: types.Complet
     parallel_tool_calls: false,
   }, options);
 
-  if (!response || !response.choices.length)
-    throw new Error('Failed to get response from OpenAI completions');
+  if (error) {
+    if (error.type === 'invalid_request_error')
+      return { result: { role: 'assistant', content: [], stopReason: { code: 'max_tokens' } }, usage: { input: 0, output: 0 } };
+    return { result: { role: 'assistant', content: [], stopReason: { code: 'other', message: (response as any).error.message } }, usage: { input: 0, output: 0 } };
+  }
 
-  const result: types.AssistantMessage = { role: 'assistant', content: [] };
+  if (!response || !response.choices.length)
+    return { result: { role: 'assistant', content: [], stopReason: { code: 'other', message: 'Failed to get response from OpenAI completions' } }, usage: { input: 0, output: 0 } };
+
+  const result: types.AssistantMessage = { role: 'assistant', content: [], stopReason: { code: 'ok' } };
+  const finishReason = response.choices[0]?.finish_reason;
   for (const choice of response.choices) {
     const message = choice.message;
     if (message.content)
@@ -63,6 +70,11 @@ async function complete(conversation: types.Conversation, options: types.Complet
     }
   }
 
+  if (finishReason === 'length')
+    result.stopReason = { code: 'max_tokens' };
+  else if (finishReason !== 'tool_calls' && finishReason !== 'function_call' && finishReason !== 'stop')
+    result.stopReason = { code: 'other', message: `Unexpected finish reason: ${finishReason}` };
+
   const usage: types.Usage = {
     input: response.usage?.prompt_tokens ?? 0,
     output: response.usage?.completion_tokens ?? 0,
@@ -70,7 +82,7 @@ async function complete(conversation: types.Conversation, options: types.Complet
   return { result, usage };
 }
 
-async function create(createParams: openai.OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming, options: types.CompletionOptions): Promise<openai.OpenAI.Chat.Completions.ChatCompletion> {
+async function create(createParams: openai.OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming, options: types.CompletionOptions): Promise<{ response?: openai.OpenAI.Chat.Completions.ChatCompletion, error?: { type: string, message: string } }> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${options.apiKey}`,
@@ -86,15 +98,17 @@ async function create(createParams: openai.OpenAI.Chat.Completions.ChatCompletio
     signal: options.signal,
     timeout: options.apiTimeout
   });
-
+  const responseText = await response.text();
+  const responseBody = JSON.parse(responseText) as openai.OpenAI.Chat.Completions.ChatCompletion;
   if (!response.ok) {
-    options.debug?.('lowire:openai')('Response:', response.status);
-    throw new Error(`API error: ${response.status} ${response.statusText} ${await response.text()}`);
+    try {
+      return { error: responseBody as any };
+    } catch {
+      return { error: { type: 'unknown', message: responseText } };
+    }
   }
-
-  const responseBody = await response.json() as openai.OpenAI.Chat.Completions.ChatCompletion;
   options.debug?.('lowire:openai')('Response:', JSON.stringify(responseBody, null, 2));
-  return responseBody;
+  return { response: responseBody };
 }
 
 function toCopilotResultContentPart(part: types.ResultPart): openai.OpenAI.Chat.Completions.ChatCompletionContentPart {

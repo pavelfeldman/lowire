@@ -49,6 +49,7 @@ export type UserMessage = BaseMessage & {
 export type AssistantMessage = BaseMessage & {
   role: 'assistant';
   content: (TextContentPart | ToolCallContentPart | ThinkingContentPart)[];
+  stopReason: { code: 'max_tokens' | 'ok' | 'other', message?: string };
   openaiId?: string;
   openaiStatus?: 'completed' | 'incomplete' | 'in_progress';
   toolError?: string;

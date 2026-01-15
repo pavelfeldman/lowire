@@ -33,7 +33,8 @@ async function cachedCompleteNoSecrets(provider: types.Provider, conversation: t
   if (!caches)
     return await provider.complete(conversation, options);
 
-  const key = calculateSha1(JSON.stringify(conversation));
+  const { maxTokens, reasoning, temperature } = options;
+  const key = calculateSha1(JSON.stringify({ conversation, maxTokens, reasoning, temperature }));
   if (!process.env.LOWIRE_NO_CACHE && caches.input[key]) {
     caches.output[key] = caches.input[key];
     return caches.input[key] ?? caches.output[key];

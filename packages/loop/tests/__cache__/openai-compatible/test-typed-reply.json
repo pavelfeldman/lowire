@@ -1,5 +1,5 @@
 {
-  "5ca8036d9c76d62a2329e97c4262174f599ddc1c": {
+  "2f47d3a59cdc90af282d9cec440203c46e279578": {
     "result": {
       "role": "assistant",
       "content": [
@@ -10,9 +10,12 @@
             "magic": 42,
             "_is_done": true
           },
-          "id": "call_18WCaNKPaqzroJmvk0PAoRt7"
+          "id": "call_CTykRk949FyoiTMQKURJgPxD"
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
       "input": 290,

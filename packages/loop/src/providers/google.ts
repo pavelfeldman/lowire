@@ -35,7 +35,10 @@ export class Google implements types.Provider {
       },
       contents,
       tools: conversation.tools.length > 0 ? [{ functionDeclarations: conversation.tools.map(toGeminiTool) }] : undefined,
-      generationConfig: { temperature: options.temperature },
+      generationConfig: {
+        temperature: options.temperature,
+        maxOutputTokens: options.maxTokens
+      },
     }, options);
 
     const [candidate] = response.candidates ?? [];
@@ -100,9 +103,23 @@ function stripUnsupportedSchemaFields(schema: any): any {
 }
 
 function toAssistantMessage(candidate: google.GenerateContentCandidate): types.AssistantMessage {
+  const stopReason: types.AssistantMessage['stopReason'] = { code: 'ok' };
+  const finishReason = candidate.finishReason;
+  if (finishReason === 'MAX_TOKENS') {
+    stopReason.code = 'max_tokens';
+  } else if (!finishReason || finishReason === 'STOP') {
+    stopReason.code = 'ok';
+  } else if (finishReason.includes('FUNCTION') || finishReason.includes('TOOL')) {
+    stopReason.code = 'ok';
+  } else {
+    stopReason.code = 'other';
+    stopReason.message = `Unexpected finish reason: ${finishReason}`;
+  }
+
   return {
     role: 'assistant',
-    content: candidate.content.parts.map(toContentPart).filter(Boolean) as (types.TextContentPart | types.ToolCallContentPart)[],
+    content: (candidate.content.parts || []).map(toContentPart).filter(Boolean) as (types.TextContentPart | types.ToolCallContentPart)[],
+    stopReason,
   };
 }
 

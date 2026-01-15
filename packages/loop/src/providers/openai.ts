@@ -28,11 +28,11 @@ export class OpenAI implements types.Provider {
   }
 }
 
-async function complete(conversation: types.Conversation, options: types.CompletionOptions) {
+async function complete(conversation: types.Conversation, options: types.CompletionOptions): Promise<{ result: types.AssistantMessage, usage: types.Usage }> {
   const inputItems = conversation.messages.map(toResponseInputItems).flat();
   const tools = conversation.tools.map(toOpenAIFunctionTool);
 
-  const response = await create({
+  const { response, error } = await create({
     model: options.model,
     temperature: options.temperature,
     input: inputItems,
@@ -40,11 +40,32 @@ async function complete(conversation: types.Conversation, options: types.Complet
     tools: tools.length > 0 ? tools : undefined,
     tool_choice: conversation.tools.length > 0 ? 'auto' : undefined,
     parallel_tool_calls: false,
+    max_output_tokens: options.maxTokens,
     reasoning: toOpenAIReasoning(options.reasoning),
   }, options);
 
+  if (!response || error)
+    return { result: { role: 'assistant', content: [], stopReason: { code: 'other', message: error } }, usage: { input: 0, output: 0 } };
+
   // Parse response output items
-  const result: types.AssistantMessage = { role: 'assistant', content: [] };
+  const stopReason: types.AssistantMessage['stopReason'] = { code: 'ok' };
+  if (response.incomplete_details?.reason === 'max_output_tokens') {
+    stopReason.code = 'max_tokens';
+  } else if (response.incomplete_details?.reason === 'content_filter') {
+    stopReason.code = 'other';
+    stopReason.message = 'Content filter triggered';
+  } else if (response.incomplete_details?.reason) {
+    stopReason.code = 'other';
+    stopReason.message = `Unexpected incomplete reason: ${response.incomplete_details.reason}`;
+  }
+  const result: types.AssistantMessage = { role: 'assistant', content: [], stopReason };
+  const usage: types.Usage = {
+    input: response.usage?.input_tokens ?? 0,
+    output: response.usage?.output_tokens ?? 0,
+  };
+
+  if (stopReason.code !== 'ok')
+    return { result, usage };
 
   for (const item of response.output) {
     if (item.type === 'message' && item.role === 'assistant') {
@@ -64,14 +85,10 @@ async function complete(conversation: types.Conversation, options: types.Complet
     }
   }
 
-  const usage: types.Usage = {
-    input: response.usage?.input_tokens ?? 0,
-    output: response.usage?.output_tokens ?? 0,
-  };
   return { result, usage };
 }
 
-async function create(createParams: openai.OpenAI.Responses.ResponseCreateParamsNonStreaming, options: types.CompletionOptions): Promise<openai.OpenAI.Responses.Response> {
+async function create(createParams: openai.OpenAI.Responses.ResponseCreateParamsNonStreaming, options: types.CompletionOptions): Promise<{ response?: openai.OpenAI.Responses.Response, error?: string }> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${options.apiKey}`,
@@ -87,15 +104,19 @@ async function create(createParams: openai.OpenAI.Responses.ResponseCreateParams
     signal: options.signal,
     timeout: options.apiTimeout
   });
+  const responseText = await response.text();
+  const responseBody = JSON.parse(responseText) as openai.OpenAI.Responses.Response;
 
   if (!response.ok) {
-    options.debug?.('lowire:openai-responses')('Response:', response.status);
-    throw new Error(`API error: ${response.status} ${response.statusText} ${await response.text()}`);
+    try {
+      return { error: (responseBody as any).error.message };
+    } catch {
+      return { error: responseText };
+    }
   }
 
-  const responseBody = await response.json() as openai.OpenAI.Responses.Response;
   options.debug?.('lowire:openai-responses')('Response:', JSON.stringify(responseBody, null, 2));
-  return responseBody;
+  return { response: responseBody };
 }
 
 function toResultContentPart(part: types.ResultPart): openai.OpenAI.Responses.ResponseInputText | openai.OpenAI.Responses.ResponseInputImage {

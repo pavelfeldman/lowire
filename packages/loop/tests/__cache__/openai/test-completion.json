@@ -1,5 +1,5 @@
 {
-  "1cf7f06ec923439fbc497f60d739202f49e53b5f": {
+  "ecf24575c6e4a313c2ae987ca890d5ca068dedc1": {
     "result": {
       "role": "assistant",
       "content": [
@@ -10,11 +10,14 @@
             "result": "Hello world",
             "_is_done": true
           },
-          "id": "call_YnbM79GLEJ85qyZV8Bohxdbh",
-          "openaiId": "fc_055d5f45c8053852006965c6db2b188190835c13694e142c60",
+          "id": "call_55EJW63AuEihxw9l7rYW38a7",
+          "openaiId": "fc_0fa52fa1ab4492e7006969679ba63081958fcbaed80720e11b",
           "openaiStatus": "completed"
         }
-      ]
+      ],
+      "stopReason": {
+        "code": "ok"
+      }
     },
     "usage": {
       "input": 291,

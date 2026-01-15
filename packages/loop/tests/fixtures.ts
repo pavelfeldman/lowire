@@ -98,7 +98,7 @@ function sanitizeFileName(name: string): string {
   return name.replace('.spec.ts', '').replace(/[^a-zA-Z0-9_]+/g, '-');
 }
 
-export async function runLoop<T>(loop: Loop, task: string, options: Omit<LoopOptions, 'model' | 'api' | 'apiKey'> & { resultSchema?: types.Schema, model?: string } = {}): Promise<{ result?: T, usage: types.Usage, turns: number, status: 'ok' | 'break' }> {
+export async function runLoop<T>(loop: Loop, task: string, options: Omit<LoopOptions, 'model' | 'api' | 'apiKey'> & { resultSchema?: types.Schema, model?: string } = {}): Promise<{ result?: T, usage: types.Usage, turns: number, status: 'ok' | 'break' | 'error', error?: string }> {
   const tools: types.Tool[] = [
     ...options.tools || [],
     {

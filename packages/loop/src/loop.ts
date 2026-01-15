@@ -71,7 +71,8 @@ export class Loop {
 
   async run(task: string, runOptions: Omit<LoopOptions, 'model' | 'api' | 'apiKey'> & { model?: string; abortController?: AbortController } = {}): Promise<{
     result?: types.ToolResult;
-    status: 'ok' | 'break',
+    status: 'ok' | 'break' | 'error',
+    error?: string,
     usage: types.Usage,
     turns: number,
   }> {
@@ -100,7 +101,7 @@ export class Loop {
 
     for (let turns = 0; turns < maxTurns; ++turns) {
       if (options.maxTokens && budget.tokens !== undefined && budget.tokens <= 0)
-        throw new Error(`Budget tokens ${options.maxTokens} exhausted`);
+        return { status: 'error', error: `Budget tokens ${options.maxTokens} exhausted`, usage: totalUsage, turns };
 
       debug?.('lowire:loop')(`Turn ${turns + 1} of (max ${maxTurns})`);
       const caches = options.cache ? {
@@ -142,7 +143,7 @@ export class Loop {
 
       for (const toolCall of toolCalls) {
         if (budget.toolCalls !== undefined && --budget.toolCalls < 0)
-          throw new Error(`Failed to perform step, max tool calls (${options.maxToolCalls}) reached`);
+          return { status: 'error', error: `Failed to perform step, max tool calls (${options.maxToolCalls}) reached`, usage: totalUsage, turns };
 
         const { name, arguments: args } = toolCall;
         debug?.('lowire:loop')('Call tool', name, JSON.stringify(args, null, 2));
@@ -205,10 +206,10 @@ export class Loop {
         budget.toolCallRetries = options.maxToolCallRetries;
 
       if (hasErrors && budget.toolCallRetries !== undefined && --budget.toolCallRetries < 0)
-        throw new Error(`Failed to perform action after ${options.maxToolCallRetries} tool call retries`);
+        return { status: 'error', error: `Failed to perform action after ${options.maxToolCallRetries} tool call retries`, usage: totalUsage, turns };
     }
 
-    throw new Error('Failed to perform step, max attempts reached');
+    return { status: 'error', error: `Failed to perform step, max attempts reached`, usage: totalUsage, turns: maxTurns };
   }
 
   private _summarizeConversation(task: string, conversation: types.Conversation, options: LoopOptions): types.Conversation {

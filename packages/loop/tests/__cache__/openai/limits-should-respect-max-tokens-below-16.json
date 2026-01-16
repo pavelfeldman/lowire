@@ -4,7 +4,7 @@
       "role": "assistant",
       "content": [],
       "stopReason": {
-        "code": "other",
+        "code": "error",
         "message": "Invalid 'max_output_tokens': integer below minimum value. Expected a value >= 16, but got 10 instead."
       }
     },

@@ -15,6 +15,7 @@
  */
 
 import { fetchWithTimeout } from '../fetchWithTimeout';
+import { assistantMessageFromError, emptyUsage } from '../types';
 
 import type * as openai from 'openai';
 import type * as types from '../types';
@@ -45,19 +46,12 @@ async function complete(conversation: types.Conversation, options: types.Complet
   }, options);
 
   if (!response || error)
-    return { result: { role: 'assistant', content: [], stopReason: { code: 'other', message: error } }, usage: { input: 0, output: 0 } };
+    return { result: assistantMessageFromError(error ?? 'No response from OpenAI API'), usage: emptyUsage() };
 
   // Parse response output items
   const stopReason: types.AssistantMessage['stopReason'] = { code: 'ok' };
-  if (response.incomplete_details?.reason === 'max_output_tokens') {
+  if (response.incomplete_details?.reason === 'max_output_tokens')
     stopReason.code = 'max_tokens';
-  } else if (response.incomplete_details?.reason === 'content_filter') {
-    stopReason.code = 'other';
-    stopReason.message = 'Content filter triggered';
-  } else if (response.incomplete_details?.reason) {
-    stopReason.code = 'other';
-    stopReason.message = `Unexpected incomplete reason: ${response.incomplete_details.reason}`;
-  }
   const result: types.AssistantMessage = { role: 'assistant', content: [], stopReason };
   const usage: types.Usage = {
     input: response.usage?.input_tokens ?? 0,

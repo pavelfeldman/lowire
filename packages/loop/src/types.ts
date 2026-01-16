@@ -49,7 +49,7 @@ export type UserMessage = BaseMessage & {
 export type AssistantMessage = BaseMessage & {
   role: 'assistant';
   content: (TextContentPart | ToolCallContentPart | ThinkingContentPart)[];
-  stopReason: { code: 'max_tokens' | 'ok' | 'other', message?: string };
+  stopReason: { code: 'ok' | 'max_tokens' | 'error', message?: string };
   openaiId?: string;
   openaiStatus?: 'completed' | 'incomplete' | 'in_progress';
   toolError?: string;
@@ -134,3 +134,18 @@ export type Usage = {
 };
 
 export type ReplayCache = Record<string, { result: AssistantMessage, usage: Usage }>;
+
+export function assistantMessageFromError(error: string): AssistantMessage {
+  return {
+    role: 'assistant',
+    content: [],
+    stopReason: { code: 'error', message: error },
+  };
+}
+
+export function emptyUsage(): Usage {
+  return {
+    input: 0,
+    output: 0,
+  };
+}

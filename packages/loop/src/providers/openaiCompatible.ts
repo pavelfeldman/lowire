@@ -15,6 +15,7 @@
  */
 
 import { fetchWithTimeout } from '../fetchWithTimeout';
+import { assistantMessageFromError, emptyUsage } from '../types';
 
 import type * as openai from 'openai';
 import type * as types from '../types';
@@ -48,14 +49,8 @@ async function complete(conversation: types.Conversation, options: types.Complet
     parallel_tool_calls: false,
   }, options);
 
-  if (error) {
-    if (error.type === 'invalid_request_error')
-      return { result: { role: 'assistant', content: [], stopReason: { code: 'max_tokens' } }, usage: { input: 0, output: 0 } };
-    return { result: { role: 'assistant', content: [], stopReason: { code: 'other', message: (response as any).error.message } }, usage: { input: 0, output: 0 } };
-  }
-
-  if (!response || !response.choices.length)
-    return { result: { role: 'assistant', content: [], stopReason: { code: 'other', message: 'Failed to get response from OpenAI completions' } }, usage: { input: 0, output: 0 } };
+  if (error || !response)
+    return { result: assistantMessageFromError(error?.message ?? 'No response from OpenAI compatible API'), usage: emptyUsage() };
 
   const result: types.AssistantMessage = { role: 'assistant', content: [], stopReason: { code: 'ok' } };
   const finishReason = response.choices[0]?.finish_reason;
@@ -72,8 +67,6 @@ async function complete(conversation: types.Conversation, options: types.Complet
 
   if (finishReason === 'length')
     result.stopReason = { code: 'max_tokens' };
-  else if (finishReason !== 'tool_calls' && finishReason !== 'function_call' && finishReason !== 'stop')
-    result.stopReason = { code: 'other', message: `Unexpected finish reason: ${finishReason}` };
 
   const usage: types.Usage = {
     input: response.usage?.prompt_tokens ?? 0,

@@ -7,12 +7,12 @@
           "type": "tool_call",
           "name": "add",
           "arguments": {
-            "b": 3,
             "_is_done": false,
+            "b": 3,
             "a": 2
           },
-          "id": "call_liz1ly9jsv9",
-          "googleThoughtSignature": "Cs8CAXLI2nwKdht2aYjY7E9uRjFYLVNLFjXr/y5mccq9ODkcfcelsRakdeQSaNi118xlEMj20bO8ujyP2goaOpddnoNqyugiMmepmq8CO3pHg6//ksR9KgB60vkbJkrryR3p5czqPSzibaoFzMexG5enlaZhttMb6RznlC4XlXoGd+7EtM3OFj01VSle3WQDAPIL77s/MyUy5bn6HG5CLs5rx+fm57NkEv90aUxndnlSIkydgfQyBSNRx7A/5+KiXnlbwpwycFc+uvh4XJOZZxciTe10pzY9v4SvjvkBOHeXP6Kx2o6EKy3IZy5/uTUniho4d3P2KgZNmtYN/ZdhABVCq0SE4hZMKLRkUKC9qNy54Jw8j9m2RjrL3ldloA95WQX4U1Ag1NV5WzQaP6IkL406b00EvExLVTA3QozkJyU39DwK+5rv9/kmvXn01pBab6Y="
+          "id": "call_d31ltylq9wu",
+          "googleThoughtSignature": "Cq0BAXLI2nxEPZcgyBw6EqQ4TGdhaJ3xB02NOXkL7oc1IBjk/FPu4Jz3ag7IZw6IBQUCcRVaFNAm7nP0svCtoE44RQIc5vSble2UXKikxunWK/dLMr4Te/41OJ0Z4cYtpJwpNK+3NKl/jte148LFU3pnNNBjuqn7HFFEhXLYoaDLoPzda64NrtWRXLW282pGKuhJ8xlY3fL7LVJzIFVzsa7Z5atUt/EEBKDMPqhQ4fo="
         }
       ],
       "stopReason": {
@@ -24,7 +24,7 @@
       "output": 24
     }
   },
-  "9910cd1a42eb98532436094c104b0bb06391bc78": {
+  "f8b6199de1289c2a502f88505ce61d338b829156": {
     "result": {
       "role": "assistant",
       "content": [
@@ -32,11 +32,11 @@
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
-            "sum": 5,
-            "_is_done": true
+            "_is_done": true,
+            "sum": 5
           },
-          "id": "call_7bkhqnsuj2c",
-          "googleThoughtSignature": "CuoBAXLI2nwTQjoisnqdCBBfY8atsGSSzcjT6dkIgGBz9LqUq5zeratl/QCZzc9wUyX8PJ9lnQnaNdQg+TaNRiLp4mFcieSUQ3x1wX2HZs/7lWkNig4XnIjA7C9E4FnXEf7Uoa82bcY/WeONf3kqznsGC9Qzl0wJQhYMDgcjPN8fW17zU2NpCkxi6iyy4OACDJ/RoDuIkdTrYRCeVta6RAoZQuXqZjcbEptK4MQGZRuik5rYk1E+H1BH5NQNChKX7R/wvUGr2WGaXdiJ3OfOAbeaDuNts9P2hi/DsuZW4Mky5kfciGKZMh9LCcdk"
+          "id": "call_r0c3olwov6",
+          "googleThoughtSignature": "CpkBAXLI2nyBsnZOtvQ9//ItlaGgv3LyYq2Iqc69SRqFURl8bbrv/HxLbzJp4obtb8uHpBVXbiUnoJgMe2IbwxI3WJUI/bCZMCCIt0Q/67nE9GP0MJbmuNWg78oEL/xxO0PX6o8VlH9U8wDtPmLwGi58uiKfvE4LILAM/NAU1JEK8o4DxBojjBdTLlnXF0bOgVdydGE/zRPB4eiE"
         }
       ],
       "stopReason": {

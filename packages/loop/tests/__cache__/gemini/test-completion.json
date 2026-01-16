@@ -7,11 +7,11 @@
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
-            "_is_done": true,
-            "result": "Hello world"
+            "result": "Hello world",
+            "_is_done": true
           },
-          "id": "call_pkyldrkqlj",
-          "googleThoughtSignature": "Cu8BAXLI2nwcbuCXufYUtnxVLRIcZ4k+54dMTulS4QcOGgPHHlQIZEbglAONlz4d1GWR42z0+yZVANmarkaF/9lvaG+XLDGKimJmPp+u7qxAkCtM7ILuSClFPlPHsACp6ZX7gaQwAdZc9pPxgO0U/s1z1jsQoHMWcot2DXRzSBCRlwwbwA5+quj7Vw2anX4bnOhznrGJC+vh/2GZHAZD9qShh3Pz2u7ynAFV+ANkEFIe28YU/0DO0V1d0fgC0unqNQtXjJEbO9B9wWS2dVKBseSNJOxcedeliX5m4l9v/g+D8UR+I8GK7ud/IxVAEJBvpjI="
+          "id": "call_ebxkunepbj5",
+          "googleThoughtSignature": "Cs0BAXLI2nwO7lo9udjJKs1IGzeek9a9joPMZ1IAnJpzQaJXFf450U/nLVYKOoY5cLrcxWoBnxANS5yS1VOnwOP24rJP/6fNp3bXJeGWBbHa/bJIonC4q5q1oxtYImszJmkHDM3Z+cZowE3Ph449hq0WBZFzXktZZXt21QTZNGFQrcEhrSfEtLqFYLL6reaI4BrOZoyjtrZ+d0WPnP8nnjTw6gthOO+i15UY5EhraZHZtMJhPTCKesG91ENBPCOSrAy1h6gjqHbA5/EBk23Y2Q=="
         }
       ],
       "stopReason": {

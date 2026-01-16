@@ -15,6 +15,7 @@
  */
 
 import { fetchWithTimeout } from '../fetchWithTimeout';
+import { assistantMessageFromError, emptyUsage } from '../types';
 
 import type * as anthropic from '@anthropic-ai/sdk';
 import type * as types from '../types';
@@ -24,7 +25,7 @@ export class Anthropic implements types.Provider {
 
   async complete(conversation: types.Conversation, options: types.CompletionOptions): Promise<{ result: types.AssistantMessage, usage: types.Usage }> {
     const maxTokens = Math.min(options.maxTokens ?? 32_768, 32_768);
-    const response = await create({
+    const { response, error } = await create({
       model: options.model,
       max_tokens: maxTokens,
       temperature: options.temperature,
@@ -36,6 +37,9 @@ export class Anthropic implements types.Provider {
         budget_tokens: options.maxTokens ? Math.round(maxTokens / 10) : 1024,
       } : undefined,
     }, options);
+    if (error || !response)
+      return { result: assistantMessageFromError(error ?? 'No response from Anthropic API'), usage: emptyUsage() };
+
     const result = toAssistantMessage(response);
     const usage: types.Usage = {
       input: response.usage.input_tokens,
@@ -45,7 +49,7 @@ export class Anthropic implements types.Provider {
   }
 }
 
-async function create(createParams: anthropic.Anthropic.Messages.MessageCreateParamsNonStreaming, options: types.CompletionOptions): Promise<anthropic.Anthropic.Messages.Message> {
+async function create(createParams: anthropic.Anthropic.Messages.MessageCreateParamsNonStreaming, options: types.CompletionOptions): Promise<{ response?: anthropic.Anthropic.Messages.Message, error?: string }> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     'x-api-key': options.apiKey,
@@ -63,14 +67,16 @@ async function create(createParams: anthropic.Anthropic.Messages.MessageCreatePa
     timeout: options.apiTimeout
   });
 
+  const responseText = await response.text();
+  const responseBody = JSON.parse(responseText) as anthropic.Anthropic.Messages.Message;
+  options.debug?.('lowire:anthropic')('Response:', responseText);
+
   if (!response.ok) {
     options.debug?.('lowire:anthropic')('Response:', response.status);
-    throw new Error(`API error: ${response.status} ${response.statusText} ${await response.text()}`);
+    return { error: `API error: ${response.status} ${response.statusText} ${responseText}` };
   }
-  const responseBody = await response.json() as anthropic.Anthropic.Messages.Message;
-  options.debug?.('lowire:anthropic')('Response:', JSON.stringify(responseBody, null, 2));
 
-  return responseBody;
+  return { response: responseBody };
 }
 
 function toContentPart(block: anthropic.Anthropic.Messages.ContentBlock): types.TextContentPart | types.ToolCallContentPart | types.ThinkingContentPart | null {
@@ -125,14 +131,8 @@ function toAnthropicResultParam(part: types.ResultPart): anthropic.Anthropic.Mes
 
 function toAssistantMessage(message: anthropic.Anthropic.Messages.Message): types.AssistantMessage {
   const stopReason: types.AssistantMessage['stopReason'] = { code: 'ok' };
-  if (message.stop_reason === 'max_tokens') {
+  if (message.stop_reason === 'max_tokens')
     stopReason.code = 'max_tokens';
-  } else if (message.stop_reason === 'tool_use') {
-    stopReason.code = 'ok';
-  } else {
-    stopReason.code = 'other';
-    stopReason.message = `Unexpected stop reason: ${message.stop_reason}`;
-  }
 
   return {
     role: 'assistant',

@@ -5,7 +5,7 @@
       "content": [
         {
           "type": "text",
-          "text": "I'll capture the image first and then report the number I see."
+          "text": "I'll capture the image first to see what number is displayed on it."
         },
         {
           "type": "tool_call",
@@ -13,7 +13,7 @@
           "arguments": {
             "_is_done": false
           },
-          "id": "toolu_01FhMqoZr143fow58K2eGaSp"
+          "id": "toolu_01QGxDbwZ8netDTu11p7T3fx"
         }
       ],
       "stopReason": {
@@ -22,16 +22,16 @@
     },
     "usage": {
       "input": 846,
-      "output": 70
+      "output": 71
     }
   },
-  "c1f17e322e9b4dbb91fc28684f2cb3d9e61e8ff5": {
+  "397be8f03e0311ebdc87132f2ed16c387f55b532": {
     "result": {
       "role": "assistant",
       "content": [
         {
           "type": "text",
-          "text": "I can see the number 42 in the image. Now I'll report this result."
+          "text": "Perfect! I can see the number 42 in the image. Now I'll report this result using the report_result tool."
         },
         {
           "type": "tool_call",
@@ -40,7 +40,7 @@
             "result": 42,
             "_is_done": true
           },
-          "id": "toolu_01R84UpZGQ7GsR4nSsWW79KD"
+          "id": "toolu_015TYgfxasNJcJoUkaYKg2Hu"
         }
       ],
       "stopReason": {
@@ -48,8 +48,8 @@
       }
     },
     "usage": {
-      "input": 2506,
-      "output": 92
+      "input": 2507,
+      "output": 100
     }
   }
 }

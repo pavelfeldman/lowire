@@ -9,8 +9,8 @@
           "arguments": {
             "_is_done": false
           },
-          "id": "call_ryzftqomvsn",
-          "googleThoughtSignature": "CuwBAXLI2nxbVQRHoiMPVfjgrPnouhTEZL84rSrhmQZvs/XlwcXUZlgvy9X1sQ/xPgZNRPF1/V7K7CvsBuzIc/VLZ+OVGMzq3Bnlma39+CDiFrm9653DfreFBdrA/crTC1OUyxeI+aqMJuyjH5cqpxYVGJZ+qMUeNMwtehPvGrcJ06p+PBJl9W9ND+MYqodWG3Ir+ruQcM+wEYMma9JG4XLdR3IRsg74h8bLmQUiCjx0U2oe492ooWzGvk8IAfkaoiWepQOwQJQJnPlfLiie6Y7GetWQQZlzOBTAyjR4jEhQ8Q9WP8u8glgVuaXzroQ="
+          "id": "call_czds888i9e",
+          "googleThoughtSignature": "Co8CAXLI2nwMKgTCamSDCPVLpRM+SEySpJ8+74boRSLsrQMZCjKU2i1RLhePJyYEyvyjhzqyYVpCxsyG/3aklVo7O3PZ94JKqJrrLtqQo9+7ITPq2QlO2m9OIGiYWbnmTyAWz6/5oTzmC7j0MdEbXmnpY3S9AUvYb8WvbSnOu2I6MEOs2gdRstAqXXN9Zw1uqo9NBwpFaWBh2GsRLS+qS8KxG//VtjttcxEEWi9p9ZHgRywMb40zOTuWvLeVpmVjkqSwb0rn1e03vV3Qnq5WZGfg4ONUZDZxdHiMtaG6zdeYaI2HEygPiTy+iELQ9hJBdCO52OqYQn8n7aJ4uqrxzelDWfYpR38v4NSjTP4DUvvmMQ=="
         }
       ],
       "stopReason": {
@@ -22,7 +22,7 @@
       "output": 16
     }
   },
-  "be7e1ae10fb3a4dbc50f4270883e6e21ff141431": {
+  "14ca85fd150d4796c4affd60129231ef7202df5f": {
     "result": {
       "role": "assistant",
       "content": [
@@ -30,11 +30,11 @@
           "type": "tool_call",
           "name": "report_result",
           "arguments": {
-            "_is_done": true,
-            "result": 42
+            "result": 42,
+            "_is_done": true
           },
-          "id": "call_v38vhq8lgz",
-          "googleThoughtSignature": "Cq0BAXLI2nwVcC94BBQmkXzZoHG2xKMP5cU031NntCZHLGmAJk2LGMdzRMu334Y5U09YatNfvc0BbW5mB60sWcN7Rk0vhAPAyY8e7HATN0yJ2enm0VzrRRGsxI4dl1uEuiKX3neUxWEvxT5BoUNRW1A9dExEUyAdJViP8uu+1xIuYulLaQF4N6qKeY0o7TLyZEGU+rr8IOBit+8T9Cmf6rXw0Nac+2hX7T7L5kOLrTI="
+          "id": "call_citl893f5z",
+          "googleThoughtSignature": "Ct8BAXLI2nx8UY9LfUrqrSfRQREvreMW69x+jMVMWs5Xfyge6wA4euolIINyFQ9SAg9h3q+RcbCoBuMaup066J6hlRc/Y2vcCb9Oz/nOqeVxyZLB6JwQfwBgr2c9NJ2Y6A4ZHfDBEp0cHMjvPX6haSUigXUK44QKUkj/ytvFrEjHDJG1aYOOBarHT33zsZstqYDkZI7iOOSlTXHLyNgid4T0COt0IIfP94TozWiXu0m+pkdLn421y1Ty/C3YwSBIEqLtzcTSBFhMmCwf7YUyVkJjX4Aw3k8JWjANaMSmUlpMzQ=="
         }
       ],
       "stopReason": {

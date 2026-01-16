@@ -15,6 +15,7 @@
  */
 
 import { fetchWithTimeout } from '../fetchWithTimeout';
+import { assistantMessageFromError, emptyUsage } from '../types';
 
 import type * as google from '@google/generative-ai';
 import type * as types from '../types';
@@ -26,7 +27,7 @@ export class Google implements types.Provider {
 
   async complete(conversation: types.Conversation, options: types.CompletionOptions) {
     const contents = conversation.messages.map(toGeminiContent).flat();
-    const response = await create(options.model ?? 'gemini-2.5-pro', {
+    const { response, error } = await create(options.model ?? 'gemini-2.5-pro', {
       systemInstruction: {
         role: 'system',
         parts: [
@@ -41,9 +42,9 @@ export class Google implements types.Provider {
       },
     }, options);
 
-    const [candidate] = response.candidates ?? [];
-    if (!candidate)
-      throw new Error('No candidates in response');
+    const [candidate] = response?.candidates ?? [];
+    if (error || !response || !candidate)
+      return { result: assistantMessageFromError(error ?? 'No response from Google API'), usage: emptyUsage() };
 
     const usage: types.Usage = {
       input: response.usageMetadata?.promptTokenCount ?? 0,
@@ -55,7 +56,7 @@ export class Google implements types.Provider {
   }
 }
 
-async function create(model: string, createParams: google.GenerateContentRequest, options: types.CompletionOptions): Promise<google.GenerateContentResponse> {
+async function create(model: string, createParams: google.GenerateContentRequest, options: types.CompletionOptions): Promise<{ response?: google.GenerateContentResponse, error?: string }> {
   const debugBody = { ...createParams, tools: `${createParams.tools?.length ?? 0} tools` };
   options.debug?.('lowire:google')('Request:', JSON.stringify(debugBody, null, 2));
 
@@ -72,12 +73,12 @@ async function create(model: string, createParams: google.GenerateContentRequest
 
   if (!response.ok) {
     options.debug?.('lowire:google')('Response:', response.status);
-    throw new Error(`API error: ${response.status} ${response.statusText} ${await response.text()}`);
+    return { error: `API error: ${response.status} ${response.statusText} ${await response.text()}` };
   }
 
   const responseBody = await response.json() as google.GenerateContentResponse;
   options.debug?.('lowire:google')('Response:', JSON.stringify(responseBody, null, 2));
-  return responseBody;
+  return { response: responseBody };
 }
 
 function toGeminiTool(tool: types.Tool) {
@@ -104,17 +105,8 @@ function stripUnsupportedSchemaFields(schema: any): any {
 
 function toAssistantMessage(candidate: google.GenerateContentCandidate): types.AssistantMessage {
   const stopReason: types.AssistantMessage['stopReason'] = { code: 'ok' };
-  const finishReason = candidate.finishReason;
-  if (finishReason === 'MAX_TOKENS') {
+  if (candidate.finishReason === 'MAX_TOKENS')
     stopReason.code = 'max_tokens';
-  } else if (!finishReason || finishReason === 'STOP') {
-    stopReason.code = 'ok';
-  } else if (finishReason.includes('FUNCTION') || finishReason.includes('TOOL')) {
-    stopReason.code = 'ok';
-  } else {
-    stopReason.code = 'other';
-    stopReason.message = `Unexpected finish reason: ${finishReason}`;
-  }
 
   return {
     role: 'assistant',

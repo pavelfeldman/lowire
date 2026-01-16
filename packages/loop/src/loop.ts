@@ -125,11 +125,11 @@ export class Loop {
         signal: abortController?.signal,
       });
 
+      if (assistantMessage.stopReason.code === 'error')
+        return { status: 'error', error: assistantMessage.stopReason.message, usage: totalUsage, turns };
+
       if (assistantMessage.stopReason.code === 'max_tokens')
         return { status: 'error', error: `Max tokens exhausted`, usage: totalUsage, turns };
-
-      if (assistantMessage.stopReason.code === 'other')
-        return { status: 'error', error: assistantMessage.stopReason.message, usage: totalUsage, turns };
 
       const intent = assistantMessage.content.filter(part => part.type === 'text').map(part => part.text).join('\n');
 

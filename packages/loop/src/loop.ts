@@ -55,6 +55,7 @@ export type LoopOptions = types.CompletionOptions & LoopEvents & {
   maxToolCalls?: number;
   maxToolCallRetries?: number;
   cache?: types.ReplayCache;
+  cacheMode?: 'strict' | 'lax';
   secrets?: Record<string, string>;
   summarize?: boolean;
 };

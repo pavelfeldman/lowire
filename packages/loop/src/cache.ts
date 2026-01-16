@@ -23,18 +23,24 @@ export type ReplayCaches = {
   output: types.ReplayCache;
 };
 
-export async function cachedComplete(provider: types.Provider, conversation: types.Conversation, caches: ReplayCaches | undefined, options: types.CompletionOptions & { secrets?: Record<string, string> }): ReturnType<types.Provider['complete']> {
+export async function cachedComplete(provider: types.Provider, conversation: types.Conversation, caches: ReplayCaches | undefined, options: types.CompletionOptions & { secrets?: Record<string, string>, cacheMode?: 'strict' | 'lax' }): ReturnType<types.Provider['complete']> {
   const c = hideSecrets(conversation, options.secrets);
   const result = await cachedCompleteNoSecrets(provider, c, caches, options);
   return unhideSecrets(result, options.secrets);
 }
 
-async function cachedCompleteNoSecrets(provider: types.Provider, conversation: types.Conversation, caches: ReplayCaches | undefined, options: types.CompletionOptions): ReturnType<types.Provider['complete']> {
+async function cachedCompleteNoSecrets(provider: types.Provider, conversation: types.Conversation, caches: ReplayCaches | undefined, options: types.CompletionOptions & { cacheMode?: 'strict' | 'lax' }): ReturnType<types.Provider['complete']> {
   if (!caches)
     return await provider.complete(conversation, options);
 
-  const { maxTokens, reasoning, temperature } = options;
-  const key = calculateSha1(JSON.stringify({ conversation, maxTokens, reasoning, temperature }));
+  const keyObject = {
+    conversation: options.cacheMode === 'lax' ? { ...conversation, tools: [] } : conversation,
+    maxTokens: options.maxTokens,
+    reasoning: options.reasoning,
+    temperature: options.temperature,
+  };
+
+  const key = calculateSha1(JSON.stringify(keyObject));
   if (!process.env.LOWIRE_NO_CACHE && caches.input[key]) {
     caches.output[key] = caches.input[key];
     return caches.input[key] ?? caches.output[key];

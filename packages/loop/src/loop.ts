@@ -70,7 +70,7 @@ export class Loop {
     this._loopOptions = options;
   }
 
-  async run(task: string, runOptions: Omit<LoopOptions, 'model' | 'api' | 'apiKey'> & { model?: string; abortController?: AbortController } = {}): Promise<{
+  async run(task: string, runOptions: Omit<LoopOptions, 'model' | 'api' | 'apiKey'> & { model?: string } = {}): Promise<{
     result?: types.ToolResult;
     status: 'ok' | 'break' | 'error',
     error?: string,
@@ -78,7 +78,6 @@ export class Loop {
     turns: number,
   }> {
     const options: LoopOptions = { ...this._loopOptions, ...runOptions };
-    const abortController = runOptions.abortController;
     const allTools: types.Tool[] = [...(options.tools || []).map(wrapToolWithIsDone)];
 
     const conversation: types.Conversation = {
@@ -112,7 +111,7 @@ export class Loop {
 
       const summarizedConversation = options.summarize ? this._summarizeConversation(task, conversation, options) : conversation;
       await options.onBeforeTurn?.({ conversation: summarizedConversation, totalUsage, budgetTokens: budget.tokens });
-      if (abortController?.signal.aborted)
+      if (options.signal?.aborted)
         return { status: 'break', usage: totalUsage, turns };
 
       debug?.('lowire:loop')(`Request`, JSON.stringify({ ...summarizedConversation, tools: `${summarizedConversation.tools.length} tools` }, null, 2));
@@ -123,7 +122,7 @@ export class Loop {
       const { result: assistantMessage, usage } = await cachedComplete(this._provider, summarizedConversation, caches, {
         ...options,
         maxTokens: budget.tokens !== undefined ? budget.tokens - tokenEstimate : undefined,
-        signal: abortController?.signal,
+        signal: options.signal,
       });
 
       if (assistantMessage.stopReason.code === 'error')
@@ -142,7 +141,7 @@ export class Loop {
       debug?.('lowire:loop')('Usage', `input: ${usage.input}, output: ${usage.output}`);
       debug?.('lowire:loop')('Assistant', intent, JSON.stringify(assistantMessage.content, null, 2));
       await options.onAfterTurn?.({ assistantMessage, totalUsage, budgetTokens: budget.tokens });
-      if (abortController?.signal.aborted)
+      if (options.signal?.aborted)
         return { status: 'break', usage: totalUsage, turns };
 
       conversation.messages.push(assistantMessage);
@@ -160,7 +159,7 @@ export class Loop {
         debug?.('lowire:loop')('Call tool', name, JSON.stringify(args, null, 2));
 
         const status = await options.onBeforeToolCall?.({ assistantMessage, toolCall });
-        if (abortController?.signal.aborted)
+        if (options.signal?.aborted)
           return { status: 'break', usage: totalUsage, turns };
         if (status === 'disallow') {
           toolCall.result = {
@@ -186,7 +185,7 @@ export class Loop {
           debug?.('lowire:loop')('Tool result', text, JSON.stringify(result, null, 2));
 
           const status = await options.onAfterToolCall?.({ assistantMessage, toolCall, result });
-          if (abortController?.signal.aborted)
+          if (options.signal?.aborted)
             return { status: 'break', usage: totalUsage, turns };
           if (status === 'disallow') {
             toolCall.result = {
@@ -202,7 +201,7 @@ export class Loop {
         } catch (error) {
           const errorMessage = `Error while executing tool "${name}": ${error instanceof Error ? error.message : String(error)}\n\nPlease try to recover and complete the task.`;
           await options.onToolCallError?.({ assistantMessage, toolCall, error });
-          if (abortController?.signal.aborted)
+          if (options.signal?.aborted)
             return { status: 'break', usage: totalUsage, turns };
 
           toolCall.result = {

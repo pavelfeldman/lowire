@@ -1,7 +1,7 @@
 {
   "name": "lowire-monorepo",
   "private": true,
-  "version": "0.0.25",
+  "version": "0.0.26",
   "description": "Lowire - a small agentic loop",
   "repository": {
     "type": "git",
